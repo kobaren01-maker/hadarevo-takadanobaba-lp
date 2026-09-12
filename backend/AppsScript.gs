@@ -350,13 +350,14 @@ function getAvailableSlots() {
 
     slots.push({
       id: String(row[idCol]),
+      date: dateStr,
       label: `${formatLabel(dateStr)} ${timeStr}`,
       sortKey: dateTime.getTime(),
     });
   }
 
   slots.sort((a, b) => a.sortKey - b.sortKey);
-  return slots.slice(0, MAX_RETURNED_SLOTS).map(({ id, label }) => ({ id, label }));
+  return slots.slice(0, MAX_RETURNED_SLOTS).map(({ id, date, label }) => ({ id, date, label }));
 }
 
 function notifyStaff(booking) {

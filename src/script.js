@@ -16,7 +16,7 @@
 // デプロイ手順・スプレッドシート構成は README.md を参照。
 const RESERVE_CONFIG = {
   webAppUrl: "https://script.google.com/macros/s/AKfycbw53HzQx_vUexfyJuu_TLxHTv7GhCdYTiBdB0CxBKfmDkYhYACjfFVfQRAwV_Oa8hBA/exec",
-  initialSlotCount: 4,
+  initialSlotCount: 5,
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -123,6 +123,11 @@ function initReservation() {
   const statusEl = root.querySelector("[data-reserve-status]");
   const slotsEl = root.querySelector("[data-reserve-slots]");
   const moreBtn = root.querySelector("[data-reserve-more]");
+  const calendarToggleBtn = root.querySelector("[data-reserve-calendar-toggle]");
+  const calendarEl = root.querySelector("[data-reserve-calendar]");
+  const dateInput = root.querySelector("[data-reserve-date-input]");
+  const dateSlotsEl = root.querySelector("[data-reserve-date-slots]");
+  const calendarEmptyEl = root.querySelector("[data-reserve-calendar-empty]");
   const form = root.querySelector("[data-reserve-form]");
   const selectedEl = root.querySelector("[data-reserve-selected]");
   const errorEl = root.querySelector("[data-reserve-error]");
@@ -137,6 +142,14 @@ function initReservation() {
   moreBtn.addEventListener("click", () => {
     expanded = true;
     renderSlots();
+  });
+
+  calendarToggleBtn.addEventListener("click", () => {
+    calendarEl.hidden = !calendarEl.hidden;
+  });
+
+  dateInput.addEventListener("change", () => {
+    renderDateSlots(dateInput.value);
   });
 
   form.addEventListener("submit", onSubmit);
@@ -164,6 +177,7 @@ function initReservation() {
       statusEl.textContent = "現在ご案内できる空き枠がありません。お電話にてお問い合わせください。";
       slotsEl.hidden = true;
       moreBtn.hidden = true;
+      calendarToggleBtn.hidden = true;
       return;
     }
 
@@ -187,6 +201,35 @@ function initReservation() {
     });
 
     moreBtn.hidden = expanded || allSlots.length <= RESERVE_CONFIG.initialSlotCount;
+    calendarToggleBtn.hidden = false;
+    dateInput.min = allSlots[0].date;
+  }
+
+  function renderDateSlots(dateStr) {
+    calendarEmptyEl.hidden = true;
+    dateSlotsEl.innerHTML = "";
+
+    if (!dateStr) return;
+
+    const matches = allSlots.filter((slot) => slot.date === dateStr);
+
+    if (matches.length === 0) {
+      calendarEmptyEl.hidden = false;
+      return;
+    }
+
+    matches.forEach((slot) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "reserve__slot";
+      btn.textContent = slot.label;
+      btn.dataset.slotId = slot.id;
+      if (selectedSlot && selectedSlot.id === slot.id) {
+        btn.classList.add("is-selected");
+      }
+      btn.addEventListener("click", () => selectSlot(slot));
+      dateSlotsEl.appendChild(btn);
+    });
   }
 
   function renderComplete(data) {
@@ -217,6 +260,7 @@ function initReservation() {
     form.hidden = false;
     errorEl.hidden = true;
     renderSlots();
+    if (dateInput.value) renderDateSlots(dateInput.value);
     form.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -253,6 +297,8 @@ function initReservation() {
       form.hidden = true;
       slotsEl.hidden = true;
       moreBtn.hidden = true;
+      calendarToggleBtn.hidden = true;
+      calendarEl.hidden = true;
       statusEl.hidden = true;
       completeEl.hidden = false;
       renderComplete(data);

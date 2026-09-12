@@ -1152,6 +1152,48 @@ a {
   padding: 8px;
 }
 
+.reserve__calendar-toggle {
+  display: block;
+  margin: 0 auto 28px;
+  background: none;
+  border: none;
+  color: var(--mauve-deep);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  padding: 8px;
+}
+
+.reserve__calendar {
+  max-width: 420px;
+  margin: 0 auto 28px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.reserve__calendar [data-reserve-date-input] {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.reserve__calendar .reserve__slots {
+  margin-top: 16px;
+  margin-bottom: 0;
+}
+
+.reserve__calendar-empty {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
 .reserve__form {
   max-width: 420px;
   margin: 0 auto;

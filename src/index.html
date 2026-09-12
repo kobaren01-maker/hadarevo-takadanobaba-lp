@@ -435,6 +435,21 @@ fbq('track', 'PageView');
 
   <button type="button" class="reserve__more" data-reserve-more hidden>その他の日時を見る</button>
 
+  <button type="button" class="reserve__calendar-toggle" data-reserve-calendar-toggle hidden>
+    ご希望の日程がない場合は、カレンダーから選ぶ
+  </button>
+
+  <div class="reserve__calendar" data-reserve-calendar hidden>
+    <label class="reserve__field">
+      日付を選択
+      <input type="date" data-reserve-date-input />
+    </label>
+    <div class="reserve__slots" data-reserve-date-slots></div>
+    <p class="reserve__calendar-empty" data-reserve-calendar-empty hidden>
+      この日はご案内できる空き枠がありません。別の日付をお試しください。
+    </p>
+  </div>
+
   <form class="reserve__form" data-reserve-form hidden>
     <p class="reserve__selected">
       選択した日時：<strong data-reserve-selected>-</strong>
