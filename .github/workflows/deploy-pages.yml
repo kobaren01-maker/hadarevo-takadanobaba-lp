@@ -1,0 +1,43 @@
+name: Deploy LP to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build site (src/ + public/ -> _site/)
+        run: |
+          mkdir -p _site
+          cp -r src/. _site/
+          cp -r public _site/public
+          # ローカル開発時は src/ から見て public/ が一つ上の階層にあるため
+          # ../public/... という相対パスになっているが、公開用ビルドでは
+          # public/ を index.html と同じ階層に置くのでパスを付け替える。
+          sed -i 's#\.\./public/#public/#g' _site/index.html _site/manage.html
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

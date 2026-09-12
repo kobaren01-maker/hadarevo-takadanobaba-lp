@@ -1,0 +1,1423 @@
+/* ==========================================================================
+   肌REVO 高田馬場店 直接予約獲得LP
+   スマホファースト / 1ブロック1メッセージ / 装飾は最小限
+   ========================================================================== */
+
+:root {
+  /* 背景：白 → アイボリー → 淡ピンクの3段階でセクションの話題転換を示す */
+  --cream: #fffcf6;
+  --ivory: #f6efe4;
+  --pink-pale: #fbedf1;
+
+  /* 旧名の互換（.section--alt 等で継続使用） */
+  --cream-alt: var(--ivory);
+
+  /* アクセント1：ピンク＝CTA・感情を動かす見出し */
+  --pink: #c2477a;
+  --pink-deep: #9c3860;
+  --pink-mid: #d98cae;
+
+  /* アクセント2：紫みのグレー＝信頼・ベネフィット情報 */
+  --mauve: #8b7690;
+  --mauve-deep: #5f4e66;
+  --mauve-pale: #efe8f0;
+
+  /* 強調：赤＝価格・先着人数など限定情報にのみ使用（ピンクと混同しない色相） */
+  --red: #c1402e;
+  --red-deep: #97301f;
+
+  --text: #2b2a28;
+  --text-sub: #5c584f;
+  --border: #e6ded4;
+
+  --gap-section: 72px;
+  --gap-section-sm: 56px;
+  --pad-x: 20px;
+  --radius: 4px;
+  --radius-card: 14px;
+
+  --font: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic Medium",
+    "Yu Gothic", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-serif: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-num: "Cormorant Garamond", "Zen Old Mincho", serif;
+
+  /* CTAボタン：以前はLINE登録がゴールだった名残でLINE公式グリーンを使っていたが、
+     現在はLP内予約が目的でLINEとは無関係のため、ブランドのピンクに統一する
+     （緑のままだとLINE誘導のボタンだと誤解されやすい）。 */
+  --cta: var(--pink);
+  --cta-deep: var(--pink-deep);
+
+  --shadow-btn: 0 8px 20px rgba(194, 71, 122, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--cream);
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.section {
+  padding: var(--gap-section) var(--pad-x);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.section--wide {
+  max-width: 720px;
+}
+
+.section--alt {
+  background: var(--ivory);
+}
+
+.section--pink {
+  background: var(--pink-pale);
+}
+
+.section--mauve {
+  background: var(--mauve-pale);
+}
+
+.section--wide-bg {
+  max-width: none;
+}
+.section--wide-bg > .inner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--pink-deep);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* 見出し：明朝で情緒を、本文はゴシックで可読性を担保する役割分担 */
+.heading {
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.6;
+  margin: 0 0 20px;
+  letter-spacing: 0.02em;
+  text-wrap: balance;
+}
+
+/* マーカー：蛍光ペン風の下線で、見出し内の最重要語だけを1箇所強調する */
+.mark {
+  background: linear-gradient(to top, var(--pink-mid) 42%, transparent 42%);
+  padding: 0 2px;
+}
+
+.heading--lg {
+  font-size: 1.85rem;
+}
+
+.heading small {
+  display: block;
+  font-size: 0.55em;
+  font-weight: 700;
+  color: var(--text-sub);
+  margin-bottom: 8px;
+}
+
+.lede {
+  font-size: 0.95rem;
+  color: var(--text-sub);
+  margin: 0 0 24px;
+}
+
+.body-text {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+/* ---- Price / emphasis ---- */
+
+.price-old {
+  font-size: 0.95rem;
+  color: var(--text-sub);
+  text-decoration: line-through;
+  text-decoration-color: var(--text-sub);
+}
+
+.price-arrow {
+  font-size: 1rem;
+  color: var(--text-sub);
+  margin: 6px 0;
+}
+
+/* 価格の主役はゴシックの太字で即読性を優先する（見出し側の明朝とは役割を分ける） */
+.price-new {
+  font-family: var(--font);
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--red);
+  line-height: 1;
+  margin: 4px 0 8px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.price-new sup {
+  font-family: var(--font);
+  font-size: 0.3em;
+  font-weight: 700;
+  margin-right: 3px;
+  vertical-align: top;
+}
+
+.price-new .unit {
+  font-size: 0.4em;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.badge-red {
+  display: inline-block;
+  background: var(--red);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin: 4px 0;
+}
+
+.badge-outline {
+  display: inline-block;
+  border: 1px solid var(--red);
+  color: var(--red-deep);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 5px 13px;
+  border-radius: 999px;
+  margin: 4px 0;
+}
+
+/* ---- CTA ---- */
+
+/* ピル形状（border-radius:999px）をやめ、完全な四角形にする。
+   色もLINEグリーンからブランドのピンクに変更。 */
+.cta-button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(135deg, var(--cta) 0%, var(--cta-deep) 100%);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 16px 20px;
+  border-radius: 0;
+  box-shadow: var(--shadow-btn);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* CTAボタン内の小さな補足コピー（所要時間・受付時間など） */
+.cta-button__note {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.68em;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.cta-button:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 12px rgba(194, 71, 122, 0.35);
+}
+
+.cta-sub {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-sub);
+  margin-top: 10px;
+}
+
+.cta-wrap {
+  margin-top: 28px;
+}
+
+/* ---- オファーボックス ----
+   優先順位（強い→弱い）：①初回4,980円 ②CTAボタン ③LINE登録者限定ラベル
+   ④先着30名様 ⑤先行予約の補足 ⑥通常18,000円。
+   1秒で「4,980円 → CTA」の順に目が流れることを目標に、
+   それ以外の要素は徹底して静かに扱う。
+*/
+
+.offer-box {
+  position: relative;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  padding: 22px 22px 0;
+  text-align: center;
+}
+
+.offer-box__label {
+  text-align: left;
+  border-left: 3px solid var(--pink);
+  padding-left: 10px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--pink-deep);
+  margin: 0 42px 18px 0;
+}
+
+/* 限定バッジ：右上に小さく添えるだけの補強要素（面で押さない） */
+.offer-box__badge {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  border: 1px solid var(--red);
+  color: var(--red-deep);
+  background: var(--cream);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* 価格：旧価格→矢印→新価格を横一直線に並べ、新価格だけを突出して大きくする */
+.offer-box__price-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4em;
+  margin: 0 0 16px;
+}
+
+.offer-box .price-old {
+  font-size: 0.75rem;
+  color: var(--text-sub);
+  margin: 0;
+}
+
+.offer-box .price-arrow {
+  font-size: 0.75rem;
+  color: var(--text-sub);
+  margin: 0;
+}
+
+.offer-box .price-new {
+  margin: 0;
+}
+
+/* 補足メリット：チェックマーク付きの静かな1〜2行。価格・CTAを喰わない大きさに留める */
+.offer-box__checks {
+  list-style: none;
+  margin: 0 0 4px;
+  padding: 0;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.offer-box__checks li {
+  font-size: 0.76rem;
+  color: var(--text-sub);
+  padding-left: 20px;
+  position: relative;
+}
+
+.offer-box__checks li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--mauve-deep);
+  font-weight: 700;
+}
+
+.offer-box__extra {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--pink-pale);
+  border-radius: 999px;
+  padding: 7px 16px;
+  display: inline-block;
+  margin: 0 0 18px;
+}
+
+/* CTA：オファーエリア内で価格の次に強い要素。余白を広く取り、
+   箱の底に静かに流し込むことで「自然な帰結」として見せる。 */
+.offer-box__cta {
+  margin: 14px -22px 0;
+  padding: 28px 22px 28px;
+  background: var(--pink-pale);
+}
+
+.offer-box__cta-inner {
+  position: relative;
+}
+
+.offer-box__cta .cta-button {
+  font-size: 1.05rem;
+  padding: 16px 20px;
+}
+
+.offer-box__cta .cta-sub {
+  margin-top: 10px;
+}
+
+/* 限定人数シール：CTAボタンの右上角に軽く乗せ、参考画像のスタンプ感を出す */
+.offer-box__seal {
+  position: absolute;
+  top: -14px;
+  right: -6px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transform: rotate(8deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+  z-index: 1;
+}
+
+.offer-box__checks--under-cta {
+  margin: 18px 0 0;
+}
+
+.offer-box__checks--under-cta li {
+  color: var(--text);
+}
+
+/* ---- Image placeholder slot ----
+   img が読み込めない/未配置の場合はラベルを表示する。
+   実素材差し替え時は img の src を差し替えるだけでよい。
+*/
+
+.img-slot {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--cream-alt);
+  border-radius: var(--radius);
+}
+
+/* 点線の枠は「画像が未配置」であることを示す時だけ表示する。
+   実写が入っている画像に点線が乗って見えるのを避けるため、
+   基本の.img-slotには枠線を付けない。 */
+.img-slot.img-missing {
+  border: 1px dashed var(--border);
+}
+
+.img-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.img-slot .ph-label {
+  display: none;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--text-sub);
+  padding: 16px;
+}
+
+.img-slot.img-missing img {
+  display: none;
+}
+
+.img-slot.img-missing .ph-label {
+  display: flex;
+}
+
+.ratio-4-5 {
+  aspect-ratio: 4 / 5;
+}
+.ratio-1-1 {
+  aspect-ratio: 1 / 1;
+}
+.ratio-16-9 {
+  aspect-ratio: 16 / 9;
+}
+.ratio-4-3 {
+  aspect-ratio: 4 / 3;
+}
+.ratio-3-4 {
+  aspect-ratio: 3 / 4;
+}
+.ratio-offer-box {
+  aspect-ratio: 1586 / 992;
+}
+
+/* ==========================================================================
+   BLOCK 01 - FV
+   ========================================================================== */
+
+/* FV全体：見出しゾーン → 全面ビジュアル → オファー(罫線区切り) → CTA → 店舗情報
+   の4〜5つの異なるリズムのブロックを縦に重ね、同じレイアウトの連続を避ける。 */
+
+.fv {
+  padding-top: 8px;
+  padding-bottom: 28px;
+}
+
+/* FVは1枚の統合ビジュアル（コピー・Before/After・オファーボックスまで画像化済み）。
+   画像内の白い空欄（CTAボタン用）にだけ、実際にクリックできるHTMLボタンを
+   position:absoluteで重ねる。空欄の位置は画像のピクセル座標を解析して算出した割合値。 */
+.fv__full {
+  position: relative;
+  width: 100%;
+}
+
+.fv__full .img-slot {
+  border: none;
+  border-radius: 0;
+}
+
+
+/* ==========================================================================
+   BLOCK 02 - 社会的証明
+   ========================================================================== */
+
+/* 「肌REVOは累計3,000名以上の」が1行に収まるサイズに調整し、
+   「肌悩みをサポート」との2行構成を崩さないようにする */
+.proof__headline {
+  text-align: center;
+  font-size: 1.42rem;
+  line-height: 1.6;
+}
+
+/* 画像の下の余白を圧縮し、横スクロール口コミへの距離を詰める
+   （詰めすぎると2つの証拠が重なって見えるため、最小限の呼吸感は残す） */
+.proof {
+  padding-bottom: 28px;
+}
+
+.proof__ratings-image {
+  margin: 24px 0 0;
+}
+
+/* 画像自体の縦横比に枠を合わせ、プレースホルダー用の点線・背景を消す。
+   比率をぴったり合わせることで object-fit:cover でも角丸が欠けない。 */
+.proof__ratings-image .img-slot {
+  aspect-ratio: 1773 / 733;
+  background: transparent;
+  border: none;
+}
+
+.review-scroller {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.review-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.review-scroller__track {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px;
+  width: max-content;
+}
+
+/* ここに入る口コミ画像は横長比率（約3:1〜5:1）のため、
+   固定の高さで横に流すこの形式が最も自然に読める。
+   BLOCK07（正方形〜縦長の口コミを1件ずつ大きく見せる）とは
+   画像の向き・見せ方の両方で役割が分かれる。 */
+.review-scroller__track img {
+  height: 110px;
+  width: auto;
+  max-width: 480px;
+  object-fit: contain;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* 口コミスクショの縦横比はそれぞれ異なるため、枠を固定幅にせず
+   実画像の比率に幅を合わせてトリミングによる文字切れを防ぐ */
+.review-scroller__track .img-slot {
+  height: 110px;
+  width: auto;
+  flex: 0 0 auto;
+  border: none;
+  background: transparent;
+}
+
+/* ==========================================================================
+   BLOCK 03 - 悩みへの共感
+   ========================================================================== */
+
+/* 「当たり前になっていませんか？」が1行に収まるサイズに調整し、
+   「こんな毎日、」との2行構成を保つ */
+.empathy__headline {
+  text-align: center;
+  font-size: 1.45rem;
+  line-height: 1.6;
+}
+
+.empathy__visual {
+  margin: 24px 0 28px;
+}
+
+/* 2×2イラストはカード間・外周が透過PNGのため、プレースホルダー用の
+   ベージュ背景と枠線を消してセクションの背景に馴染ませる */
+.empathy__visual .img-slot {
+  background: transparent;
+  border: none;
+}
+
+/* 見出しより弱く、本文より少し強い「安心させる」トーン。
+   太字で言い切るのではなく、明朝の柔らかさで優しく伝える。 */
+.empathy__closing {
+  font-family: var(--font-serif);
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.08rem;
+  line-height: 1.8;
+  color: var(--text);
+  margin: 0;
+}
+
+/* ==========================================================================
+   BLOCK 04 - 理想の未来＋お客様ストーリー
+   ========================================================================== */
+
+.story__headline {
+  text-align: center;
+}
+
+/* 1行目は控えめに、2行目（あなたも、変われる。）を大きく強調色にして
+   メリハリをつける。参考LPの見出しサイズバランスに合わせている。 */
+.story__headline-lead {
+  display: block;
+  font-size: 0.85em;
+  font-weight: 500;
+  color: var(--text-sub);
+  margin-bottom: 6px;
+}
+
+.story__headline-emphasis {
+  display: block;
+  font-size: clamp(1.5rem, 8vw, 2rem);
+  font-weight: 800;
+  color: var(--pink-deep);
+  white-space: nowrap;
+}
+
+.story__supporting {
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--text);
+  line-height: 1.9;
+  margin: 20px 0 0;
+}
+
+.story__bridge {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-sub);
+  margin: 14px 0 28px;
+}
+
+/* お客様ごとにBefore/After・2ショット・感想を1枚にまとめた画像を大きく見せる */
+.story-item {
+  margin-bottom: 28px;
+}
+
+.story-item:last-child {
+  margin-bottom: 0;
+}
+
+.story__disclaimer {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-sub);
+  margin: 16px 0 0;
+}
+
+/* ---- 早期予約導線（軽量リンク） ----
+   ボタンではなくテキストリンクに留め、周囲の見出し・写真より
+   視覚的に弱く扱うことで情報ヒエラルキーを壊さない。 */
+.soft-cta {
+  text-align: center;
+  margin: 0;
+  padding: 28px var(--pad-x);
+}
+
+.soft-cta a {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--pink-deep);
+  border-bottom: 1px solid var(--pink-mid);
+  padding-bottom: 2px;
+}
+
+/* ==========================================================================
+   BLOCK 05 - ニキビが繰り返す理由（画像図解）
+   ========================================================================== */
+
+.why__headline {
+  text-align: center;
+}
+
+.why__diagram {
+  margin: 24px 0 28px;
+}
+
+/* 画像自体の縦横比に正確に合わせ、object-fit:cover でも図解の端が
+   欠けないようにする（プレースホルダー背景・枠線も不要なので消す） */
+.why__diagram .img-slot {
+  aspect-ratio: 1007 / 1402;
+  background: transparent;
+  border: none;
+}
+
+.why__conclusion {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ==========================================================================
+   BLOCK 06 - なぜ繰り返すのかを整理し、ハーブピーリングで整える
+   認知負荷対策として3つの独立したセクションに分割し、
+   ivory → mauve-pale → cream と背景色を必ず切り替えて区切りを明確にする
+   （隣り合うBLOCK05=cream・BLOCK08=pink-paleとも被らない配色）。
+   ========================================================================== */
+
+/* 初回来店時の3ステップ（相談→施術→レポート）であることを明示するバッジ。
+   コピーは変えず、視覚的に「これは順番のある流れ」だと伝える。 */
+.care__step-num {
+  display: block;
+  width: fit-content;
+  margin: 0 auto 14px;
+  font-family: var(--font-num);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: var(--pink);
+  padding: 3px 12px;
+  border-radius: 999px;
+}
+
+.care__headline {
+  text-align: center;
+}
+
+/* 指定した2行の改行のまま、画面幅ぎりぎりに収まるサイズへ調整する。
+   小さくしすぎず、他のSTEP見出しと近い大きさを保つ下限を設ける。 */
+.care__headline--fit {
+  font-size: clamp(1.15rem, 5.8vw, 1.4rem);
+  white-space: normal;
+}
+
+.care__visual {
+  margin: 24px 0 20px;
+}
+
+/* 施術紹介の2枚は、それぞれの実画像の縦横比のまま縦に並べる
+   （無理に同じ枠に揃えず、角丸が欠けないようにする） */
+.care__visual--pair {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.care__visual--pair .img-slot:first-child {
+  aspect-ratio: 1600 / 1200;
+}
+
+.care__visual--pair .img-slot:last-child {
+  aspect-ratio: 2172 / 724;
+}
+
+/* 写真の上に文字を重ねず、実写をそのまま主役にする */
+.care__note {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-sub);
+  line-height: 1.8;
+  margin: 0 0 12px;
+}
+
+/* STEP1→STEP2の間が間延びして見えていたため、隣接する
+   両セクションの余白を詰めて距離感を近づける。 */
+.care {
+  padding-bottom: 32px;
+}
+
+.care--treatment {
+  padding-top: 32px;
+}
+
+/* 前の見出しほど強くはないが、話題の転換点として分かる中見出し。
+   以前は1.25remでSTEP1の見出しより小さく、視認性が弱かったため
+   他のSTEP見出しと同じ大きさに揃える。 */
+.care__subheadline {
+  font-family: var(--font-serif);
+  text-align: center;
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.6;
+  margin: 0 0 20px;
+  text-wrap: balance;
+}
+
+.care__subheadline--fit {
+  font-size: clamp(1.28rem, 6.6vw, 1.55rem);
+  white-space: normal;
+}
+
+/* 独立したセクションになったため、区切りは背景色の切り替え自体が担う。
+   ここでの余白調整（margin/border）は不要。 */
+.care__report {
+  text-align: center;
+}
+
+/* 以前は1.05remとSTEP1・2の見出しよりかなり小さく、
+   視認性が弱かったため他のSTEP見出しと同じ大きさに揃える。 */
+.care__report-heading {
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  font-weight: 700;
+  line-height: 1.6;
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+
+.care__report-heading--fit {
+  font-size: clamp(1.25rem, 6.5vw, 1.55rem);
+  white-space: normal;
+}
+
+/* 同じ流れ内の他の写真（counseling-01・herb-peeling-intro）と
+   横幅を揃える。以前はmax-width:240pxで小さく見えていた。 */
+.care__report-visual {
+  margin: 0 auto 16px;
+}
+
+.care__report-note {
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--text-sub);
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ==========================================================================
+   BLOCK 08 - 予約前の不安解消
+   ========================================================================== */
+
+.reassure__headline {
+  text-align: center;
+}
+
+/* 口コミは1件ずつ大きなスクリーンショットで見せる（横スクロールにしない） */
+.reassure-review {
+  margin-bottom: 20px;
+}
+
+.reassure-review:last-child {
+  margin-bottom: 0;
+}
+
+
+/* ==========================================================================
+   BLOCK 08 - 高田馬場店 基本情報
+   ========================================================================== */
+
+.open-notice {
+  text-align: center;
+  /* 直後のBLOCK09（オファー画像）との間の余白が間延びして見えるため、
+     標準の下パディング(72px)より詰める。 */
+  padding-bottom: 32px;
+}
+
+.open-notice__headline {
+  margin-bottom: 18px;
+}
+
+.open-notice__info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+
+.open-notice__sub-visual {
+  margin-top: 20px;
+}
+
+/* 店内実写ギャラリー：自動では動かさず、指でスワイプして自分のペースで
+   見てもらう（BLOCK02の自動横流れとは操作性・役割を分ける）。 */
+.open-notice__gallery {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.open-notice__gallery::-webkit-scrollbar {
+  display: none;
+}
+
+.open-notice__gallery .img-slot {
+  flex: 0 0 78%;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 480px) {
+  .open-notice__gallery .img-slot {
+    flex-basis: 60%;
+  }
+}
+
+/* ==========================================================================
+   BLOCK 09 - 初回体験オファー
+   ========================================================================== */
+
+/* 見出し・補足コピーは削除し、画像だけで完結させる
+   （HTML/CSSでの表現では視覚的な説得力が不足していたため画像化した）。
+   CTAボタンはここに置かず、常時表示のスマホ固定バーに一本化する。
+   テキストがない画像1枚だけのブロックのため、他ブロックと同じ
+   標準の上下パディングだと余白が間延びして見える。詰める。 */
+.offer {
+  padding-top: 16px;
+  padding-bottom: 32px;
+}
+
+.ratio-offer-box {
+  margin-top: 0;
+}
+
+/* 最後の再掲版は背景色を外してあり、その分カードが埋没しないよう
+   左右の余白を詰めて画像自体を大きく見せる。 */
+.offer--final {
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+/* ==========================================================================
+   BLOCK 10.5 - スタッフ紹介
+   スタッフ1名の完全担当制であることを、顔写真付きで伝える。
+   参考LPの「専属パートナー」紹介と同じ構成（顔写真・名前・趣味・メッセージ）。
+   ========================================================================== */
+
+.staff__headline {
+  text-align: center;
+}
+
+.staff__card {
+  max-width: 320px;
+  margin: 12px auto 0;
+  text-align: center;
+}
+
+.staff__photo {
+  max-width: 220px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+}
+
+.staff__name {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.staff__hobby {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  margin: 0 0 20px;
+}
+
+.staff__message {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  color: var(--text);
+  margin: 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+/* ==========================================================================
+   BLOCK 09.5 - よくある質問
+   ネイティブ details/summary によるアコーディオン。
+   タップした質問だけ回答が開く（JS不要・標準のアクセシビリティに乗る）。
+   ========================================================================== */
+
+.faq__headline {
+  text-align: center;
+}
+
+.faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 28px 0 0;
+}
+
+.faq__item {
+  /* セクション自体がcreamになったため、箱を少し明度差のあるivoryにして
+     背景と質問ブロックの境目が視認できるようにする */
+  background: var(--ivory);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 0 18px;
+}
+
+.faq__item[open] {
+  padding-bottom: 18px;
+}
+
+/* デフォルトの開閉三角マーカーを消し、自前のシェブロンに差し替える */
+.faq__q {
+  list-style: none;
+  cursor: pointer;
+  position: relative;
+  padding: 18px 30px 18px 0;
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.faq__q::-webkit-details-marker {
+  display: none;
+}
+
+.faq__q::after {
+  content: "";
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--mauve-deep);
+  border-bottom: 2px solid var(--mauve-deep);
+  transform: translateY(-65%) rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.faq__item[open] .faq__q::after {
+  transform: translateY(-35%) rotate(-135deg);
+}
+
+.faq__a {
+  margin: 0;
+  padding-top: 2px;
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  line-height: 1.8;
+}
+
+/* ==========================================================================
+   BLOCK 10 - 予約枠選択・予約フォーム
+   ========================================================================== */
+
+.reserve {
+  text-align: center;
+}
+
+.reserve__assurance {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.reserve__assurance li {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  padding-left: 20px;
+  position: relative;
+}
+
+.reserve__assurance li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--mauve-deep);
+  font-weight: 700;
+}
+
+.reserve__status {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  margin: 8px 0 20px;
+}
+
+.reserve__slots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.reserve__slot {
+  border: 1px solid var(--border);
+  background: var(--cream);
+  color: var(--text);
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 12px 18px;
+  border-radius: 999px;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.reserve__slot.is-selected {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: #fff;
+}
+
+.reserve__more {
+  display: block;
+  margin: 0 auto 28px;
+  background: none;
+  border: none;
+  color: var(--mauve-deep);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  padding: 8px;
+}
+
+.reserve__form {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: left;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+
+.reserve__selected,
+.reserve__menu {
+  text-align: center;
+  font-size: 0.88rem;
+  margin: 0 0 8px;
+}
+
+.reserve__menu {
+  color: var(--text-sub);
+  margin-bottom: 20px;
+}
+
+.reserve__field {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.reserve__field .req,
+.reserve__field .opt {
+  font-weight: 700;
+  font-size: 0.68rem;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.reserve__field .req {
+  color: var(--red-deep);
+  border: 1px solid var(--red);
+}
+
+.reserve__field .opt {
+  color: var(--text-sub);
+  border: 1px solid var(--border);
+}
+
+.reserve__field input {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--cream);
+  min-height: 44px;
+}
+
+.reserve__submit {
+  margin-top: 8px;
+}
+
+.reserve__error {
+  color: var(--red-deep);
+  font-size: 0.82rem;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.reserve__complete {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+  font-weight: 700;
+  line-height: 1.9;
+}
+
+.reserve__complete-note {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--text-sub);
+  word-break: break-all;
+}
+
+/* ==========================================================================
+   BLOCK 11 - 最終CTA
+   ========================================================================== */
+
+.final__headline {
+  text-align: center;
+}
+
+.final__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 24px 0 0;
+}
+
+.final__step {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 18px 18px 20px;
+  text-align: left;
+}
+
+.final__step-num {
+  display: inline-block;
+  font-family: var(--font-num);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: var(--pink);
+  padding: 3px 12px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+
+.final__step-main {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.final__step-sub {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-sub);
+}
+
+.final__note {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-sub);
+  line-height: 1.8;
+  margin: 24px 0 32px;
+}
+
+/* ==========================================================================
+   フッター
+   ========================================================================== */
+
+.site-footer {
+  text-align: center;
+  padding: 32px var(--pad-x) calc(32px + 76px);
+  font-size: 0.72rem;
+  color: var(--text-sub);
+}
+
+/* ==========================================================================
+   スマホ固定CTAバー
+   ========================================================================== */
+
+.sticky-cta {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  padding: 6px 14px calc(6px + env(safe-area-inset-bottom));
+  background: rgba(255, 252, 246, 0.96);
+  border-top: 1px solid var(--border);
+  backdrop-filter: blur(4px);
+  transform: translateY(100%);
+  transition: transform 0.25s ease;
+}
+
+.sticky-cta.is-visible {
+  transform: translateY(0);
+}
+
+.sticky-cta .cta-button {
+  padding: 9px 16px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(194, 71, 122, 0.25);
+}
+
+.sticky-cta .cta-button:active {
+  box-shadow: 0 1px 4px rgba(194, 71, 122, 0.25);
+}
+
+
+/* ==========================================================================
+   タブレット以上（あくまで補助的な余白調整のみ）
+   ========================================================================== */
+
+@media (min-width: 768px) {
+  :root {
+    --gap-section: 100px;
+  }
+
+  .heading {
+    font-size: 1.85rem;
+  }
+
+  .heading--lg {
+    font-size: 2.2rem;
+  }
+
+  .price-new {
+    font-size: 3.2rem;
+  }
+
+  .cta-button {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}
+
+/* ==========================================================================
+   manage.html - 予約確認・日時変更・キャンセル
+   ========================================================================== */
+
+.manage {
+  padding-top: 40px;
+  text-align: center;
+}
+
+.manage__status {
+  font-size: 0.9rem;
+  color: var(--text-sub);
+}
+
+.manage__label {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  margin: 0 0 6px;
+}
+
+.manage__datetime {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0 0 24px;
+}
+
+.manage__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.manage__cancel-link {
+  background: none;
+  border: none;
+  color: var(--text-sub);
+  font-size: 0.85rem;
+  text-decoration: underline;
+  padding: 8px;
+}
+
+.manage__deadline-note {
+  font-size: 0.85rem;
+  color: var(--red-deep);
+  margin-top: 20px;
+  line-height: 1.8;
+}
+
+.manage__result {
+  margin-top: 20px;
+  font-weight: 700;
+}
