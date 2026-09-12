@@ -1,46 +1,58 @@
 /**
  * 肌REVO 高田馬場店 LP 予約バックエンド（Google Apps Script）
  *
- * 使い方:
- * 1. Googleスプレッドシートを新規作成し、以下2つのシートを用意する。
+ * 空き枠は「予約専用のGoogleカレンダー」の予定の有無から自動計算する。
+ * スプレッドシートに空き枠を手入力する必要はない。
  *
- *    シート「Slots」（ヘッダー行必須）
- *      id | date       | time  | status
- *      1  | 2026-09-07 | 12:30 | available
- *      2  | 2026-09-07 | 16:30 | available
- *      ...
- *      - status は "available" または "booked"。
- *      - スタッフはこのシートを直接編集して枠を追加する。
- *      - Hot Pepper Beauty経由で予約が入った場合は、該当行のstatusを
- *        手動で "booked" に変更する（LP側との二重予約を防ぐための運用）。
+ * 使い方:
+ * 1. Googleカレンダーで新しいカレンダーを作成する（例：「肌REVO高田馬場 予約」）。
+ *    このカレンダーの「設定と共有」からカレンダーIDをコピーし、
+ *    下記 CALENDAR_ID に設定する。
+ * 2. 営業時間（BUSINESS_START_HOUR〜BUSINESS_END_HOUR）のうち、
+ *    このカレンダーに予定が入っていない時間帯が「空き」として扱われる。
+ *    - 定休日や臨時休業にしたい日は、その日の営業時間帯（例：11:00〜20:00）
+ *      に「定休日」等の予定を1件入れるだけでよい。曜日を固定するコードは
+ *      書いていないため、不定休（例：基本は火・木だがたまに変わる）にも
+ *      そのまま対応できる。
+ *    - LP経由の予約が入ると、このカレンダーに自動で予定が作成される。
+ *    - Hot Pepper Beauty経由の予約が入った場合は、スタッフがこのカレンダーに
+ *      手動で同じ時間帯の予定を1件追加する（LP側との二重予約を防ぐ運用）。
+ * 3. Googleスプレッドシートを新規作成し、以下のシートを用意する。
  *
  *    シート「Bookings」（ヘッダー行必須）
- *      token | timestamp | slotId | date | time | name | phone | email | status | gender | age
- *      - LPからの予約はこのシートに自動追記される。
+ *      token | timestamp | date | time | name | phone | email | status | gender | age | eventId
+ *      - LPからの予約はこのシートに自動追記される（予約の記録・本人確認用）。
  *      - status は "confirmed" または "cancelled"。
  *      - token は予約者本人がLPの予約管理ページ（src/manage.html）から
  *        日時変更・キャンセルを行うための一意なキー。
+ *      - eventId は上記予約専用カレンダーに作成された予定のID（変更・削除に使う）。
  *
- * 2. 拡張機能 > Apps Script を開き、このファイルの内容を貼り付ける。
- * 3. NOTIFY_EMAIL を実際の通知先メールアドレスに書き換える。
- * 4. 「デプロイ」>「新しいデプロイ」>種類「ウェブアプリ」で公開する。
+ * 4. 拡張機能 > Apps Script を開き、このファイルの内容を貼り付ける。
+ * 5. CALENDAR_ID・NOTIFY_EMAIL を実際の値に書き換える。
+ * 6. 「デプロイ」>「新しいデプロイ」>種類「ウェブアプリ」で公開する。
  *    - 実行するユーザー: 自分
  *    - アクセスできるユーザー: 全員
- * 5. 発行されたWeb App URLを src/script.js の RESERVE_CONFIG.webAppUrl に設定する。
+ *    - Googleカレンダーへのアクセス許可を求められるので許可する。
+ * 7. 発行されたWeb App URLを src/script.js の RESERVE_CONFIG.webAppUrl に設定する。
  *
  * 注意:
  * - このスクリプトはHot Pepper Beautyの空き状況を自動取得するものではない。
- *   空き枠はあくまで「Slots」シートに手入力されたデータのみを参照する。
  * - Salon Boardへの予約登録は行わない。スタッフが手動で登録すること。
  * - 日時変更・キャンセルは「来店前日23:59まで」本人が自分でLPから行える。
  *   来店当日分の変更・キャンセルはこのシステムでは受け付けない
  *   （電話等、店舗側の別対応に誘導する）。
  */
 
-const SHEET_SLOTS = "Slots";
+const CALENDAR_ID = "REPLACE_RESERVATION_CALENDAR_ID";
 const SHEET_BOOKINGS = "Bookings";
 // 複数人に通知したい場合はカンマ区切りで追加できる（例: "a@example.com,b@example.com"）
 const NOTIFY_EMAIL = "revi.kds@gmail.com";
+
+const BUSINESS_START_HOUR = 11; // 営業開始 11:00
+const BUSINESS_END_HOUR = 20; // 営業終了 20:00
+const TREATMENT_MINUTES = 110; // 初回体験ハーブピーリングの所要時間
+const SLOT_INTERVAL_MINUTES = 30; // 候補として提示する開始時刻の間隔
+const LOOKAHEAD_DAYS = 21; // 何日先まで空き枠を計算するか
 const MAX_RETURNED_SLOTS = 30;
 
 const STORE_ADDRESS = "東京都新宿区高田馬場4-9-18 畔上セブンビル402";
@@ -100,42 +112,51 @@ function createBooking(payload) {
     return jsonResponse({ ok: false, message: "必須項目が不足しています。" });
   }
 
-  const slotsSheet = getSheet(SHEET_SLOTS);
-  const slot = findSlotRow(slotsSheet, slotId);
-
-  if (!slot) {
+  const slotStart = parseSlotId(slotId);
+  if (!slotStart) {
     return jsonResponse({ ok: false, message: "指定された日時が見つかりませんでした。" });
   }
-  if (slot.status !== "available") {
+  const slotEnd = new Date(slotStart.getTime() + TREATMENT_MINUTES * 60000);
+
+  const calendar = getReservationCalendar();
+  if (!isRangeFree(calendar, slotStart, slotEnd)) {
     return jsonResponse({
       ok: false,
       message: "この日時は直前に予約が埋まった可能性があります。他の日時をお選びください。",
     });
   }
 
-  slotsSheet.getRange(slot.row, slot.statusCol + 1).setValue("booked");
+  const event = calendar.createEvent(
+    `【LP予約】${name}様`,
+    slotStart,
+    slotEnd,
+    { description: `電話番号: ${phone}\nメール: ${email}\n性別: ${gender}\n年齢: ${age}` }
+  );
+
+  const dateStr = formatDate(slotStart);
+  const timeStr = formatTime(slotStart);
 
   const token = Utilities.getUuid();
   const bookings = getSheet(SHEET_BOOKINGS);
   bookings.appendRow([
     token,
     new Date(),
-    slotId,
-    slot.date,
-    slot.time,
+    dateStr,
+    timeStr,
     name,
     phone,
     email,
     "confirmed",
     gender,
     age,
+    event.getId(),
   ]);
 
   const manageUrl = buildManageUrl(token);
-  notifyStaff({ slotDate: slot.date, slotTime: slot.time, name, phone, email, gender, age, type: "新規予約" });
-  notifyCustomer(email, { date: slot.date, time: slot.time, manageUrl });
+  notifyStaff({ slotDate: dateStr, slotTime: timeStr, name, phone, email, gender, age, type: "新規予約" });
+  notifyCustomer(email, { date: dateStr, time: timeStr, manageUrl });
 
-  return jsonResponse({ ok: true, token, manageUrl, date: slot.date, time: slot.time });
+  return jsonResponse({ ok: true, token, manageUrl, date: dateStr, time: timeStr });
 }
 
 /* ---- 日時変更（来店前日23:59まで） ---- */
@@ -156,33 +177,44 @@ function rescheduleBooking(payload) {
     });
   }
 
-  const slotsSheet = getSheet(SHEET_SLOTS);
-  const newSlot = findSlotRow(slotsSheet, newSlotId);
-  if (!newSlot || newSlot.status !== "available") {
+  const newSlotStart = parseSlotId(newSlotId);
+  if (!newSlotStart) {
+    return jsonResponse({ ok: false, message: "指定された日時が見つかりませんでした。" });
+  }
+  const newSlotEnd = new Date(newSlotStart.getTime() + TREATMENT_MINUTES * 60000);
+
+  const calendar = getReservationCalendar();
+  if (!isRangeFree(calendar, newSlotStart, newSlotEnd)) {
     return jsonResponse({ ok: false, message: "その日時はすでに埋まっています。他の日時をお選びください。" });
   }
 
-  // 旧枠を空け、新枠を確保
-  const oldSlot = findSlotRow(slotsSheet, booking.slotId);
-  if (oldSlot) {
-    slotsSheet.getRange(oldSlot.row, oldSlot.statusCol + 1).setValue("available");
-  }
-  slotsSheet.getRange(newSlot.row, newSlot.statusCol + 1).setValue("booked");
+  const oldEvent = booking.eventId ? calendar.getEventById(booking.eventId) : null;
+  if (oldEvent) oldEvent.deleteEvent();
 
-  bookingsSheet.getRange(booking.row, booking.slotIdCol + 1).setValue(newSlotId);
-  bookingsSheet.getRange(booking.row, booking.dateCol + 1).setValue(newSlot.date);
-  bookingsSheet.getRange(booking.row, booking.timeCol + 1).setValue(newSlot.time);
+  const newEvent = calendar.createEvent(
+    `【LP予約】${booking.name}様`,
+    newSlotStart,
+    newSlotEnd,
+    { description: `電話番号: ${booking.phone}\nメール: ${booking.email}` }
+  );
+
+  const newDateStr = formatDate(newSlotStart);
+  const newTimeStr = formatTime(newSlotStart);
+
+  bookingsSheet.getRange(booking.row, booking.dateCol + 1).setValue(newDateStr);
+  bookingsSheet.getRange(booking.row, booking.timeCol + 1).setValue(newTimeStr);
+  bookingsSheet.getRange(booking.row, booking.eventIdCol + 1).setValue(newEvent.getId());
 
   notifyStaff({
-    slotDate: newSlot.date,
-    slotTime: newSlot.time,
+    slotDate: newDateStr,
+    slotTime: newTimeStr,
     name: booking.name,
     phone: booking.phone,
     email: booking.email,
     type: `日時変更（変更前: ${booking.date} ${booking.time}）`,
   });
 
-  return jsonResponse({ ok: true, date: newSlot.date, time: newSlot.time });
+  return jsonResponse({ ok: true, date: newDateStr, time: newTimeStr });
 }
 
 /* ---- キャンセル（来店前日23:59まで） ---- */
@@ -204,10 +236,10 @@ function cancelBooking(payload) {
 
   bookingsSheet.getRange(booking.row, booking.statusCol + 1).setValue("cancelled");
 
-  const slotsSheet = getSheet(SHEET_SLOTS);
-  const slot = findSlotRow(slotsSheet, booking.slotId);
-  if (slot) {
-    slotsSheet.getRange(slot.row, slot.statusCol + 1).setValue("available");
+  if (booking.eventId) {
+    const calendar = getReservationCalendar();
+    const event = calendar.getEventById(booking.eventId);
+    if (event) event.deleteEvent();
   }
 
   notifyStaff({
@@ -240,61 +272,92 @@ function getBookingByToken(token) {
   };
 }
 
+/* ---- 空き枠の計算（Googleカレンダーの予定の有無から算出） ---- */
+
+function getAvailableSlots() {
+  const calendar = getReservationCalendar();
+  const now = new Date();
+  const rangeEnd = new Date();
+  rangeEnd.setDate(rangeEnd.getDate() + LOOKAHEAD_DAYS);
+
+  const events = calendar.getEvents(now, rangeEnd);
+  const slots = [];
+
+  for (let d = 0; d < LOOKAHEAD_DAYS; d++) {
+    const day = new Date();
+    day.setDate(day.getDate() + d);
+    day.setHours(BUSINESS_START_HOUR, 0, 0, 0);
+
+    const dayLimit = new Date(day);
+    dayLimit.setHours(BUSINESS_END_HOUR, 0, 0, 0);
+
+    let slotStart = new Date(day);
+    while (true) {
+      const slotEnd = new Date(slotStart.getTime() + TREATMENT_MINUTES * 60000);
+      if (slotEnd > dayLimit) break;
+
+      if (slotStart > now && !overlapsAny(events, slotStart, slotEnd)) {
+        slots.push({
+          id: formatSlotId(slotStart),
+          date: formatDate(slotStart),
+          label: `${formatLabel(formatDate(slotStart))} ${formatTime(slotStart)}`,
+          sortKey: slotStart.getTime(),
+        });
+      }
+
+      slotStart = new Date(slotStart.getTime() + SLOT_INTERVAL_MINUTES * 60000);
+    }
+  }
+
+  slots.sort((a, b) => a.sortKey - b.sortKey);
+  return slots.slice(0, MAX_RETURNED_SLOTS).map(({ id, date, label }) => ({ id, date, label }));
+}
+
+function overlapsAny(events, start, end) {
+  return events.some((ev) => ev.getStartTime() < end && ev.getEndTime() > start);
+}
+
+function isRangeFree(calendar, start, end) {
+  return calendar.getEvents(start, end).length === 0;
+}
+
 /* ---- 共通ヘルパー ---- */
+
+function getReservationCalendar() {
+  return CalendarApp.getCalendarById(CALENDAR_ID);
+}
 
 function getSheet(name) {
   return SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name);
-}
-
-function findSlotRow(sheet, slotId) {
-  const data = sheet.getDataRange().getValues();
-  const header = data[0];
-  const idCol = header.indexOf("id");
-  const dateCol = header.indexOf("date");
-  const timeCol = header.indexOf("time");
-  const statusCol = header.indexOf("status");
-
-  for (let i = 1; i < data.length; i++) {
-    if (String(data[i][idCol]) === slotId) {
-      return {
-        row: i + 1,
-        date: formatDate(data[i][dateCol]),
-        time: formatTime(data[i][timeCol]),
-        status: data[i][statusCol],
-        statusCol,
-      };
-    }
-  }
-  return null;
 }
 
 function findBookingRow(sheet, token) {
   const data = sheet.getDataRange().getValues();
   const header = data[0];
   const tokenCol = header.indexOf("token");
-  const slotIdCol = header.indexOf("slotId");
   const dateCol = header.indexOf("date");
   const timeCol = header.indexOf("time");
   const nameCol = header.indexOf("name");
   const phoneCol = header.indexOf("phone");
   const emailCol = header.indexOf("email");
   const statusCol = header.indexOf("status");
+  const eventIdCol = header.indexOf("eventId");
 
   for (let i = 1; i < data.length; i++) {
     if (String(data[i][tokenCol]) === token) {
       return {
         row: i + 1,
-        slotId: String(data[i][slotIdCol]),
         date: formatDate(data[i][dateCol]),
-        time: formatTime(data[i][timeCol]),
+        time: formatTimeCell(data[i][timeCol]),
         name: data[i][nameCol],
         phone: data[i][phoneCol],
         email: data[i][emailCol],
         status: data[i][statusCol],
-        slotIdCol,
+        eventId: String(data[i][eventIdCol] || ""),
         dateCol,
         timeCol,
         statusCol,
+        eventIdCol,
       };
     }
   }
@@ -307,6 +370,18 @@ function isChangeAllowed(dateStr) {
   return dateStr > today;
 }
 
+// 空き枠の識別子。日時をそのままIDとして使う（例: 2026-09-16T12:30）。
+function formatSlotId(date) {
+  return Utilities.formatDate(date, Session.getScriptTimeZone(), "yyyy-MM-dd'T'HH:mm");
+}
+
+function parseSlotId(slotId) {
+  const m = slotId.match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})$/);
+  if (!m) return null;
+  const d = new Date(`${m[1]}T${m[2]}:00`);
+  return isNaN(d.getTime()) ? null : d;
+}
+
 function formatDate(value) {
   if (value instanceof Date) {
     return Utilities.formatDate(value, Session.getScriptTimeZone(), "yyyy-MM-dd");
@@ -314,9 +389,13 @@ function formatDate(value) {
   return String(value);
 }
 
+function formatTime(value) {
+  return Utilities.formatDate(value, Session.getScriptTimeZone(), "HH:mm");
+}
+
 // スプレッドシートのセルに "12:30" と入力すると時刻型として保存され、
 // getValues() ではDateオブジェクトとして返ってくるため文字列に整形する。
-function formatTime(value) {
+function formatTimeCell(value) {
   if (value instanceof Date) {
     return Utilities.formatDate(value, Session.getScriptTimeZone(), "HH:mm");
   }
@@ -329,44 +408,8 @@ function formatLabel(dateStr) {
 }
 
 function buildManageUrl(token) {
-  // ScriptApp.getService().getUrl() はWeb Appとしてデプロイ後のURLを返す。
-  // フロント側の manage.html にトークンを引き渡す形にするため、
-  // LP_BASE_URL を実際に公開するLPのドメインに書き換えて使う。
   const LP_BASE_URL = "https://kobaren01-maker.github.io/hadarevo-takadanobaba-lp";
   return `${LP_BASE_URL}/manage.html?t=${token}`;
-}
-
-function getAvailableSlots() {
-  const sheet = getSheet(SHEET_SLOTS);
-  const data = sheet.getDataRange().getValues();
-  const header = data[0];
-  const idCol = header.indexOf("id");
-  const dateCol = header.indexOf("date");
-  const timeCol = header.indexOf("time");
-  const statusCol = header.indexOf("status");
-
-  const now = new Date();
-  const slots = [];
-
-  for (let i = 1; i < data.length; i++) {
-    const row = data[i];
-    if (row[statusCol] !== "available") continue;
-
-    const dateStr = formatDate(row[dateCol]);
-    const timeStr = formatTime(row[timeCol]);
-    const dateTime = new Date(`${dateStr}T${timeStr}:00`);
-    if (dateTime < now) continue;
-
-    slots.push({
-      id: String(row[idCol]),
-      date: dateStr,
-      label: `${formatLabel(dateStr)} ${timeStr}`,
-      sortKey: dateTime.getTime(),
-    });
-  }
-
-  slots.sort((a, b) => a.sortKey - b.sortKey);
-  return slots.slice(0, MAX_RETURNED_SLOTS).map(({ id, date, label }) => ({ id, date, label }));
 }
 
 function notifyStaff(booking) {

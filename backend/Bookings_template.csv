@@ -1,1 +1,1 @@
-token,timestamp,slotId,date,time,name,phone,email,status,gender,age
+token,timestamp,date,time,name,phone,email,status,gender,age,eventId

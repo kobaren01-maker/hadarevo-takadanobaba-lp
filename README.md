@@ -56,17 +56,18 @@ python -m http.server 8000
 | `staff/` | スタッフ・施術・既存店舗の実写（`store-photo-01〜03.jpg`はBLOCK08の店内ギャラリー用、`staff.jpg`はBLOCK10.5のスタッフ紹介用） | `herb-peeling-treatment-01.jpg`, `store-photo-01.jpg`, `staff.jpg` |
 | `diagrams/` | 完成画像として制作する図解・レポートモック | `why-acne-repeats.png`, `skin-report-mock.png` |
 
-## 予約システムのセットアップ（Googleスプレッドシート + Apps Script）
+## 予約システムのセットアップ（Googleカレンダー + Apps Script）
 
-LP内の「空き状況を見て予約する」CTAは、Hot Pepper Beautyへ遷移させず、独自管理の予約枠データを使ってLP内で予約を完結させる仕組み。
+LP内の「空き状況を見て予約する」CTAは、Hot Pepper Beautyへ遷移させず、Googleカレンダーの予定の有無から自動計算した空き枠を使ってLP内で予約を完結させる仕組み。空き枠をスプレッドシートに手入力する必要はない。
 
-1. Googleスプレッドシートを新規作成し、`backend/AppsScript.gs` 冒頭のコメントに従って「Slots」「Bookings」の2シートを用意する（`backend/Slots_template.csv` / `backend/Bookings_template.csv` をそれぞれのシートにインポートするとヘッダー行とサンプル枠がそのまま入るので早い）。
-2. 拡張機能 > Apps Script に `backend/AppsScript.gs` の内容を貼り付け、`NOTIFY_EMAIL` を実際の通知先に書き換える。
-3. ウェブアプリとしてデプロイし、発行されたURLを `src/script.js` の `RESERVE_CONFIG.webAppUrl` に設定する。
-4. スタッフは「Slots」シートを直接編集して、LPに出す予約可能枠を追加・管理する。
-5. **重要な運用ルール**：Hot Pepper Beauty経由で予約が入った場合、スタッフは同じ日時の行を「Slots」シートで手動で `booked` に変更する。これによりLPとHPBの二重予約を防ぐ（HPBの空き状況をLP側が自動取得することはしない）。
-6. LP経由の予約が確定した通知はスタッフへメールで届く。Salon Boardへの登録は、その通知を受けてスタッフが手動で行う（自動連携は行わない）。
-7. `backend/AppsScript.gs` の `buildManageUrl()` 内の `LP_BASE_URL` を、実際に公開するLPのURL（`src/`が置かれるドメイン）に書き換える。これにより、予約完了時に発行される管理リンクが正しい `manage.html` を指すようになる。
+1. Googleカレンダーで予約専用のカレンダーを新規作成する（例：「肌REVO高田馬場 予約」）。「設定と共有」からカレンダーIDをコピーする。
+2. Googleスプレッドシートを新規作成し、`backend/AppsScript.gs` 冒頭のコメントに従って「Bookings」シートを用意する（`backend/Bookings_template.csv` をインポートするとヘッダー行がそのまま入るので早い）。
+3. 拡張機能 > Apps Script に `backend/AppsScript.gs` の内容を貼り付け、`CALENDAR_ID` を手順1でコピーしたカレンダーIDに、`NOTIFY_EMAIL` を実際の通知先に書き換える。
+4. ウェブアプリとしてデプロイし（Googleカレンダーへのアクセス許可が求められるので許可する）、発行されたURLを `src/script.js` の `RESERVE_CONFIG.webAppUrl` に設定する。
+5. **空き枠の管理**：営業時間（11:00〜20:00）のうち、予約専用カレンダーに予定が入っていない時間が自動的にLPの空き枠になる。定休日にしたい日は、その日の営業時間帯に「定休日」等の予定を1件入れるだけでよい（曜日を固定していないため、不定休にもそのまま対応できる）。
+6. **重要な運用ルール**：Hot Pepper Beauty経由で予約が入った場合、スタッフはこの予約専用カレンダーに同じ日時の予定を1件手動で追加する。これによりLPとHPBの二重予約を防ぐ（HPBの空き状況をLP側が自動取得することはしない）。
+7. LP経由の予約が確定した通知はスタッフへメールで届く。Salon Boardへの登録は、その通知を受けてスタッフが手動で行う（自動連携は行わない）。
+8. `backend/AppsScript.gs` の `buildManageUrl()` 内の `LP_BASE_URL` を、実際に公開するLPのURL（`src/`が置かれるドメイン）に書き換える。これにより、予約完了時に発行される管理リンクが正しい `manage.html` を指すようになる。
 
 ### 予約の日時変更・キャンセル（manage.html）
 
