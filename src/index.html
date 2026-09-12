@@ -468,9 +468,10 @@ fbq('track', 'PageView');
     </label>
 
     <label class="reserve__field">
-      メールアドレス<span class="opt">任意</span>
-      <input type="email" name="email" autocomplete="email" />
+      メールアドレス<span class="req">必須</span>
+      <input type="email" name="email" required autocomplete="email" />
     </label>
+    <p class="reserve__field-note">予約確認メールに、日時変更・キャンセル用のページをお送りします。</p>
 
     <button type="submit" class="cta-button reserve__submit" data-reserve-submit>この日時で予約する</button>
     <p class="reserve__error" data-reserve-error hidden></p>

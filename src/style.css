@@ -1236,23 +1236,21 @@ a {
   margin-bottom: 16px;
 }
 
-.reserve__field .req,
-.reserve__field .opt {
+.reserve__field .req {
   font-weight: 700;
   font-size: 0.68rem;
   margin-left: 6px;
   padding: 2px 8px;
   border-radius: 999px;
-}
-
-.reserve__field .req {
   color: var(--red-deep);
   border: 1px solid var(--red);
 }
 
-.reserve__field .opt {
+.reserve__field-note {
+  font-size: 0.75rem;
+  font-weight: 400;
   color: var(--text-sub);
-  border: 1px solid var(--border);
+  margin: -10px 0 16px;
 }
 
 .reserve__field input {

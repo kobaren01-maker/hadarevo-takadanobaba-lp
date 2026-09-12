@@ -89,7 +89,7 @@ function createBooking(payload) {
   const phone = String(payload.phone || "").trim();
   const email = String(payload.email || "").trim();
 
-  if (!slotId || !name || !phone) {
+  if (!slotId || !name || !phone || !email) {
     return jsonResponse({ ok: false, message: "必須項目が不足しています。" });
   }
 
@@ -124,7 +124,7 @@ function createBooking(payload) {
 
   const manageUrl = buildManageUrl(token);
   notifyStaff({ slotDate: slot.date, slotTime: slot.time, name, phone, email, type: "新規予約" });
-  if (email) notifyCustomer(email, { date: slot.date, time: slot.time, manageUrl });
+  notifyCustomer(email, { date: slot.date, time: slot.time, manageUrl });
 
   return jsonResponse({ ok: true, token, manageUrl, date: slot.date, time: slot.time });
 }
