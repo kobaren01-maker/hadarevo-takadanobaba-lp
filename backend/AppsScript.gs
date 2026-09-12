@@ -43,6 +43,11 @@ const SHEET_BOOKINGS = "Bookings";
 const NOTIFY_EMAIL = "revi.kds@gmail.com";
 const MAX_RETURNED_SLOTS = 30;
 
+const STORE_ADDRESS = "東京都新宿区高田馬場4-9-18 畔上セブンビル402";
+const STORE_MAP_URL =
+  "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(STORE_ADDRESS);
+const STORE_PHONE = "070-8390-6769";
+
 function doGet(e) {
   const action = e && e.parameter && e.parameter.action;
   if (action === "slots") {
@@ -380,8 +385,18 @@ function notifyCustomer(email, info) {
   const body = [
     `ご予約日時: ${info.date} ${info.time}`,
     "",
-    "日時の変更・キャンセルは、来店前日まで下記ページから行えます。",
+    "■ 店舗情報",
+    `住所: ${STORE_ADDRESS}`,
+    `地図: ${STORE_MAP_URL}`,
+    "",
+    "■ 日時変更・キャンセルについて",
+    "来店前日まで、下記ページから何度でも日時変更・キャンセルが可能です。",
     info.manageUrl,
+    "",
+    "■ ご予約にあたっての注意事項",
+    "・当日のキャンセルはキャンセル料100%をいただきます。",
+    `・遅れる場合は ${STORE_PHONE} までご連絡ください。`,
+    "・1か月以内に整形手術を受けた方、または何らかの治療を行っている方は、事前に医師にご確認をお願いいたします。",
     "",
     "当日の変更・キャンセルは店舗まで直接ご連絡ください。",
   ].join("\n");
