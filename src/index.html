@@ -440,10 +440,11 @@ fbq('track', 'PageView');
   </button>
 
   <div class="reserve__calendar" data-reserve-calendar hidden>
-    <label class="reserve__field">
-      日付を選択
+    <p class="reserve__calendar-label">日付を選択</p>
+    <div class="reserve__calendar-input-wrap">
       <input type="date" data-reserve-date-input />
-    </label>
+    </div>
+    <p class="reserve__calendar-hint">▲ タップするとカレンダーが開きます</p>
     <div class="reserve__slots" data-reserve-date-slots></div>
     <p class="reserve__calendar-empty" data-reserve-calendar-empty hidden>
       この日はご案内できる空き枠がありません。別の日付をお試しください。

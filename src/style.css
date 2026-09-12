@@ -1123,15 +1123,16 @@ a {
 }
 
 .reserve__slot {
-  border: 1px solid var(--border);
-  background: var(--cream);
-  color: var(--text);
+  border: 1.5px solid var(--mauve-deep);
+  background: #fff;
+  color: var(--mauve-deep);
   font-weight: 700;
   font-size: 0.9rem;
   padding: 12px 18px;
   border-radius: 999px;
   min-width: 44px;
   min-height: 44px;
+  box-shadow: 0 2px 6px rgba(95, 78, 102, 0.12);
 }
 
 .reserve__slot.is-selected {
@@ -1172,15 +1173,29 @@ a {
   padding-top: 24px;
 }
 
+.reserve__calendar-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
 .reserve__calendar [data-reserve-date-input] {
   display: block;
   width: 100%;
-  margin-top: 8px;
-  padding: 12px 14px;
+  padding: 14px;
   font-size: 1rem;
   font-family: inherit;
-  border: 1px solid var(--border);
+  color: var(--text);
+  background: #fff;
+  border: 1.5px solid var(--mauve-deep);
   border-radius: var(--radius);
+  box-shadow: 0 2px 6px rgba(95, 78, 102, 0.12);
+}
+
+.reserve__calendar-hint {
+  margin: 8px 0 0;
+  font-size: 0.75rem;
+  color: var(--mauve-deep);
 }
 
 .reserve__calendar .reserve__slots {
