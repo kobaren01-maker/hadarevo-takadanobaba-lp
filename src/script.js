@@ -122,7 +122,6 @@ function initReservation() {
 
   const statusEl = root.querySelector("[data-reserve-status]");
   const slotsEl = root.querySelector("[data-reserve-slots]");
-  const moreBtn = root.querySelector("[data-reserve-more]");
   const calendarToggleBtn = root.querySelector("[data-reserve-calendar-toggle]");
   const calendarEl = root.querySelector("[data-reserve-calendar]");
   const dateInput = root.querySelector("[data-reserve-date-input]");
@@ -134,15 +133,9 @@ function initReservation() {
   const completeEl = root.querySelector("[data-reserve-complete]");
 
   let allSlots = [];
-  let expanded = false;
   let selectedSlot = null;
 
   fetchSlots();
-
-  moreBtn.addEventListener("click", () => {
-    expanded = true;
-    renderSlots();
-  });
 
   calendarToggleBtn.addEventListener("click", () => {
     calendarEl.hidden = !calendarEl.hidden;
@@ -176,7 +169,6 @@ function initReservation() {
     if (allSlots.length === 0) {
       statusEl.textContent = "現在ご案内できる空き枠がありません。お電話にてお問い合わせください。";
       slotsEl.hidden = true;
-      moreBtn.hidden = true;
       calendarToggleBtn.hidden = true;
       return;
     }
@@ -185,7 +177,7 @@ function initReservation() {
     slotsEl.hidden = false;
     slotsEl.innerHTML = "";
 
-    const visible = expanded ? allSlots : allSlots.slice(0, RESERVE_CONFIG.initialSlotCount);
+    const visible = allSlots.slice(0, RESERVE_CONFIG.initialSlotCount);
 
     visible.forEach((slot) => {
       const btn = document.createElement("button");
@@ -200,7 +192,6 @@ function initReservation() {
       slotsEl.appendChild(btn);
     });
 
-    moreBtn.hidden = expanded || allSlots.length <= RESERVE_CONFIG.initialSlotCount;
     calendarToggleBtn.hidden = false;
     dateInput.min = allSlots[0].date;
   }
@@ -292,7 +283,6 @@ function initReservation() {
       allSlots = allSlots.filter((s) => s.id !== selectedSlot.id);
       form.hidden = true;
       slotsEl.hidden = true;
-      moreBtn.hidden = true;
       calendarToggleBtn.hidden = true;
       calendarEl.hidden = true;
       statusEl.hidden = true;
