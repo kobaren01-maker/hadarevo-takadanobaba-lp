@@ -43,7 +43,7 @@
  *   （電話等、店舗側の別対応に誘導する）。
  */
 
-const CALENDAR_ID = "REPLACE_RESERVATION_CALENDAR_ID";
+const CALENDAR_ID = "hadarevo.takadanobaba@gmail.com";
 const SHEET_BOOKINGS = "Bookings";
 // 複数人に通知したい場合はカンマ区切りで追加できる（例: "a@example.com,b@example.com"）
 const NOTIFY_EMAIL = "revi.kds@gmail.com";
