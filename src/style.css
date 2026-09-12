@@ -1285,11 +1285,22 @@ a {
   line-height: 1.9;
 }
 
+.reserve__complete-title {
+  margin: 0 0 8px;
+}
+
+.reserve__complete-mail-check {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--mauve-deep);
+  margin: 12px 0;
+}
+
 .reserve__complete-note {
   font-size: 0.78rem;
   font-weight: 400;
   color: var(--text-sub);
-  word-break: break-all;
+  line-height: 1.6;
 }
 
 /* ==========================================================================

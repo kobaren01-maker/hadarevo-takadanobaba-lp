@@ -235,13 +235,7 @@ function initReservation() {
   function renderComplete(data) {
     const detailEl = root.querySelector("[data-reserve-complete-detail]");
     if (!detailEl) return;
-    if (data.manageUrl) {
-      detailEl.innerHTML = `ご予約日時：${escapeHtml(selectedSlot.label)}<br />予約管理リンク：<a href="${escapeHtml(
-        data.manageUrl
-      )}">${escapeHtml(data.manageUrl)}</a>（このリンクは大切に保存してください）`;
-    } else {
-      detailEl.textContent = `ご予約日時：${selectedSlot.label}`;
-    }
+    detailEl.textContent = `ご予約日時：${selectedSlot.label}`;
   }
 
   function escapeHtml(str) {
