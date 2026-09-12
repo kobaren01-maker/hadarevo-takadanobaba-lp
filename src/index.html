@@ -473,6 +473,21 @@ fbq('track', 'PageView');
     </label>
     <p class="reserve__field-note">予約確認メールに、日時変更・キャンセル用のページをお送りします。</p>
 
+    <label class="reserve__field">
+      性別<span class="req">必須</span>
+      <select name="gender" required>
+        <option value="" disabled selected>選択してください</option>
+        <option value="女性">女性</option>
+        <option value="男性">男性</option>
+        <option value="回答しない">回答しない</option>
+      </select>
+    </label>
+
+    <label class="reserve__field">
+      年齢<span class="req">必須</span>
+      <input type="number" name="age" required inputmode="numeric" min="1" max="120" />
+    </label>
+
     <button type="submit" class="cta-button reserve__submit" data-reserve-submit>この日時で予約する</button>
     <p class="reserve__error" data-reserve-error hidden></p>
   </form>

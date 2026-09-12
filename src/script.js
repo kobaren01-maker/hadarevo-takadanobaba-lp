@@ -273,6 +273,8 @@ function initReservation() {
       name: formData.get("name"),
       phone: formData.get("phone"),
       email: formData.get("email") || "",
+      gender: formData.get("gender") || "",
+      age: formData.get("age") || "",
     };
 
     try {

@@ -15,7 +15,7 @@
  *        手動で "booked" に変更する（LP側との二重予約を防ぐための運用）。
  *
  *    シート「Bookings」（ヘッダー行必須）
- *      token | timestamp | slotId | date | time | name | phone | email | status
+ *      token | timestamp | slotId | date | time | name | phone | email | status | gender | age
  *      - LPからの予約はこのシートに自動追記される。
  *      - status は "confirmed" または "cancelled"。
  *      - token は予約者本人がLPの予約管理ページ（src/manage.html）から
@@ -93,8 +93,10 @@ function createBooking(payload) {
   const name = String(payload.name || "").trim();
   const phone = String(payload.phone || "").trim();
   const email = String(payload.email || "").trim();
+  const gender = String(payload.gender || "").trim();
+  const age = String(payload.age || "").trim();
 
-  if (!slotId || !name || !phone || !email) {
+  if (!slotId || !name || !phone || !email || !gender || !age) {
     return jsonResponse({ ok: false, message: "必須項目が不足しています。" });
   }
 
@@ -125,10 +127,12 @@ function createBooking(payload) {
     phone,
     email,
     "confirmed",
+    gender,
+    age,
   ]);
 
   const manageUrl = buildManageUrl(token);
-  notifyStaff({ slotDate: slot.date, slotTime: slot.time, name, phone, email, type: "新規予約" });
+  notifyStaff({ slotDate: slot.date, slotTime: slot.time, name, phone, email, gender, age, type: "新規予約" });
   notifyCustomer(email, { date: slot.date, time: slot.time, manageUrl });
 
   return jsonResponse({ ok: true, token, manageUrl, date: slot.date, time: slot.time });
@@ -373,6 +377,8 @@ function notifyStaff(booking) {
     `お名前: ${booking.name}`,
     `電話番号: ${booking.phone}`,
     `メール: ${booking.email || "(未入力)"}`,
+    `性別: ${booking.gender || "(未入力)"}`,
+    `年齢: ${booking.age || "(未入力)"}`,
     "",
     "Salon Boardへの反映を忘れずに行ってください。",
   ].join("\n");
