@@ -323,7 +323,7 @@ function buildManageUrl(token) {
   // ScriptApp.getService().getUrl() はWeb Appとしてデプロイ後のURLを返す。
   // フロント側の manage.html にトークンを引き渡す形にするため、
   // LP_BASE_URL を実際に公開するLPのドメインに書き換えて使う。
-  const LP_BASE_URL = "REPLACE_LP_BASE_URL"; // 例: https://example.com/hadarevo-takadanobaba-lp/src
+  const LP_BASE_URL = "https://kobaren01-maker.github.io/hadarevo-takadanobaba-lp";
   return `${LP_BASE_URL}/manage.html?t=${token}`;
 }
 
