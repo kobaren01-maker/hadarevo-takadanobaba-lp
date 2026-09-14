@@ -55,6 +55,7 @@ const SLOT_INTERVAL_MINUTES = 30; // 候補として提示する開始時刻の�
 const LOOKAHEAD_DAYS = 21; // 何日先まで空き枠を計算するか
 const MAX_RETURNED_SLOTS = 30;
 
+const STORE_DISPLAY_NAME = "肌REVO高田馬場店";
 const STORE_ADDRESS = "東京都新宿区高田馬場4-9-18 畔上セブンビル402";
 const STORE_MAP_URL =
   "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(STORE_ADDRESS);
@@ -426,7 +427,7 @@ function notifyStaff(booking) {
     "Salon Boardへの反映を忘れずに行ってください。",
   ].join("\n");
 
-  MailApp.sendEmail(NOTIFY_EMAIL, subject, body);
+  MailApp.sendEmail(NOTIFY_EMAIL, subject, body, { name: STORE_DISPLAY_NAME });
 }
 
 function notifyCustomer(email, info) {
@@ -450,7 +451,7 @@ function notifyCustomer(email, info) {
     "当日の変更・キャンセルは店舗まで直接ご連絡ください。",
   ].join("\n");
 
-  MailApp.sendEmail(email, subject, body);
+  MailApp.sendEmail(email, subject, body, { name: STORE_DISPLAY_NAME });
 }
 
 function jsonResponse(obj) {
