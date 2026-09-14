@@ -46,7 +46,7 @@
 const CALENDAR_ID = "hadarevo.takadanobaba@gmail.com";
 const SHEET_BOOKINGS = "Bookings";
 // 複数人に通知したい場合はカンマ区切りで追加できる（例: "a@example.com,b@example.com"）
-const NOTIFY_EMAIL = "revi.kds@gmail.com";
+const NOTIFY_EMAIL = "revi.kds@gmail.com,murase416@gmail.com,rukam0225@gmail.com";
 
 const BUSINESS_START_HOUR = 11; // 営業開始 11:00
 const BUSINESS_END_HOUR = 20; // 営業終了 20:00
