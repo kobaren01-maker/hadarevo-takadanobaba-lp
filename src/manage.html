@@ -29,7 +29,25 @@
     </p>
   </div>
 
-  <div class="reserve__slots" data-manage-slots hidden></div>
+  <div class="manage__reschedule" data-manage-reschedule-panel hidden>
+    <div class="reserve__slots" data-manage-slots></div>
+
+    <button type="button" class="reserve__calendar-toggle" data-manage-calendar-toggle hidden>
+      ご希望の日程がない場合は、カレンダーから選ぶ
+    </button>
+
+    <div class="reserve__calendar" data-manage-calendar hidden>
+      <p class="reserve__calendar-label">日付を選択</p>
+      <div class="reserve__calendar-input-wrap">
+        <input type="date" data-manage-date-input />
+      </div>
+      <p class="reserve__calendar-hint">▲ タップするとカレンダーが開きます</p>
+      <div class="reserve__slots" data-manage-date-slots></div>
+      <p class="reserve__calendar-empty" data-manage-calendar-empty hidden>
+        この日はご案内できる空き枠がありません。別の日付をお試しください。
+      </p>
+    </div>
+  </div>
 
   <p class="manage__result" data-manage-result hidden></p>
 </section>

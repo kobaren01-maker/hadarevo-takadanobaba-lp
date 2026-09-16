@@ -1179,7 +1179,7 @@ a {
   margin: 0 0 8px;
 }
 
-.reserve__calendar [data-reserve-date-input] {
+.reserve__calendar input[type="date"] {
   display: block;
   width: 100%;
   padding: 14px;

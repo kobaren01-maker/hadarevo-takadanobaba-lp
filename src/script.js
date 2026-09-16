@@ -321,8 +321,16 @@ function initManage() {
   const deadlineNoteEl = root.querySelector("[data-manage-deadline-note]");
   const rescheduleBtn = root.querySelector("[data-manage-reschedule]");
   const cancelBtn = root.querySelector("[data-manage-cancel]");
+  const reschedulePanel = root.querySelector("[data-manage-reschedule-panel]");
   const slotsEl = root.querySelector("[data-manage-slots]");
+  const calendarToggleBtn = root.querySelector("[data-manage-calendar-toggle]");
+  const calendarEl = root.querySelector("[data-manage-calendar]");
+  const dateInput = root.querySelector("[data-manage-date-input]");
+  const dateSlotsEl = root.querySelector("[data-manage-date-slots]");
+  const calendarEmptyEl = root.querySelector("[data-manage-calendar-empty]");
   const resultEl = root.querySelector("[data-manage-result]");
+
+  let allSlots = [];
 
   if (!token) {
     statusEl.textContent = "予約管理リンクが正しくありません。予約完了時に届いたリンクからアクセスしてください。";
@@ -336,29 +344,70 @@ function initManage() {
   loadBooking();
 
   rescheduleBtn.addEventListener("click", async () => {
-    slotsEl.hidden = false;
+    reschedulePanel.hidden = false;
     slotsEl.innerHTML = "読み込み中…";
     try {
       const res = await fetch(`${RESERVE_CONFIG.webAppUrl}?action=slots`);
       const data = await res.json();
-      const slots = Array.isArray(data.slots) ? data.slots : [];
-      slotsEl.innerHTML = "";
-      if (slots.length === 0) {
-        slotsEl.textContent = "現在ご案内できる空き枠がありません。お電話にてお問い合わせください。";
-        return;
-      }
-      slots.forEach((slot) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "reserve__slot";
-        btn.textContent = slot.label;
-        btn.addEventListener("click", () => doReschedule(slot.id, slot.label));
-        slotsEl.appendChild(btn);
-      });
+      allSlots = Array.isArray(data.slots) ? data.slots : [];
+      renderQuickSlots();
     } catch (err) {
       slotsEl.textContent = "空き状況の取得に失敗しました。時間をおいて再度お試しください。";
     }
   });
+
+  calendarToggleBtn.addEventListener("click", () => {
+    calendarEl.hidden = !calendarEl.hidden;
+  });
+
+  dateInput.addEventListener("change", () => {
+    renderDateSlots(dateInput.value);
+  });
+
+  function renderQuickSlots() {
+    slotsEl.innerHTML = "";
+
+    if (allSlots.length === 0) {
+      slotsEl.textContent = "現在ご案内できる空き枠がありません。お電話にてお問い合わせください。";
+      calendarToggleBtn.hidden = true;
+      return;
+    }
+
+    allSlots.slice(0, RESERVE_CONFIG.initialSlotCount).forEach((slot) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "reserve__slot";
+      btn.textContent = slot.label;
+      btn.addEventListener("click", () => doReschedule(slot.id, slot.label));
+      slotsEl.appendChild(btn);
+    });
+
+    calendarToggleBtn.hidden = false;
+    dateInput.min = allSlots[0].date;
+  }
+
+  function renderDateSlots(dateStr) {
+    calendarEmptyEl.hidden = true;
+    dateSlotsEl.innerHTML = "";
+
+    if (!dateStr) return;
+
+    const matches = allSlots.filter((slot) => slot.date === dateStr);
+
+    if (matches.length === 0) {
+      calendarEmptyEl.hidden = false;
+      return;
+    }
+
+    matches.forEach((slot) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "reserve__slot";
+      btn.textContent = slot.label;
+      btn.addEventListener("click", () => doReschedule(slot.id, slot.label));
+      dateSlotsEl.appendChild(btn);
+    });
+  }
 
   cancelBtn.addEventListener("click", () => {
     if (!window.confirm("この予約をキャンセルします。よろしいですか？")) return;
@@ -402,7 +451,7 @@ function initManage() {
       const data = await res.json();
       if (!data.ok) throw new Error(data.message);
 
-      slotsEl.hidden = true;
+      reschedulePanel.hidden = true;
       datetimeEl.textContent = newLabel;
       resultEl.textContent = "日時を変更しました。";
       resultEl.hidden = false;
