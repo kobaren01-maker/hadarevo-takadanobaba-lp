@@ -289,33 +289,67 @@ function getAvailableSlots() {
     day.setDate(day.getDate() + d);
     day.setHours(BUSINESS_START_HOUR, 0, 0, 0);
 
-    const dayLimit = new Date(day);
-    dayLimit.setHours(BUSINESS_END_HOUR, 0, 0, 0);
+    const dayEnd = new Date(day);
+    dayEnd.setHours(BUSINESS_END_HOUR, 0, 0, 0);
 
-    let slotStart = new Date(day);
-    while (true) {
-      const slotEnd = new Date(slotStart.getTime() + TREATMENT_MINUTES * 60000);
-      if (slotEnd > dayLimit) break;
+    const windowStart = day < now ? now : day;
+    if (windowStart >= dayEnd) continue;
 
-      if (slotStart > now && !overlapsAny(events, slotStart, slotEnd)) {
+    // 営業時間内で、この日のカレンダー予定と重なる区間をマージして「埋まっている区間」を作る
+    const busy = events
+      .filter((ev) => ev.getEndTime() > windowStart && ev.getStartTime() < dayEnd)
+      .map((ev) => ({
+        start: ev.getStartTime() < windowStart ? windowStart : ev.getStartTime(),
+        end: ev.getEndTime() > dayEnd ? dayEnd : ev.getEndTime(),
+      }))
+      .sort((a, b) => a.start - b.start);
+
+    const merged = [];
+    busy.forEach((b) => {
+      const last = merged[merged.length - 1];
+      if (last && b.start <= last.end) {
+        if (b.end > last.end) last.end = b.end;
+      } else {
+        merged.push({ start: b.start, end: b.end });
+      }
+    });
+
+    // 空き区間（予定と予定の間、または予定がない区間）を算出
+    const gaps = [];
+    let cursor = windowStart;
+    merged.forEach((b) => {
+      if (b.start > cursor) gaps.push({ start: cursor, end: b.start });
+      if (b.end > cursor) cursor = b.end;
+    });
+    if (cursor < dayEnd) gaps.push({ start: cursor, end: dayEnd });
+
+    // 各空き区間の開始時刻ちょうどから候補を詰めて生成する（予約直後の端数時間を無駄にしない）。
+    // ただし「現在時刻」による打ち切りだけは次の30分区切りに切り上げる（今すぐ予約を避けるため）。
+    gaps.forEach((gap) => {
+      let slotStart = new Date(gap.start);
+      if (gap.start.getTime() === windowStart.getTime() && windowStart.getTime() === now.getTime()) {
+        const rounded = Math.ceil(slotStart.getMinutes() / SLOT_INTERVAL_MINUTES) * SLOT_INTERVAL_MINUTES;
+        slotStart.setMinutes(rounded, 0, 0);
+      }
+
+      while (true) {
+        const slotEnd = new Date(slotStart.getTime() + TREATMENT_MINUTES * 60000);
+        if (slotEnd > gap.end) break;
+
         slots.push({
           id: formatSlotId(slotStart),
           date: formatDate(slotStart),
           label: `${formatLabel(formatDate(slotStart))} ${formatTime(slotStart)}`,
           sortKey: slotStart.getTime(),
         });
-      }
 
-      slotStart = new Date(slotStart.getTime() + SLOT_INTERVAL_MINUTES * 60000);
-    }
+        slotStart = new Date(slotStart.getTime() + SLOT_INTERVAL_MINUTES * 60000);
+      }
+    });
   }
 
   slots.sort((a, b) => a.sortKey - b.sortKey);
   return slots.slice(0, MAX_RETURNED_SLOTS).map(({ id, date, label }) => ({ id, date, label }));
-}
-
-function overlapsAny(events, start, end) {
-  return events.some((ev) => ev.getStartTime() < end && ev.getEndTime() > start);
 }
 
 function isRangeFree(calendar, start, end) {
