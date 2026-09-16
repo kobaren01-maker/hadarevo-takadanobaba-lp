@@ -415,8 +415,13 @@ function initManage() {
   });
 
   async function loadBooking() {
+    const slowNotice = setTimeout(() => {
+      statusEl.textContent = "ご予約を確認しています…（時間がかかる場合があります。しばらくお待ちください）";
+    }, 4000);
+
     try {
       const res = await fetch(`${RESERVE_CONFIG.webAppUrl}?action=booking&token=${encodeURIComponent(token)}`);
+      clearTimeout(slowNotice);
       const data = await res.json();
       if (!data.ok) {
         statusEl.textContent = data.message || "予約が見つかりませんでした。";
@@ -436,6 +441,7 @@ function initManage() {
         deadlineNoteEl.hidden = false;
       }
     } catch (err) {
+      clearTimeout(slowNotice);
       statusEl.textContent = "予約の確認に失敗しました。時間をおいて再度お試しください。";
     }
   }

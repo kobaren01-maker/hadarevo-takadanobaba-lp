@@ -493,3 +493,17 @@ function jsonResponse(obj) {
     ContentService.MimeType.JSON
   );
 }
+
+/**
+ * Apps Scriptは一定時間アクセスがないと休止し、次のアクセス時（＝お客様が
+ * LPやmanage.htmlを開いた瞬間）に起動し直すため数十秒〜数分の遅延が発生する。
+ * これを避けるため、時間主導型トリガーで数分おきにこの関数を実行し、
+ * スクリプトを起動したままにしておく。
+ *
+ * 設定方法：Apps Scriptエディタ左メニューの時計アイコン「トリガー」→
+ * 「トリガーを追加」→ 実行する関数「keepAlive」→ イベントのソース
+ * 「時間主導型」→ 分ベースのタイマー→ 「5分おき」を選んで保存。
+ */
+function keepAlive() {
+  getReservationCalendar();
+}
