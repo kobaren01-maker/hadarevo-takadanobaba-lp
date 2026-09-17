@@ -904,9 +904,10 @@ a {
 }
 
 .open-notice__address {
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   color: var(--text-sub);
   margin: 0 0 24px;
+  white-space: nowrap;
 }
 
 .open-notice__sub-visual {
