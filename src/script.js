@@ -290,6 +290,9 @@ function initReservation() {
       renderComplete(data);
 
       if (typeof fbq === "function") {
+        // Schedule: Metaの標準イベント（予約・来店予約の完了）。広告の最適化・
+        // コンバージョン計測に使えるよう、カスタムイベントとあわせて発火する。
+        fbq("track", "Schedule", { content_name: selectedSlot.label });
         fbq("trackCustom", "ReservationComplete", { slot: selectedSlot.label });
       }
     } catch (err) {
