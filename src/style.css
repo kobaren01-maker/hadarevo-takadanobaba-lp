@@ -900,7 +900,13 @@ a {
   gap: 6px;
   font-weight: 700;
   font-size: 0.95rem;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
+}
+
+.open-notice__address {
+  font-size: 0.82rem;
+  color: var(--text-sub);
+  margin: 0 0 24px;
 }
 
 .open-notice__sub-visual {
@@ -1093,10 +1099,12 @@ a {
 }
 
 .reserve__assurance li {
-  font-size: 0.8rem;
-  color: var(--text-sub);
-  padding-left: 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  padding-left: 22px;
   position: relative;
+  line-height: 1.5;
 }
 
 .reserve__assurance li::before {
@@ -1109,9 +1117,9 @@ a {
 }
 
 .reserve__payment-label {
-  font-size: 0.78rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  color: var(--text-sub);
+  color: var(--text);
   margin: 0 0 8px;
 }
 
@@ -1120,10 +1128,21 @@ a {
   margin: 0 auto 28px;
 }
 
+.reserve__panel {
+  max-width: 480px;
+  margin: 0 auto;
+  background: #fff;
+  border: 1.5px solid var(--mauve-deep);
+  border-radius: var(--radius-card);
+  padding: 28px 20px;
+  box-shadow: 0 6px 20px rgba(95, 78, 102, 0.14);
+}
+
 .reserve__status {
-  font-size: 0.85rem;
-  color: var(--text-sub);
-  margin: 8px 0 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 20px;
 }
 
 .reserve__slots {
