@@ -60,7 +60,12 @@
 
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-behavior: smooth;
+  /* 以前は scroll-behavior: smooth だったが、ページが非常に長く（約18,000px）、
+     アニメーション中に下部の画像が順次読み込まれてレイアウトの高さが変化するため、
+     スムーズスクロールの目標位置がずれてアニメーションが途中で止まり、
+     固定CTAバーの「#reserve」ジャンプが実質的に効かなくなる不具合が発生していた。
+     即時ジャンプに変更し、レイアウトシフトの影響を受けないようにする。 */
+  scroll-behavior: auto;
 }
 
 body {
