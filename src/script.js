@@ -72,20 +72,25 @@ function initReviewScroller() {
   let resumeTimer = null;
   const SPEED = 0.35; // px / frame（ゆっくり）
 
-  scroller.addEventListener("pointerdown", () => {
+  function pause() {
     paused = true;
     if (resumeTimer) clearTimeout(resumeTimer);
-  });
-  scroller.addEventListener("pointerup", () => {
-    resumeTimer = setTimeout(() => (paused = false), 2500);
-  });
-  scroller.addEventListener("touchstart", () => {
-    paused = true;
+  }
+  function scheduleResume() {
     if (resumeTimer) clearTimeout(resumeTimer);
-  }, { passive: true });
-  scroller.addEventListener("touchend", () => {
     resumeTimer = setTimeout(() => (paused = false), 2500);
-  });
+  }
+
+  scroller.addEventListener("pointerdown", pause);
+  scroller.addEventListener("pointerup", scheduleResume);
+  scroller.addEventListener("pointercancel", scheduleResume);
+  scroller.addEventListener("touchstart", pause, { passive: true });
+  scroller.addEventListener("touchend", scheduleResume);
+  // touchendではなくtouchcancelが発火するケース（指を触れたまま
+  // ページを縦スクロールした場合など）でも再開できるようにする。
+  // これを拾わないと一度触れただけでpausedがtrueのまま固まり、
+  // 以後永久に流れなくなる不具合になる。
+  scroller.addEventListener("touchcancel", scheduleResume);
 
   function tick() {
     if (!paused) {
