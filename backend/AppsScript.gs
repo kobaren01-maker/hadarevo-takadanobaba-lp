@@ -133,7 +133,7 @@ function createBooking(payload) {
     slotEnd,
     { description: `電話番号: ${phone}\nメール: ${email}\n性別: ${gender}\n年齢: ${age}` }
   );
-  CacheService.getScriptCache().remove(SLOTS_CACHE_KEY);
+  refreshSlotsCache();
 
   const dateStr = formatDate(slotStart);
   const timeStr = formatTime(slotStart);
@@ -199,7 +199,7 @@ function rescheduleBooking(payload) {
     newSlotEnd,
     { description: `電話番号: ${booking.phone}\nメール: ${booking.email}` }
   );
-  CacheService.getScriptCache().remove(SLOTS_CACHE_KEY);
+  refreshSlotsCache();
 
   const newDateStr = formatDate(newSlotStart);
   const newTimeStr = formatTime(newSlotStart);
@@ -244,7 +244,7 @@ function cancelBooking(payload) {
     const event = calendar.getEventById(booking.eventId);
     if (event) event.deleteEvent();
   }
-  CacheService.getScriptCache().remove(SLOTS_CACHE_KEY);
+  refreshSlotsCache();
 
   notifyStaff({
     slotDate: booking.date,
@@ -279,15 +279,24 @@ function getBookingByToken(token) {
 /* ---- 空き枠の計算（Googleカレンダーの予定の有無から算出） ---- */
 
 const SLOTS_CACHE_KEY = "availableSlots";
-const SLOTS_CACHE_SECONDS = 30;
+// keepAliveトリガー（5分おき）がこのキャッシュを作り置きするため、
+// トリガーが多少遅れても切れないよう余裕を持たせている。
+const SLOTS_CACHE_SECONDS = 600;
 
 function getAvailableSlots() {
   const cache = CacheService.getScriptCache();
   const cached = cache.get(SLOTS_CACHE_KEY);
   if (cached) return JSON.parse(cached);
 
+  const slots = refreshSlotsCache();
+  return slots;
+}
+
+// 空き枠を計算し直してキャッシュに書き込む。keepAliveトリガー（5分おき）と、
+// 予約の作成・変更・キャンセル直後（キャッシュ破棄後）に呼ばれる。
+function refreshSlotsCache() {
   const slots = computeAvailableSlots();
-  cache.put(SLOTS_CACHE_KEY, JSON.stringify(slots), SLOTS_CACHE_SECONDS);
+  CacheService.getScriptCache().put(SLOTS_CACHE_KEY, JSON.stringify(slots), SLOTS_CACHE_SECONDS);
   return slots;
 }
 
@@ -514,12 +523,15 @@ function jsonResponse(obj) {
  * Apps Scriptは一定時間アクセスがないと休止し、次のアクセス時（＝お客様が
  * LPやmanage.htmlを開いた瞬間）に起動し直すため数十秒〜数分の遅延が発生する。
  * これを避けるため、時間主導型トリガーで数分おきにこの関数を実行し、
- * スクリプトを起動したままにしておく。
+ * スクリプトを起動したままにしておく。あわせて空き状況のキャッシュも
+ * ここで作り置きしておくことで、お客様のアクセス時にはほぼ常に
+ * キャッシュ済みの結果を返せるようにしている（Googleカレンダーへの
+ * 問い合わせは重く、都度計算すると3〜6秒以上かかることがある）。
  *
  * 設定方法：Apps Scriptエディタ左メニューの時計アイコン「トリガー」→
  * 「トリガーを追加」→ 実行する関数「keepAlive」→ イベントのソース
  * 「時間主導型」→ 分ベースのタイマー→ 「5分おき」を選んで保存。
  */
 function keepAlive() {
-  getReservationCalendar();
+  refreshSlotsCache();
 }
