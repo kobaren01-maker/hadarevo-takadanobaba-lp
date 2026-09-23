@@ -551,11 +551,19 @@ a {
 }
 
 /* 画像自体の縦横比に枠を合わせ、プレースホルダー用の点線・背景を消す。
-   比率をぴったり合わせることで object-fit:cover でも角丸が欠けない。 */
+   aspect-ratioは読み込み中のレイアウトシフト防止用の目安値に留め、
+   実際の表示はheight:auto + object-fit:containにして、枠と実画像の
+   比率が完全一致していなくても評価数値や星が絶対に切れないようにする
+   （以前はobject-fit:coverで、わずかな比率差でも下部がクロップされていた）。 */
 .proof__ratings-image .img-slot {
   aspect-ratio: 1773 / 733;
   background: transparent;
   border: none;
+}
+
+.proof__ratings-image .img-slot img {
+  height: auto;
+  object-fit: contain;
 }
 
 .review-scroller {
