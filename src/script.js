@@ -154,14 +154,22 @@ function initReservation() {
       root.hidden = true;
       return;
     }
-    try {
-      const res = await fetch(`${RESERVE_CONFIG.webAppUrl}?action=slots`);
-      if (!res.ok) throw new Error("failed to fetch slots");
-      const data = await res.json();
-      allSlots = Array.isArray(data.slots) ? data.slots : [];
-      renderSlots();
-    } catch (err) {
-      statusEl.textContent = "空き状況の取得に失敗しました。時間をおいて再度お試しください。";
+    const retryDelays = [800, 1500];
+    for (let attempt = 0; attempt <= retryDelays.length; attempt++) {
+      try {
+        const res = await fetch(`${RESERVE_CONFIG.webAppUrl}?action=slots`);
+        if (!res.ok) throw new Error("failed to fetch slots");
+        const data = await res.json();
+        allSlots = Array.isArray(data.slots) ? data.slots : [];
+        renderSlots();
+        return;
+      } catch (err) {
+        if (attempt < retryDelays.length) {
+          await new Promise((resolve) => setTimeout(resolve, retryDelays[attempt]));
+        } else {
+          statusEl.textContent = "空き状況の取得に失敗しました。時間をおいて再度お試しください。";
+        }
+      }
     }
   }
 
