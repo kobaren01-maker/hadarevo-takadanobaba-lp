@@ -133,6 +133,7 @@ function createBooking(payload) {
     slotEnd,
     { description: `電話番号: ${phone}\nメール: ${email}\n性別: ${gender}\n年齢: ${age}` }
   );
+  CacheService.getScriptCache().remove(SLOTS_CACHE_KEY);
 
   const dateStr = formatDate(slotStart);
   const timeStr = formatTime(slotStart);
@@ -198,6 +199,7 @@ function rescheduleBooking(payload) {
     newSlotEnd,
     { description: `電話番号: ${booking.phone}\nメール: ${booking.email}` }
   );
+  CacheService.getScriptCache().remove(SLOTS_CACHE_KEY);
 
   const newDateStr = formatDate(newSlotStart);
   const newTimeStr = formatTime(newSlotStart);
@@ -242,6 +244,7 @@ function cancelBooking(payload) {
     const event = calendar.getEventById(booking.eventId);
     if (event) event.deleteEvent();
   }
+  CacheService.getScriptCache().remove(SLOTS_CACHE_KEY);
 
   notifyStaff({
     slotDate: booking.date,
@@ -275,7 +278,20 @@ function getBookingByToken(token) {
 
 /* ---- 空き枠の計算（Googleカレンダーの予定の有無から算出） ---- */
 
+const SLOTS_CACHE_KEY = "availableSlots";
+const SLOTS_CACHE_SECONDS = 30;
+
 function getAvailableSlots() {
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get(SLOTS_CACHE_KEY);
+  if (cached) return JSON.parse(cached);
+
+  const slots = computeAvailableSlots();
+  cache.put(SLOTS_CACHE_KEY, JSON.stringify(slots), SLOTS_CACHE_SECONDS);
+  return slots;
+}
+
+function computeAvailableSlots() {
   const calendar = getReservationCalendar();
   const now = new Date();
   const rangeEnd = new Date();
