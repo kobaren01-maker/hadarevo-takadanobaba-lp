@@ -72,13 +72,26 @@ function initReviewScroller() {
   let resumeTimer = null;
   const SPEED = 0.35; // px / frame（ゆっくり）
 
+  // Safari（WebKit）はscrollLeftへの書き込みを整数pxに丸めるため、
+  // 毎フレーム「現在のscrollLeftを読んでSPEEDを加算」する実装だと
+  // 0 + 0.35 → 書き込み時に0へ丸められる → 次フレームも0 + 0.35…と
+  // 永久に0のまま動かなくなる（Chrome等は小数を保持するため気づきにくい）。
+  // そのため実際の位置はこのJS変数側で小数精度のまま管理し、
+  // scrollLeftには書き込むだけにする。
+  let currentScroll = scroller.scrollLeft;
+
   function pause() {
     paused = true;
     if (resumeTimer) clearTimeout(resumeTimer);
   }
   function scheduleResume() {
     if (resumeTimer) clearTimeout(resumeTimer);
-    resumeTimer = setTimeout(() => (paused = false), 2500);
+    // 手動操作でユーザーがスクロールさせた位置から違和感なく再開できるよう、
+    // 再開直前に現在の実際のscrollLeftへ同期する。
+    resumeTimer = setTimeout(() => {
+      currentScroll = scroller.scrollLeft;
+      paused = false;
+    }, 2500);
   }
 
   scroller.addEventListener("pointerdown", pause);
@@ -94,11 +107,12 @@ function initReviewScroller() {
 
   function tick() {
     if (!paused) {
-      scroller.scrollLeft += SPEED;
+      currentScroll += SPEED;
       const half = track.scrollWidth / 2;
-      if (scroller.scrollLeft >= half) {
-        scroller.scrollLeft -= half;
+      if (currentScroll >= half) {
+        currentScroll -= half;
       }
+      scroller.scrollLeft = currentScroll;
     }
     requestAnimationFrame(tick);
   }
