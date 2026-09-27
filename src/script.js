@@ -273,7 +273,12 @@ function initReservation() {
     errorEl.hidden = true;
     renderSlots();
     if (dateInput.value) renderDateSlots(dateInput.value);
-    form.scrollIntoView({ behavior: "smooth", block: "start" });
+    // form.hidden = false でページの高さが変わった直後にスムーズスクロールを
+    // 開始すると、固定CTAバーの#reserveジャンプと同じ理由（レイアウトシフトと
+    // スムーズスクロールのアニメーションが競合する）でスクロールが失敗し、
+    // フォームが表示されているのに気づかれず離脱される事例が起きていた。
+    // 即時ジャンプに変更してこの競合を避ける。
+    form.scrollIntoView({ behavior: "auto", block: "start" });
   }
 
   async function onSubmit(e) {
