@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<!-- 遊び用。本番LPには含めない・検索エンジンに載せない -->
+<meta name="robots" content="noindex, nofollow" />
+<title>先バレ演出（遊び）｜鍵マッハ24</title>
+<style>
+  :root {
+    --red: #c4001a;
+    --blood: #6b000d;
+    --skin: #e9e2dc;
+    --skin-shade: #b9aea6;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  body { font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif; }
+
+  /* 背景：本物のLPをそのまま表示し、その上に演出を重ねる */
+  .lp { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; }
+
+  .stage {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .stage.is-active { pointer-events: auto; }
+
+  /* ---------- スタート画面（音を鳴らすにはタップが必要） ---------- */
+  .start {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    border: 0;
+    font: inherit;
+    cursor: pointer;
+  }
+  .start__inner { text-align: center; }
+  .start__title { font-size: 22px; font-weight: 700; letter-spacing: 0.1em; }
+  .start__sub { margin-top: 8px; font-size: 13px; opacity: 0.7; }
+  .start__btn {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 14px 32px;
+    border: 2px solid var(--red);
+    color: #fff;
+    border-radius: 999px;
+    animation: pulse 1.4s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { box-shadow: 0 0 24px var(--red); } }
+
+  /* ---------- 暗転・赤いチラつき ---------- */
+  .dim {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 40%, rgba(80, 0, 10, 0.55), rgba(0, 0, 0, 0.95) 70%);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .stage.is-dim .dim { opacity: 1; }
+  .stage.is-flicker .dim { animation: flicker 0.6s steps(2) 1; }
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    20% { opacity: 0.3; background-color: var(--blood); }
+    40% { opacity: 1; }
+    60% { opacity: 0.5; background-color: var(--red); }
+  }
+
+  /* ---------- 手（上から落ちてくる） ---------- */
+  .hand {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: min(70vw, 340px);
+    transform: translate(-50%, -110%) rotate(8deg);
+    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.8));
+  }
+  .stage.is-drop .hand { animation: drop 0.42s cubic-bezier(0.55, 0, 1, 0.45) forwards; }
+  @keyframes drop {
+    to { transform: translate(-50%, 8vh) rotate(-2deg); }
+  }
+  .stage.is-landed .hand {
+    transform: translate(-50%, 8vh) rotate(-2deg);
+    animation: hand-out 0.5s 0.9s ease-in forwards;
+  }
+  @keyframes hand-out {
+    to { transform: translate(-50%, 8vh) scale(1.6); opacity: 0; filter: blur(6px); }
+  }
+
+  /* 着地の衝撃：画面揺れ・赤フラッシュ・衝撃波 */
+  .stage.is-landed { animation: shake 0.45s linear 1; }
+  @keyframes shake {
+    10% { transform: translate(-10px, 6px); }
+    20% { transform: translate(9px, -8px); }
+    30% { transform: translate(-7px, -4px); }
+    40% { transform: translate(6px, 8px); }
+    55% { transform: translate(-4px, 3px); }
+    70% { transform: translate(3px, -2px); }
+    100% { transform: none; }
+  }
+  .flash { position: absolute; inset: 0; background: var(--red); opacity: 0; mix-blend-mode: screen; }
+  .stage.is-landed .flash { animation: flash 0.5s ease-out 1; }
+  @keyframes flash { 0% { opacity: 0.9; } 100% { opacity: 0; } }
+
+  .wave {
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 6px solid var(--red);
+    border-radius: 50%;
+    opacity: 0;
+  }
+  .stage.is-landed .wave { animation: wave 0.7s ease-out 1; }
+  .stage.is-landed .wave--2 { animation-delay: 0.12s; }
+  @keyframes wave {
+    0% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(18); border-width: 1px; }
+  }
+
+  /* ---------- 当たり：虹色の後光 ---------- */
+  .burst {
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    width: 220vmax;
+    height: 220vmax;
+    margin: -110vmax 0 0 -110vmax;
+    background: repeating-conic-gradient(
+      from 0deg,
+      rgba(255, 0, 0, 0.35) 0deg 6deg, rgba(255, 165, 0, 0.35) 6deg 12deg,
+      rgba(255, 255, 0, 0.35) 12deg 18deg, rgba(0, 200, 0, 0.35) 18deg 24deg,
+      rgba(0, 120, 255, 0.35) 24deg 30deg, rgba(140, 0, 255, 0.35) 30deg 36deg
+    );
+    -webkit-mask: radial-gradient(circle, #000 0%, transparent 45%);
+            mask: radial-gradient(circle, #000 0%, transparent 45%);
+    opacity: 0;
+  }
+  .stage.is-win .dim { background: radial-gradient(circle at 50% 40%, rgba(40, 0, 8, 0.88), rgba(0, 0, 0, 0.97) 70%); }
+  .stage.is-win .burst { opacity: 1; transition: opacity 0.4s; animation: spin 8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- キャラクター＋吹き出し ---------- */
+  .chara {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: min(66vw, 300px);
+    transform: translate(-50%, 110%);
+  }
+  .stage.is-win .chara { transition: transform 0.45s cubic-bezier(0.2, 1.4, 0.4, 1); transform: translate(-50%, 0); }
+  /* クーポンが出たら左下へ小さく下がり、クーポンを渡している位置に */
+  .stage.is-coupon .chara {
+    transition: transform 0.4s ease, left 0.4s ease, width 0.4s ease;
+    left: 0;
+    width: min(32vw, 150px);
+    transform: translate(-8%, 0);
+  }
+  .chara img,
+  .chara svg { display: block; width: 100%; height: auto; }
+
+  .bubble {
+    position: absolute;
+    left: 50%;
+    top: 14%;
+    transform: translateX(-50%) scale(0);
+    width: min(92vw, 440px);
+    text-align: center;
+  }
+  .stage.is-win .bubble { transition: transform 0.4s 0.25s cubic-bezier(0.2, 1.6, 0.4, 1); transform: translateX(-50%) scale(1); }
+  .bubble__name {
+    display: inline-block;
+    padding: 2px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--red);
+    border-radius: 4px;
+    letter-spacing: 0.1em;
+  }
+
+  /* 虹色の「おめでとう」 */
+  .rainbow {
+    margin: 6px 0 0;
+    font-size: clamp(44px, 14vw, 84px);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .rainbow span {
+    display: inline-block;
+    background: linear-gradient(90deg, #ff004c, #ff8a00, #ffe600, #2bff00, #00c8ff, #6a00ff, #ff00d4, #ff004c);
+    background-size: 400% 100%;
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.9);
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.8)) drop-shadow(0 0 18px rgba(255, 0, 120, 0.6));
+    animation: rainbow 1.6s linear infinite, hop 0.9s ease-in-out infinite;
+    opacity: 0;
+    transform: translateY(30px) scale(0.3);
+  }
+  .stage.is-win .rainbow span { opacity: 1; transform: none; transition: opacity 0.2s, transform 0.35s cubic-bezier(0.2, 1.8, 0.4, 1); }
+  @keyframes rainbow { to { background-position: 400% 0; } }
+  @keyframes hop { 50% { translate: 0 -6px; } }
+
+  /* ---------- クーポン ---------- */
+  .coupon {
+    position: absolute;
+    left: 50%;
+    top: 34%;
+    width: min(80vw, 340px);
+    padding: 14px 14px 12px;
+    background: linear-gradient(135deg, #fff9e6, #ffe7a3);
+    border: 3px dashed #c48a00;
+    border-radius: 14px;
+    text-align: center;
+    color: #3a2a00;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 220, 120, 0.6);
+    transform: translateX(-50%) rotateY(90deg);
+    opacity: 0;
+  }
+  .stage.is-coupon .coupon {
+    transition: transform 0.5s cubic-bezier(0.2, 1.3, 0.4, 1), opacity 0.2s;
+    transform: translateX(-50%) rotateY(0);
+    opacity: 1;
+  }
+  .coupon p { margin: 0; }
+  .coupon__label { font-size: 13px; font-weight: 700; letter-spacing: 0.2em; }
+  .coupon__off { font-size: 56px; font-weight: 900; line-height: 1.1; color: var(--red); }
+  .coupon__off small { font-size: 22px; }
+  .coupon__code {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 4px 12px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    background: #fff;
+    border-radius: 6px;
+  }
+  .coupon__note { margin-top: 8px; font-size: 11px; opacity: 0.75; }
+  .coupon__actions { display: grid; gap: 8px; margin-top: 14px; }
+  .coupon__actions a,
+  .coupon__actions button {
+    display: block;
+    padding: 12px;
+    border: 0;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .btn-tel { background: #e8590c; color: #fff; }
+  .btn-sub { background: rgba(0, 0, 0, 0.08); color: #3a2a00; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 背景：本番LPの骨組みをそのまま読み込む -->
+<iframe class="lp" src="/" title="鍵マッハ24 LP"></iframe>
+
+<div class="stage" id="stage" aria-live="polite">
+  <div class="dim"></div>
+  <div class="burst"></div>
+
+  <!-- 手：オリジナルの絵（コードで描画） -->
+  <svg class="hand" viewBox="0 0 200 330" aria-hidden="true">
+    <defs>
+      <linearGradient id="skin" x1="0" x2="1">
+        <stop offset="0" stop-color="#cfc6bf" />
+        <stop offset="0.45" stop-color="#f1ebe6" />
+        <stop offset="1" stop-color="#a99d94" />
+      </linearGradient>
+    </defs>
+    <g fill="url(#skin)" stroke="#3a2e2a" stroke-width="2.5">
+      <rect x="68" y="-200" width="64" height="270" rx="26" />
+      <path d="M44 60 Q46 30 100 28 Q156 30 158 62 L160 150 Q150 172 100 172 Q52 172 42 150 Z" />
+      <rect x="20" y="78" width="22" height="86" rx="11" transform="rotate(-24 31 78)" />
+      <rect x="48" y="140" width="24" height="98" rx="12" />
+      <rect x="75" y="146" width="25" height="118" rx="12" />
+      <rect x="103" y="142" width="24" height="106" rx="12" />
+      <rect x="130" y="132" width="20" height="84" rx="10" />
+    </g>
+    <!-- 爪 -->
+    <g fill="#5a0010" stroke="#1a0004" stroke-width="1.5">
+      <path d="M50 226 L60 250 L70 226 Z" />
+      <path d="M77 252 L87 280 L98 252 Z" />
+      <path d="M105 236 L115 262 L125 236 Z" />
+      <path d="M131 205 L140 226 L149 205 Z" />
+      <path d="M2 140 L4 162 L18 150 Z" />
+    </g>
+    <!-- 血管・影 -->
+    <g fill="none" stroke="#7a1020" stroke-width="1.5" opacity="0.55">
+      <path d="M86 -60 Q92 0 84 60 Q90 100 98 130" />
+      <path d="M112 -20 Q106 40 116 90" />
+    </g>
+  </svg>
+
+  <div class="flash"></div>
+  <div class="wave"></div>
+  <div class="wave wave--2"></div>
+
+  <div class="bubble">
+    <span class="bubble__name">金木くん</span>
+    <p class="rainbow" id="rainbow"></p>
+  </div>
+
+  <!-- キャラクター：同じフォルダに kaneki.png を置くとその画像に差し替わる（個人で楽しむ範囲で） -->
+  <div class="chara">
+    <img src="kaneki.png" alt="" hidden onload="this.hidden=false; this.nextElementSibling.remove();" onerror="this.remove();" />
+    <svg viewBox="0 0 200 260" aria-hidden="true">
+      <path d="M20 260 Q30 170 100 160 Q170 170 180 260 Z" fill="#111" />
+      <circle cx="100" cy="100" r="58" fill="#161616" />
+      <path d="M42 92 Q48 30 100 34 Q156 30 160 94 Q150 66 132 74 Q120 52 100 66 Q82 52 70 74 Q52 64 42 92 Z" fill="#e8e8e8" />
+      <ellipse cx="120" cy="104" rx="11" ry="8" fill="#000" />
+      <circle cx="120" cy="104" r="5" fill="#ff1a2e">
+        <animate attributeName="opacity" values="1;0.4;1" dur="1.2s" repeatCount="indefinite" />
+      </circle>
+      <rect x="66" y="96" width="30" height="16" rx="6" fill="#2a2a2a" />
+    </svg>
+  </div>
+
+  <div class="coupon" role="dialog" aria-label="10%オフクーポン">
+    <p class="coupon__label">WEB限定クーポン</p>
+    <p class="coupon__off">10<small>%OFF</small></p>
+    <span class="coupon__code" id="coupon-code">MACH-10</span>
+    <p class="coupon__note">お電話の際に「WEBクーポン」とお伝えください<br />※遊び用のデモです。実際の割引ではありません</p>
+    <div class="coupon__actions">
+      <a class="btn-tel" href="tel:07091861366">クーポンを使って電話する</a>
+      <button class="btn-sub" type="button" id="again">もう一回</button>
+      <button class="btn-sub" type="button" id="close">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<button class="start" id="start" type="button">
+  <span class="start__inner">
+    <span class="start__title">運試し</span><br />
+    <span class="start__sub">音が出ます</span><br />
+    <span class="start__btn">▶ タップでスタート</span>
+  </span>
+</button>
+
+<script>
+(function () {
+  "use strict";
+
+  var stage = document.getElementById("stage");
+  var startBtn = document.getElementById("start");
+  var rainbow = document.getElementById("rainbow");
+  var audio = null;
+
+  // 「おめでとう」を1文字ずつ時間差で弾ませる
+  "おめでとう".split("").forEach(function (ch, i) {
+    var s = document.createElement("span");
+    s.textContent = ch;
+    s.style.transitionDelay = 0.35 + i * 0.09 + "s";
+    s.style.animationDelay = "0s, " + i * 0.1 + "s";
+    rainbow.appendChild(s);
+  });
+
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  // ---------- 効果音（音源ファイルなし。WebAudioで合成） ----------
+  function tone(type, f1, f2, start, dur, vol) {
+    var t = audio.currentTime + start;
+    var o = audio.createOscillator();
+    var g = audio.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(f1, t);
+    o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+    o.connect(g).connect(audio.destination);
+    o.start(t);
+    o.stop(t + dur);
+  }
+  function noise(start, dur, vol) {
+    var len = audio.sampleRate * dur;
+    var buf = audio.createBuffer(1, len, audio.sampleRate);
+    var d = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    var src = audio.createBufferSource();
+    var g = audio.createGain();
+    var t = audio.currentTime + start;
+    src.buffer = buf;
+    g.gain.setValueAtTime(vol, t);
+    src.connect(g).connect(audio.destination);
+    src.start(t);
+  }
+  var sfx = {
+    kyuin: function () { if (!audio) return; tone("sawtooth", 300, 2400, 0, 0.5, 0.12); tone("square", 600, 4800, 0.05, 0.45, 0.05); },
+    don:   function () { if (!audio) return; tone("sine", 140, 30, 0, 0.6, 0.9); noise(0, 0.35, 0.5); },
+    fanfare: function () {
+      if (!audio) return;
+      [523, 659, 784, 1047, 1319].forEach(function (f, i) { tone("triangle", f, f, i * 0.09, 0.35, 0.18); });
+      tone("triangle", 1568, 1568, 0.5, 0.8, 0.15);
+    }
+  };
+
+  function reset() {
+    stage.className = "stage";
+  }
+
+  // ---------- 演出の流れ ----------
+  async function play() {
+    reset();
+    void stage.offsetWidth; // アニメーションを最初から再生させる
+    stage.classList.add("is-active", "is-dim", "is-flicker");
+    sfx.kyuin();
+    await wait(700);
+
+    stage.classList.add("is-drop");      // 手が落ちる
+    await wait(420);
+    stage.classList.remove("is-drop");
+    stage.classList.add("is-landed");    // 着地：揺れ・赤フラッシュ
+    sfx.don();
+    await wait(1500);
+
+    stage.classList.add("is-win");       // 虹の後光＋金木くん「おめでとう」
+    sfx.fanfare();
+    await wait(1400);
+
+    stage.classList.add("is-coupon");    // クーポン
+  }
+
+  startBtn.addEventListener("click", function () {
+    try { audio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { audio = null; }
+    startBtn.remove();
+    play();
+  });
+  document.getElementById("again").addEventListener("click", play);
+  document.getElementById("close").addEventListener("click", reset);
+})();
+</script>
+</body>
+</html>
