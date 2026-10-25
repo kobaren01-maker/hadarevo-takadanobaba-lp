@@ -82,15 +82,16 @@
      1. FV：3秒で「ここに電話して大丈夫」と判断させる
      ====================================================================== -->
 <section class="fv" id="top">
-  <!-- 広告グループ別に見出しを出し分ける場合は data-variant を JS で差し替え（フェーズ2） -->
+  <!-- 広告の最終ページURLに ?type=funshitsu|kagiake|koukan|car を付けると、
+       script.js が見出し・料金目安・お困りごとの並び順を差し替える。パラメータなし（自然検索）は下記のまま -->
   <h1 class="fv__title">
-    <span class="fv__lead">鍵をなくした・開かない</span>
+    <span class="fv__lead" id="fv-lead">鍵をなくした・開かない</span>
     {地域}へ<strong>最短◯分</strong>で駆けつけます
   </h1>
 
   <div class="fv__price">
-    <p class="fv__price-label">玄関の鍵開け</p>
-    <p class="fv__price-num">◯◯<span>円</span></p>
+    <p class="fv__price-label" id="fv-price-label">玄関の鍵開け</p>
+    <p class="fv__price-num"><span id="fv-price-num">◯◯</span><span>円</span></p>
     <p class="fv__price-note">出張費・見積もり費込み／税込の総額</p>
   </div>
 
@@ -120,13 +121,13 @@
      ====================================================================== -->
 <section class="section" id="trouble">
   <h2 class="section__title">どんなお困りですか？</h2>
-  <ul class="trouble">
-    <li><a href="#price-kagiake">家の鍵をなくした</a></li>
-    <li><a href="#price-kagiake">家から閉め出された</a></li>
-    <li><a href="#price-repair">鍵が回らない・抜けない</a></li>
-    <li><a href="#price-koukan">鍵を交換したい</a></li>
-    <li><a href="#price-car">車・バイクの鍵</a></li>
-    <li><a href="#price-other">金庫・ポスト・その他</a></li>
+  <ul class="trouble" id="trouble-list">
+    <li data-type="funshitsu"><a href="#price-kagiake">家の鍵をなくした</a></li>
+    <li data-type="kagiake"><a href="#price-kagiake">家から閉め出された</a></li>
+    <li data-type="repair"><a href="#price-repair">鍵が回らない・抜けない</a></li>
+    <li data-type="koukan"><a href="#price-koukan">鍵を交換したい</a></li>
+    <li data-type="car"><a href="#price-car">車・バイクの鍵</a></li>
+    <li data-type="other"><a href="#price-other">金庫・ポスト・その他</a></li>
   </ul>
 </section>
 

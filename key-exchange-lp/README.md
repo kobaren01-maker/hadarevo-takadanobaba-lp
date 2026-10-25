@@ -13,15 +13,32 @@
 | [docs/01-strategy.md](docs/01-strategy.md) | 方針書：ターゲット心理、ポジショニング、サイト構成、SEO/AIO方針、ヒアリングシート |
 | [docs/02-keywords.md](docs/02-keywords.md) | キーワード設計：意図別の受け皿ページ、広告グループ案、初期コラム20本 |
 | [docs/03-wireframe.md](docs/03-wireframe.md) | トップ（LP）のワイヤーと各ブロックの要件 |
+| [docs/04-content-ops.md](docs/04-content-ops.md) | 運用ガイド：コラムの型、作業事例の投稿手順、GBP・口コミ、月次の振り返り |
 
 ## 骨組み
 
 ```
 key-exchange-lp/src/
-├─ index.html  … LP本体（BLOCK0〜16。構造化データ Locksmith / FAQPage 入り）
-├─ style.css   … スマホファーストの仮デザイン
-└─ script.js   … 固定CTAの表示制御、電話・LINEタップのGA4イベント
+├─ index.html                     … トップ兼LP（BLOCK0〜16。構造化データ Locksmith / FAQPage 入り）
+├─ price/index.html               … 料金表（鍵開け・交換・修理・車・その他・追加費用）
+├─ area/_template/index.html      … エリアページの雛形（【独自】欄を埋められるエリアだけ作る）
+├─ column/kagi-nakushita/index.html … コラム1本目「鍵をなくした時にまずやること」＝記事の雛形
+├─ style.css                      … 全ページ共通のスタイル
+└─ script.js                      … FVの広告別出し分け、固定CTA、電話・LINEタップのGA4イベント
 ```
+
+### 広告ごとのFV出し分け
+
+広告の最終ページURLに `?type=` を付けると、トップのFV見出し・料金目安・お困りごとボタンの並び順が変わる。
+文言と金額は `script.js` の `FV_VARIANTS` で管理する。
+
+| パラメータ | 広告グループ | FV見出し |
+| --- | --- | --- |
+| （なし） | 自然検索・地域 | 鍵をなくした・開かない |
+| `?type=funshitsu` | 紛失・閉め出し | 鍵をなくして家に入れない方へ |
+| `?type=kagiake` | 鍵開け | 玄関の鍵開け・閉め出し |
+| `?type=koukan` | 鍵交換 | 鍵交換・シリンダー交換 |
+| `?type=car` | 車 | 車・バイクの鍵トラブル |
 
 プレビュー：
 
@@ -29,6 +46,8 @@ key-exchange-lp/src/
 cd key-exchange-lp/src && python -m http.server 8001
 # http://localhost:8001/ をスマホ幅で確認
 ```
+
+下層ページはCSS・JSを `/style.css` のようにルートからのパスで読むので、ファイルを直接開かず必ずサーバー経由で確認する。
 
 ## 差し替えルール
 

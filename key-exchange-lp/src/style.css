@@ -318,6 +318,83 @@ p { margin: 0; }
 .fixed-cta__tel { background: var(--orange); }
 .fixed-cta__line { background: var(--line-green); }
 
+/* ==========================================================================
+   下層ページ（料金・サービス・エリア・コラム）
+   ========================================================================== */
+
+/* パンくず：BreadcrumbList の JSON-LD と同じ階層にする */
+.breadcrumb { padding: 12px var(--pad-x) 0; font-size: 12px; color: var(--text-sub); }
+.breadcrumb ol { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; }
+.breadcrumb li + li::before { content: "›"; margin: 0 6px; }
+.breadcrumb a { color: var(--text-sub); }
+
+.page-hero { padding: 24px var(--pad-x) 8px; }
+.page-hero__title { font-size: 24px; color: var(--navy); }
+.page-hero__meta { margin-top: 8px; font-size: 12px; color: var(--text-sub); }
+
+/* 結論ボックス：見出し直下で答えを言い切る（AIOで引用されやすい形） */
+.answer {
+  margin: 16px 0 0;
+  padding: 16px;
+  background: var(--navy-pale);
+  border-left: 4px solid var(--navy);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.answer__label { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+
+.toc { margin: 24px var(--pad-x) 0; padding: 16px; border: 1px solid var(--border); border-radius: var(--radius); }
+.toc__title { font-weight: 700; margin-bottom: 8px; }
+.toc ol { margin: 0; padding-left: 1.4em; }
+.toc a { color: var(--navy); }
+
+/* 記事本文 */
+.prose { padding: 8px var(--pad-x) 0; }
+.prose h2 {
+  font-size: 20px;
+  color: var(--navy);
+  margin: 48px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--navy);
+}
+.prose h3 { font-size: 17px; color: var(--navy); margin: 28px 0 8px; }
+.prose p + p { margin-top: 1em; }
+.prose ul,
+.prose ol { padding-left: 1.4em; margin: 12px 0; }
+.prose li + li { margin-top: 4px; }
+.prose table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+.prose th,
+.prose td { border: 1px solid var(--border); padding: 10px; text-align: left; vertical-align: top; }
+.prose thead th { background: var(--navy-pale); }
+
+/* 記事内CTA：本文の流れの中で「困ったら電話」を差し込む */
+.cta-box {
+  margin: 32px 0;
+  padding: 20px 16px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: var(--radius);
+  text-align: center;
+}
+.cta-box__title { font-weight: 700; font-size: 17px; }
+.cta-box__text { font-size: 14px; margin-top: 4px; }
+
+/* 監修者：誰が書いたかを明示（E-E-A-T） */
+.author {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 12px;
+  margin: 40px var(--pad-x) 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+.author img { border-radius: 50%; }
+.author__name { font-weight: 700; color: var(--navy); }
+
+.related { padding: 40px var(--pad-x) 0; }
+.related__title { font-size: 18px; color: var(--navy); margin-bottom: 8px; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .fixed-cta { transition: none; }

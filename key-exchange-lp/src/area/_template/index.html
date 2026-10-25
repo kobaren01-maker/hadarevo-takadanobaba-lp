@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<!--
+  エリアページのテンプレート。/area/{地域ローマ字}/index.html として複製して使う。
+  ★地名だけ差し替えた量産ページは検索エンジンに評価されない（低品質・誘導ページ扱い）。
+    【独自】と書いた箇所は、必ずそのエリア固有の内容を書くこと。書けないエリアはページを作らない。
+-->
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>{市区町村}の鍵開け・鍵交換｜最短◯分で到着・24時間受付｜{屋号}</title>
+<meta name="description" content="{市区町村}で鍵をなくした・開かない時は{屋号}へ。{市区町村}内は最短◯分で到着。玄関の鍵開け◯◯円（出張費込み・税込）。作業前に総額をお伝えします。" />
+<link rel="canonical" href="https://h-gate.jp/area/{slug}/" />
+<meta name="theme-color" content="#14325c" />
+<link rel="stylesheet" href="/style.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://h-gate.jp/"},
+    {"@type": "ListItem", "position": 2, "name": "対応エリア", "item": "https://h-gate.jp/area/"},
+    {"@type": "ListItem", "position": 3, "name": "{市区町村}"}
+  ]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="site-header__logo">{屋号}<span>鍵開け・鍵交換</span></a>
+  <a href="tel:0120000000" class="site-header__tel js-tel" data-cta="header">
+    <span class="site-header__tel-label">24時間受付</span>
+    <span class="site-header__tel-num">0120-000-000</span>
+  </a>
+</header>
+
+<main>
+<nav class="breadcrumb" aria-label="パンくずリスト">
+  <ol><li><a href="/">ホーム</a></li><li><a href="/area/">対応エリア</a></li><li>{市区町村}</li></ol>
+</nav>
+
+<header class="page-hero">
+  <h1 class="page-hero__title">{市区町村}の鍵開け・鍵交換なら{屋号}</h1>
+  <div class="answer">
+    <p class="answer__label">{市区町村}への到着目安</p>
+    <p>{市区町村}内なら<strong>最短◯分・平均◯分</strong>で到着します。玄関の鍵開けは<strong>◯◯円</strong>（出張費込み・税込）です。</p>
+  </div>
+  <a href="tel:0120000000" class="btn btn--tel js-tel" data-cta="area">
+    <span class="btn__sub">通話無料・24時間受付</span>
+    <span class="btn__main">0120-000-000</span>
+  </a>
+</header>
+
+<div class="prose">
+  <h2>{市区町村}の対応地域と到着時間</h2>
+  <!-- 【独自】町名・駅名単位の到着目安。実測ベースで -->
+  <table>
+    <thead><tr><th scope="col">地域・駅</th><th scope="col">到着目安</th></tr></thead>
+    <tbody>
+      <tr><td>{町名・駅名A}</td><td>約◯分</td></tr>
+      <tr><td>{町名・駅名B}</td><td>約◯分</td></tr>
+    </tbody>
+  </table>
+
+  <h2>{市区町村}での作業事例</h2>
+  <!-- 【独自】このエリアの実際の事例を3件以上。WordPress化後は「エリア＝{市区町村}」の事例を自動表示 -->
+  <p>【独自：日付・町名・建物種別・鍵の種類・所要時間・金額】</p>
+
+  <h2>{市区町村}で多い鍵トラブル</h2>
+  <!-- 【独自】現場の実感を書く。例：築年数の古いアパートが多く鍵が回りにくいトラブルが多い／
+       ディンプルキーのマンションが多い／繁華街での紛失が多い など -->
+  <p>【独自：このエリアの住宅事情・よく対応する鍵の種類・時間帯の傾向】</p>
+
+  <h2>料金</h2>
+  <p>{市区町村}でも料金は全エリア共通です。出張費はかかりません。</p>
+  <p><a href="/price/">料金表を見る</a></p>
+
+  <div class="cta-box">
+    <p class="cta-box__title">{市区町村}で鍵にお困りなら</p>
+    <p class="cta-box__text">作業前に総額をお伝えします。見積もり後のキャンセルは無料です。</p>
+    <a href="tel:0120000000" class="btn btn--tel js-tel" data-cta="area-bottom">
+      <span class="btn__sub">通話無料・24時間受付</span>
+      <span class="btn__main">0120-000-000</span>
+    </a>
+  </div>
+</div>
+</main>
+
+<footer class="site-footer">
+  <nav class="footer-nav">
+    <a href="/">ホーム</a><a href="/price/">料金表</a><a href="/case/">作業事例</a><a href="/column/">コラム</a>
+    <a href="/company/">会社概要</a><a href="/privacy/">プライバシーポリシー</a>
+  </nav>
+  <p class="copyright">&copy; {屋号}</p>
+</footer>
+
+<div class="fixed-cta is-visible" id="fixed-cta">
+  <a href="tel:0120000000" class="fixed-cta__tel js-tel" data-cta="fixed">📞 電話する（24時間）</a>
+  <a href="https://lin.ee/XXXXXXX" class="fixed-cta__line js-line" data-cta="fixed">LINE</a>
+</div>
+
+<script src="/script.js" defer></script>
+</body>
+</html>
