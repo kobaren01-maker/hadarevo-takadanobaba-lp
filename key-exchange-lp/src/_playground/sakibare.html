@@ -413,6 +413,27 @@
   "use strict";
 
   var stage = document.getElementById("stage");
+
+  // 遊び用：背景のLPのFV画像だけを差し替え、見出しの直後へ移動する（本番LPのファイルは変更しない）
+  var lp = document.querySelector(".lp");
+  var fvImage = new URL("kaneki-fv.webp", location.href).href;
+  function swapFv() {
+    var doc;
+    try { doc = lp.contentDocument; } catch (e) { return; }
+    var fig = doc && doc.querySelector(".fv__visual");
+    var title = doc && doc.querySelector(".fv__title");
+    if (!fig || !title) return;
+    var img = fig.querySelector("img");
+    img.src = fvImage;
+    img.alt = "鍵の作業をするスタッフのイラスト";
+    img.width = 1254;
+    img.height = 1254;
+    img.style.borderRadius = "12px";
+    fig.style.margin = "16px 0 0";
+    title.after(fig);
+  }
+  lp.addEventListener("load", swapFv);
+  swapFv();
   var startBtn = document.getElementById("start");
   var rainbow = document.getElementById("rainbow");
   var audio = null;
