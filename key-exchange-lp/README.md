@@ -14,6 +14,7 @@
 | [docs/02-keywords.md](docs/02-keywords.md) | キーワード設計：意図別の受け皿ページ、広告グループ案、初期コラム20本 |
 | [docs/03-wireframe.md](docs/03-wireframe.md) | トップ（LP）のワイヤーと各ブロックの要件 |
 | [docs/04-content-ops.md](docs/04-content-ops.md) | 運用ガイド：コラムの型、作業事例の投稿手順、GBP・口コミ、月次の振り返り |
+| [docs/05-current-site-audit.md](docs/05-current-site-audit.md) | 現行サイトの分析（WordPress＋Lightning）と、子テーマ化による移行方針 |
 
 ## 骨組み
 
@@ -51,7 +52,8 @@ cd key-exchange-lp/src && python -m http.server 8001
 
 ## 差し替えルール
 
-- `{屋号}` `{地域}` `{市区町村A}` `◯◯円` `0120-000-000` `【要確認】` はすべて仮。ヒアリング後に置換する
+- 屋号（鍵マッハ24）・電話番号・所在地・到着時間（最短5分／平均5〜20分）は現行サイトの情報を反映済み
+- `{地域}` `{市区町村A}` `◯◯円` `【要確認】` は仮。ヒアリング後に置換する
 - 電話番号は `tel:` リンク・表示・JSON-LD・フッターの**4か所すべて**を同じ番号にする
 - FAQを変更したら `<head>` 内の FAQPage JSON-LD も同じ文言に揃える
 - 作業事例・口コミは実在のものが揃うまで `hidden` のまま（ダミーで埋めない）
