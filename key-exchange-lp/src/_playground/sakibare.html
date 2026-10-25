@@ -79,7 +79,8 @@
     left: 50%;
     top: 50%;
     width: min(118vw, 560px);
-    transform: translate(-50%, -190%) rotate(-10deg) scale(0.8);
+    /* 待機中は画面の上の外に置く（素材画像は横長なので、高さ基準ではなく画面の高さ分ずらす） */
+    transform: translate(-50%, calc(-50% - 100vh)) rotate(-10deg) scale(0.8);
     height: auto;
     filter: drop-shadow(0 24px 30px rgba(0, 0, 0, 0.7));
   }
@@ -364,23 +365,28 @@
 
   var stage = document.getElementById("stage");
 
-  // 遊び用：背景のLPのFV画像だけを差し替え、見出しの直後へ移動する（本番LPのファイルは変更しない）
+  // 遊び用：背景のLPのFVをバナー画像1枚に差し替える（本番LPのファイルは変更しない）
+  // バナーに見出し・料金・強みが入っているので、LP側の見出し等は隠し、電話・LINEボタンだけ残す
   var lp = document.querySelector(".lp");
-  var fvImage = new URL("kaneki-fv.webp", location.href).href;
+  var fvImage = new URL("fv-banner.webp", location.href).href;
   function swapFv() {
     var doc;
     try { doc = lp.contentDocument; } catch (e) { return; }
-    var fig = doc && doc.querySelector(".fv__visual");
-    var title = doc && doc.querySelector(".fv__title");
-    if (!fig || !title) return;
-    var img = fig.querySelector("img");
+    var fv = doc && doc.querySelector(".fv");
+    if (!fv || fv.dataset.swapped) return;
+    fv.dataset.swapped = "1";
+    Array.prototype.forEach.call(fv.children, function (el) {
+      if (!el.classList.contains("btn")) el.style.display = "none";
+    });
+    var img = doc.createElement("img");
     img.src = fvImage;
-    img.alt = "鍵の作業をするスタッフのイラスト";
-    img.width = 1254;
-    img.height = 1254;
-    img.style.borderRadius = "12px";
-    fig.style.margin = "16px 0 0";
-    title.after(fig);
+    img.alt = "鍵マッハ24 鍵のトラブルにすぐ駆けつけます 24時間365日受付中";
+    img.width = 1491;
+    img.height = 1055;
+    // 画面の端まで広げて表示（FVの左右余白を打ち消す）
+    img.style.cssText = "display:block;width:calc(100% + 32px);max-width:none;height:auto;margin:0 -16px 4px;";
+    fv.style.paddingTop = "0";
+    fv.prepend(img);
   }
   lp.addEventListener("load", swapFv);
   swapFv();
