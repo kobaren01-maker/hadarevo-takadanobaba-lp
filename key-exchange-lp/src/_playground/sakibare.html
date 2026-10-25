@@ -73,26 +73,54 @@
     60% { opacity: 0.5; background-color: var(--red); }
   }
 
-  /* ---------- 手（上から落ちてくる） ---------- */
+  /* ---------- 手（上から落ちてくる。爪側をこちらに向けてつかみかかる形） ---------- */
   .hand {
     position: absolute;
     left: 50%;
-    top: 0;
-    width: min(70vw, 340px);
-    transform: translate(-50%, -110%) rotate(8deg);
-    filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.8));
+    top: 50%;
+    width: min(118vw, 560px);
+    transform: translate(-50%, -190%) rotate(-10deg) scale(0.8);
+    overflow: visible;
+    filter: drop-shadow(0 24px 30px rgba(0, 0, 0, 0.7));
   }
-  .stage.is-drop .hand { animation: drop 0.42s cubic-bezier(0.55, 0, 1, 0.45) forwards; }
+  .stage.is-drop .hand { animation: drop 0.45s cubic-bezier(0.6, 0, 1, 0.5) forwards; }
   @keyframes drop {
-    to { transform: translate(-50%, 8vh) rotate(-2deg); }
+    to { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
   }
+  /* 着地で一瞬つぶれて跳ね返る → 少し止まってから手前に抜けて消える */
   .stage.is-landed .hand {
-    transform: translate(-50%, 8vh) rotate(-2deg);
-    animation: hand-out 0.5s 0.9s ease-in forwards;
+    transform: translate(-50%, -50%) scale(1);
+    animation: squash 0.3s ease-out, hand-out 0.45s 1.05s ease-in forwards;
+  }
+  @keyframes squash {
+    0% { transform: translate(-50%, -46%) scale(1.06, 0.92); }
+    60% { transform: translate(-50%, -52%) scale(0.98, 1.03); }
+    100% { transform: translate(-50%, -50%) scale(1); }
   }
   @keyframes hand-out {
-    to { transform: translate(-50%, 8vh) scale(1.6); opacity: 0; filter: blur(6px); }
+    to { transform: translate(-50%, -50%) scale(1.7); opacity: 0; filter: blur(8px); }
   }
+
+  /* 着地の瞬間の背景：赤〜マゼンタの爆発＋黄色い中心＋集中線 */
+  .rush {
+    position: absolute;
+    inset: -20%;
+    background: radial-gradient(circle at 50% 52%, #fff7c2 0%, #ffd23a 7%, #ff6a1a 16%, #ff1650 30%, #c4006b 48%, #4a0030 72%, #12000b 90%);
+    opacity: 0;
+  }
+  .rush::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-conic-gradient(from 3deg at 50% 52%, rgba(255, 255, 255, 0.55) 0deg 0.8deg, transparent 0.8deg 6deg);
+    -webkit-mask: radial-gradient(circle at 50% 52%, transparent 18%, #000 60%);
+            mask: radial-gradient(circle at 50% 52%, transparent 18%, #000 60%);
+    animation: lines 0.25s steps(3) infinite;
+  }
+  @keyframes lines { 50% { transform: rotate(2deg) scale(1.03); } }
+  .stage.is-landed .rush { opacity: 1; animation: rush-in 0.35s ease-out; }
+  .stage.is-win .rush { opacity: 0; transition: opacity 0.4s; }
+  @keyframes rush-in { from { transform: scale(1.4); opacity: 0.4; } }
 
   /* 着地の衝撃：画面揺れ・赤フラッシュ・衝撃波 */
   .stage.is-landed { animation: shake 0.45s linear 1; }
@@ -112,7 +140,7 @@
   .wave {
     position: absolute;
     left: 50%;
-    top: 55%;
+    top: 52%;
     width: 40px;
     height: 40px;
     margin: -20px 0 0 -20px;
@@ -280,42 +308,64 @@
   <div class="dim"></div>
   <div class="burst"></div>
 
-  <!-- 手：オリジナルの絵（コードで描画） -->
-  <svg class="hand" viewBox="0 0 200 330" aria-hidden="true">
+  <div class="rush"></div>
+  <div class="wave"></div>
+  <div class="wave wave--2"></div>
+
+  <!-- 手：オリジナルの絵（コードで描画）。手の甲と爪がこちらを向き、指先が下に曲がった「つかみかかる」形 -->
+  <svg class="hand" viewBox="0 0 400 420" aria-hidden="true">
     <defs>
-      <linearGradient id="skin" x1="0" x2="1">
-        <stop offset="0" stop-color="#cfc6bf" />
-        <stop offset="0.45" stop-color="#f1ebe6" />
-        <stop offset="1" stop-color="#a99d94" />
+      <radialGradient id="skin" cx="0.48" cy="0.4" r="0.65">
+        <stop offset="0" stop-color="#fff6f6" />
+        <stop offset="0.55" stop-color="#f6d3db" />
+        <stop offset="1" stop-color="#d98ea4" />
+      </radialGradient>
+      <linearGradient id="sleeve" x1="0" x2="1">
+        <stop offset="0" stop-color="#1b1622" />
+        <stop offset="1" stop-color="#3a3346" />
       </linearGradient>
     </defs>
-    <g fill="url(#skin)" stroke="#3a2e2a" stroke-width="2.5">
-      <rect x="68" y="-200" width="64" height="270" rx="26" />
-      <path d="M44 60 Q46 30 100 28 Q156 30 158 62 L160 150 Q150 172 100 172 Q52 172 42 150 Z" />
-      <rect x="20" y="78" width="22" height="86" rx="11" transform="rotate(-24 31 78)" />
-      <rect x="48" y="140" width="24" height="98" rx="12" />
-      <rect x="75" y="146" width="25" height="118" rx="12" />
-      <rect x="103" y="142" width="24" height="106" rx="12" />
-      <rect x="130" y="132" width="20" height="84" rx="10" />
+    <!-- 袖と手首（画面の上へ伸びる） -->
+    <path d="M150 -120 L280 -120 L268 70 L162 70 Z" fill="url(#sleeve)" stroke="#0b0710" stroke-width="3" />
+    <path d="M168 60 L262 60 L270 130 L160 130 Z" fill="url(#skin)" stroke="#3a0d22" stroke-width="3" />
+    <g fill="url(#skin)" stroke="#3a0d22" stroke-width="3" stroke-linejoin="round">
+      <!-- 親指（左下へ張り出す） -->
+      <path d="M118 170 Q70 190 44 250 Q30 290 58 300 Q86 306 100 268 Q118 230 150 214 Z" />
+      <!-- 手の甲 -->
+      <path d="M112 150 Q150 104 218 108 Q294 112 318 160 Q334 208 318 250 L112 256 Q96 200 112 150 Z" />
+      <!-- 指（第二関節から手前に曲がり、爪がこちらを向く） -->
+      <path d="M110 238 Q106 300 122 344 Q150 372 176 344 Q186 300 178 240 Z" />
+      <path d="M172 244 Q166 318 184 372 Q212 404 242 372 Q256 318 246 244 Z" />
+      <path d="M240 240 Q238 310 252 352 Q278 380 302 350 Q312 300 304 236 Z" />
+      <path d="M298 226 Q300 280 312 312 Q332 334 350 310 Q356 266 342 214 Z" />
     </g>
-    <!-- 爪 -->
-    <g fill="#5a0010" stroke="#1a0004" stroke-width="1.5">
-      <path d="M50 226 L60 250 L70 226 Z" />
-      <path d="M77 252 L87 280 L98 252 Z" />
-      <path d="M105 236 L115 262 L125 236 Z" />
-      <path d="M131 205 L140 226 L149 205 Z" />
-      <path d="M2 140 L4 162 L18 150 Z" />
+    <!-- 関節のピンクの陰影 -->
+    <g fill="#e48aa3" opacity="0.55">
+      <ellipse cx="144" cy="244" rx="26" ry="10" />
+      <ellipse cx="209" cy="250" rx="28" ry="11" />
+      <ellipse cx="272" cy="244" rx="26" ry="10" />
+      <ellipse cx="322" cy="226" rx="18" ry="8" />
+      <ellipse cx="150" cy="292" rx="16" ry="6" />
+      <ellipse cx="212" cy="306" rx="18" ry="7" />
+      <ellipse cx="276" cy="296" rx="16" ry="6" />
     </g>
-    <!-- 血管・影 -->
-    <g fill="none" stroke="#7a1020" stroke-width="1.5" opacity="0.55">
-      <path d="M86 -60 Q92 0 84 60 Q90 100 98 130" />
-      <path d="M112 -20 Q106 40 116 90" />
+    <!-- 黒い爪 -->
+    <g fill="#120814" stroke="#000" stroke-width="2">
+      <rect x="128" y="300" width="40" height="44" rx="14" />
+      <rect x="191" y="322" width="44" height="50" rx="16" />
+      <rect x="258" y="306" width="38" height="44" rx="14" />
+      <rect x="316" y="276" width="28" height="34" rx="11" />
+      <rect x="40" y="254" width="36" height="40" rx="13" transform="rotate(-28 58 274)" />
+    </g>
+    <!-- 爪のツヤ -->
+    <g fill="#ffffff" opacity="0.35">
+      <rect x="136" y="306" width="8" height="18" rx="4" />
+      <rect x="200" y="330" width="9" height="20" rx="4" />
+      <rect x="265" y="312" width="8" height="18" rx="4" />
     </g>
   </svg>
 
   <div class="flash"></div>
-  <div class="wave"></div>
-  <div class="wave wave--2"></div>
 
   <div class="bubble">
     <span class="bubble__name">金木くん</span>
@@ -428,7 +478,7 @@
     await wait(700);
 
     stage.classList.add("is-drop");      // 手が落ちる
-    await wait(420);
+    await wait(450);
     stage.classList.remove("is-drop");
     stage.classList.add("is-landed");    // 着地：揺れ・赤フラッシュ
     sfx.don();
