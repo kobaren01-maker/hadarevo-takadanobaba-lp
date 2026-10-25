@@ -5,3 +5,5 @@ out.txt
 
 # 遊び用ページの版権キャラ画像はリポジトリに含めない
 key-exchange-lp/src/_playground/kaneki*
+key-exchange-lp/src/_playground/hand*
+key-exchange-lp/src/_playground/*.mp3

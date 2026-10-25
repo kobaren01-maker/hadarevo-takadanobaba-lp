@@ -80,7 +80,7 @@
     top: 50%;
     width: min(118vw, 560px);
     transform: translate(-50%, -190%) rotate(-10deg) scale(0.8);
-    overflow: visible;
+    height: auto;
     filter: drop-shadow(0 24px 30px rgba(0, 0, 0, 0.7));
   }
   .stage.is-drop .hand { animation: drop 0.45s cubic-bezier(0.6, 0, 1, 0.5) forwards; }
@@ -312,58 +312,8 @@
   <div class="wave"></div>
   <div class="wave wave--2"></div>
 
-  <!-- 手：オリジナルの絵（コードで描画）。手の甲と爪がこちらを向き、指先が下に曲がった「つかみかかる」形 -->
-  <svg class="hand" viewBox="0 0 400 420" aria-hidden="true">
-    <defs>
-      <radialGradient id="skin" cx="0.48" cy="0.4" r="0.65">
-        <stop offset="0" stop-color="#fff6f6" />
-        <stop offset="0.55" stop-color="#f6d3db" />
-        <stop offset="1" stop-color="#d98ea4" />
-      </radialGradient>
-      <linearGradient id="sleeve" x1="0" x2="1">
-        <stop offset="0" stop-color="#1b1622" />
-        <stop offset="1" stop-color="#3a3346" />
-      </linearGradient>
-    </defs>
-    <!-- 袖と手首（画面の上へ伸びる） -->
-    <path d="M150 -120 L280 -120 L268 70 L162 70 Z" fill="url(#sleeve)" stroke="#0b0710" stroke-width="3" />
-    <path d="M168 60 L262 60 L270 130 L160 130 Z" fill="url(#skin)" stroke="#3a0d22" stroke-width="3" />
-    <g fill="url(#skin)" stroke="#3a0d22" stroke-width="3" stroke-linejoin="round">
-      <!-- 親指（左下へ張り出す） -->
-      <path d="M118 170 Q70 190 44 250 Q30 290 58 300 Q86 306 100 268 Q118 230 150 214 Z" />
-      <!-- 手の甲 -->
-      <path d="M112 150 Q150 104 218 108 Q294 112 318 160 Q334 208 318 250 L112 256 Q96 200 112 150 Z" />
-      <!-- 指（第二関節から手前に曲がり、爪がこちらを向く） -->
-      <path d="M110 238 Q106 300 122 344 Q150 372 176 344 Q186 300 178 240 Z" />
-      <path d="M172 244 Q166 318 184 372 Q212 404 242 372 Q256 318 246 244 Z" />
-      <path d="M240 240 Q238 310 252 352 Q278 380 302 350 Q312 300 304 236 Z" />
-      <path d="M298 226 Q300 280 312 312 Q332 334 350 310 Q356 266 342 214 Z" />
-    </g>
-    <!-- 関節のピンクの陰影 -->
-    <g fill="#e48aa3" opacity="0.55">
-      <ellipse cx="144" cy="244" rx="26" ry="10" />
-      <ellipse cx="209" cy="250" rx="28" ry="11" />
-      <ellipse cx="272" cy="244" rx="26" ry="10" />
-      <ellipse cx="322" cy="226" rx="18" ry="8" />
-      <ellipse cx="150" cy="292" rx="16" ry="6" />
-      <ellipse cx="212" cy="306" rx="18" ry="7" />
-      <ellipse cx="276" cy="296" rx="16" ry="6" />
-    </g>
-    <!-- 黒い爪 -->
-    <g fill="#120814" stroke="#000" stroke-width="2">
-      <rect x="128" y="300" width="40" height="44" rx="14" />
-      <rect x="191" y="322" width="44" height="50" rx="16" />
-      <rect x="258" y="306" width="38" height="44" rx="14" />
-      <rect x="316" y="276" width="28" height="34" rx="11" />
-      <rect x="40" y="254" width="36" height="40" rx="13" transform="rotate(-28 58 274)" />
-    </g>
-    <!-- 爪のツヤ -->
-    <g fill="#ffffff" opacity="0.35">
-      <rect x="136" y="306" width="8" height="18" rx="4" />
-      <rect x="200" y="330" width="9" height="20" rx="4" />
-      <rect x="265" y="312" width="8" height="18" rx="4" />
-    </g>
-  </svg>
+  <!-- 手：hand.webp（背景透過の素材画像） -->
+  <img class="hand" src="hand.webp" alt="" width="1000" height="702" />
 
   <div class="flash"></div>
 
@@ -476,6 +426,24 @@
     src.connect(g).connect(audio.destination);
     src.start(t);
   }
+  var fallBuffer = null;
+  function loadFall() {
+    if (!audio) return;
+    fetch(new URL("fall.mp3", location.href))
+      .then(function (r) { return r.arrayBuffer(); })
+      .then(function (b) { return audio.decodeAudioData(b); })
+      .then(function (buf) { fallBuffer = buf; })
+      .catch(function () { fallBuffer = null; });
+  }
+  function playFall() {
+    if (!audio) return;
+    if (!fallBuffer) { sfx.don(); return; }
+    var src = audio.createBufferSource();
+    src.buffer = fallBuffer;
+    src.connect(audio.destination);
+    src.start();
+  }
+
   var sfx = {
     kyuin: function () { if (!audio) return; tone("sawtooth", 300, 2400, 0, 0.5, 0.12); tone("square", 600, 4800, 0.05, 0.45, 0.05); },
     don:   function () { if (!audio) return; tone("sine", 140, 30, 0, 0.6, 0.9); noise(0, 0.35, 0.5); },
@@ -498,11 +466,11 @@
     sfx.kyuin();
     await wait(700);
 
-    stage.classList.add("is-drop");      // 手が落ちる
+    stage.classList.add("is-drop");      // 手が落ちる（落下音は元音声の14秒〜。衝撃音が約0.3秒後に来る）
+    playFall();
     await wait(450);
     stage.classList.remove("is-drop");
     stage.classList.add("is-landed");    // 着地：揺れ・赤フラッシュ
-    sfx.don();
     await wait(1500);
 
     stage.classList.add("is-win");       // 虹の後光＋金木くん「おめでとう」
@@ -515,7 +483,8 @@
   startBtn.addEventListener("click", function () {
     try { audio = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { audio = null; }
     startBtn.remove();
-    play();
+    loadFall();
+    setTimeout(play, 300); // 落下音の読み込みを待つ
   });
   document.getElementById("again").addEventListener("click", play);
   document.getElementById("close").addEventListener("click", reset);
