@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<!-- 【要確認】{地域}・{屋号}・金額を確定後に差し替え。titleは32字前後、descriptionは120字前後 -->
+<title>鍵開け・鍵交換なら{屋号}｜{地域}最短◯分・24時間受付・作業前に総額提示</title>
+<meta name="description" content="鍵をなくした・家に入れない時は{屋号}へ。{地域}に最短◯分で到着。玄関の鍵開け◯◯円（出張費込み・税込）。作業前に総額をお伝えし、ご納得いただけなければキャンセル無料です。" />
+<link rel="canonical" href="https://h-gate.jp/" />
+<meta name="theme-color" content="#14325c" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="鍵開け・鍵交換なら{屋号}｜24時間受付・作業前に総額提示" />
+<meta property="og:description" content="鍵をなくした・開かない時は{屋号}へ。最短◯分で到着、作業前に総額をお伝えします。" />
+<meta property="og:url" content="https://h-gate.jp/" />
+<meta property="og:image" content="https://h-gate.jp/images/ogp.jpg" />
+<link rel="stylesheet" href="style.css" />
+
+<!-- 構造化データ：事業者情報。フッターの会社概要・Googleビジネスプロフィールと一字一句一致させる -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Locksmith",
+  "name": "{屋号}",
+  "url": "https://h-gate.jp/",
+  "telephone": "+81-120-000-000",
+  "image": "https://h-gate.jp/images/ogp.jpg",
+  "priceRange": "¥◯◯〜¥◯◯",
+  "address": {
+    "@type": "PostalAddress",
+    "postalCode": "000-0000",
+    "addressRegion": "{都道府県}",
+    "addressLocality": "{市区町村}",
+    "streetAddress": "{番地}",
+    "addressCountry": "JP"
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+    "opens": "00:00",
+    "closes": "23:59"
+  },
+  "areaServed": ["{市区町村A}", "{市区町村B}", "{市区町村C}"],
+  "paymentAccepted": "現金, クレジットカード, QRコード決済"
+}
+</script>
+<!-- 構造化データ：FAQ。BLOCK13の質問・回答と内容を一致させること（不一致はガイドライン違反） -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "鍵開けの料金はいくらですか？",
+     "acceptedAnswer": {"@type": "Answer", "text": "玄関の一般的な鍵は◯◯円（出張費・見積もり費込み、税込）です。到着後、作業前に総額をお伝えします。"}},
+    {"@type": "Question", "name": "見積もり後にキャンセルできますか？",
+     "acceptedAnswer": {"@type": "Answer", "text": "はい。金額にご納得いただけない場合、キャンセル料はかかりません。"}},
+    {"@type": "Question", "name": "到着までどのくらいかかりますか？",
+     "acceptedAnswer": {"@type": "Answer", "text": "{地域}周辺であれば最短◯分、平均◯分ほどで到着します。お電話の際に目安をお伝えします。"}},
+    {"@type": "Question", "name": "身分証が必要ですか？",
+     "acceptedAnswer": {"@type": "Answer", "text": "防犯のため、鍵開けの際はご本人確認をお願いしています。身分証が室内にある場合は、開錠後にご提示いただく形で対応します。"}},
+    {"@type": "Question", "name": "鍵を壊さずに開けられますか？",
+     "acceptedAnswer": {"@type": "Answer", "text": "ほとんどの鍵は壊さずに開錠できます。破壊が必要な場合は、作業前に必ずご説明し、ご了承を得てから行います。"}}
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ======================================================================
+     0. 固定ヘッダー：どこからでも1タップで電話
+     ====================================================================== -->
+<header class="site-header">
+  <a href="/" class="site-header__logo">{屋号}<span>鍵開け・鍵交換</span></a>
+  <a href="tel:0120000000" class="site-header__tel js-tel" data-cta="header">
+    <span class="site-header__tel-label">24時間受付</span>
+    <span class="site-header__tel-num">0120-000-000</span>
+  </a>
+</header>
+
+<main>
+
+<!-- ======================================================================
+     1. FV：3秒で「ここに電話して大丈夫」と判断させる
+     ====================================================================== -->
+<section class="fv" id="top">
+  <!-- 広告グループ別に見出しを出し分ける場合は data-variant を JS で差し替え（フェーズ2） -->
+  <h1 class="fv__title">
+    <span class="fv__lead">鍵をなくした・開かない</span>
+    {地域}へ<strong>最短◯分</strong>で駆けつけます
+  </h1>
+
+  <div class="fv__price">
+    <p class="fv__price-label">玄関の鍵開け</p>
+    <p class="fv__price-num">◯◯<span>円</span></p>
+    <p class="fv__price-note">出張費・見積もり費込み／税込の総額</p>
+  </div>
+
+  <ul class="promise">
+    <li>作業前に<br />総額提示</li>
+    <li>見積もり後<br />キャンセル無料</li>
+    <li>24時間<br />365日受付</li>
+    <li>地元{地域}の<br />鍵屋</li>
+  </ul>
+
+  <a href="tel:0120000000" class="btn btn--tel js-tel" id="fv-tel" data-cta="fv">
+    <span class="btn__sub">通話無料・24時間受付</span>
+    <span class="btn__main">0120-000-000</span>
+  </a>
+  <a href="https://lin.ee/XXXXXXX" class="btn btn--line js-line" data-cta="fv">LINEで写真を送って見積もり</a>
+
+  <p class="fv__status">現在 {地域}周辺へ <strong>約◯分</strong> で到着可能です</p>
+
+  <figure class="fv__visual">
+    <!-- 実写：作業車の前に立つスタッフ等。テキストを画像に焼き込まない -->
+    <img src="images/fv-staff.webp" alt="{屋号}のスタッフと作業車" width="750" height="500" fetchpriority="high" />
+  </figure>
+</section>
+
+<!-- ======================================================================
+     2. お困りごと選択：自分ごと化し、該当する料金へジャンプ
+     ====================================================================== -->
+<section class="section" id="trouble">
+  <h2 class="section__title">どんなお困りですか？</h2>
+  <ul class="trouble">
+    <li><a href="#price-kagiake">家の鍵をなくした</a></li>
+    <li><a href="#price-kagiake">家から閉め出された</a></li>
+    <li><a href="#price-repair">鍵が回らない・抜けない</a></li>
+    <li><a href="#price-koukan">鍵を交換したい</a></li>
+    <li><a href="#price-car">車・バイクの鍵</a></li>
+    <li><a href="#price-other">金庫・ポスト・その他</a></li>
+  </ul>
+</section>
+
+<!-- ======================================================================
+     3. 料金表：HTMLの表で記載（画像にしない＝検索・AIに読ませる）
+     ====================================================================== -->
+<section class="section section--alt" id="price">
+  <h2 class="section__title">鍵開け・鍵交換の料金</h2>
+  <p class="section__lead">表示はすべて<strong>出張費・見積もり費込みの税込総額</strong>です。</p>
+
+  <table class="price-table">
+    <tbody>
+      <tr id="price-kagiake"><th scope="row">鍵開け（玄関・一般的な鍵）</th><td>◯◯円</td></tr>
+      <tr><th scope="row">鍵開け（ディンプルキー等の防犯性の高い鍵）</th><td>◯◯円</td></tr>
+      <tr><th scope="row">鍵開け（補助錠・室内ドア）</th><td>◯◯円</td></tr>
+      <tr id="price-koukan"><th scope="row">鍵交換（一般シリンダー・部品込み）</th><td>◯◯円〜</td></tr>
+      <tr><th scope="row">鍵交換（ディンプルシリンダー・部品込み）</th><td>◯◯円〜</td></tr>
+      <tr id="price-repair"><th scope="row">鍵の修理（回らない・抜けない）</th><td>◯◯円〜</td></tr>
+      <tr id="price-car"><th scope="row">車の鍵開け（インロック）</th><td>◯◯円</td></tr>
+      <tr id="price-other"><th scope="row">金庫の開錠</th><td>◯◯円〜</td></tr>
+    </tbody>
+  </table>
+  <ul class="notes">
+    <li>深夜・早朝（◯時〜◯時）の割増：【要確認：あり◯円／なし】</li>
+    <li>「〜」の料金は、鍵の種類・部品代により変わります。必ず作業前に総額をお伝えします。</li>
+  </ul>
+  <a href="/price/" class="link-more">鍵の種類別・詳しい料金を見る</a>
+</section>
+
+<!-- ======================================================================
+     4. 料金が後から増えないルール：業界の高額請求不安への回答
+     ====================================================================== -->
+<section class="section" id="rule">
+  <h2 class="section__title">料金が後から増えない<br />{屋号}の3つのルール</h2>
+  <ol class="rule">
+    <li><h3>作業前に、総額をお伝えします</h3><p>到着後に鍵の状態を確認し、作業に入る前に最終金額を提示します。</p></li>
+    <li><h3>ご納得いただけなければ0円</h3><p>見積もり後のキャンセルに費用はかかりません。出張費もいただきません。</p></li>
+    <li><h3>提示した金額以上は請求しません</h3><p>作業中に追加作業が必要になった場合も、必ず事前にご相談します。</p></li>
+  </ol>
+</section>
+
+<!-- ======================================================================
+     5. 作業の流れ：先が見える安心
+     ====================================================================== -->
+<section class="section section--alt" id="flow">
+  <h2 class="section__title">お電話から作業完了まで</h2>
+  <ol class="flow">
+    <li><h3>お電話・LINE</h3><p>場所と鍵の状況をお聞きし、到着時間と料金の目安をお伝えします。</p></li>
+    <li><h3>到着</h3><p>最短◯分。到着前にスタッフからお電話します。</p></li>
+    <li><h3>本人確認・お見積もり</h3><p>防犯のため身分証で本人確認をお願いしています。その上で総額を提示します。</p></li>
+    <li><h3>作業</h3><p>ご了承後に作業開始。一般的な鍵開けは◯〜◯分ほどです。</p></li>
+    <li><h3>お支払い</h3><p>現金・カード・QR決済に対応しています。</p></li>
+  </ol>
+</section>
+
+<!-- ======================================================================
+     6. 選ばれる理由
+     ====================================================================== -->
+<section class="section" id="reason">
+  <h2 class="section__title">{屋号}が選ばれる理由</h2>
+  <ul class="reason">
+    <!-- 【要確認】実在する根拠のあるものだけを書く -->
+    <li><h3>地元{地域}の拠点から急行</h3><p>【要確認：拠点の所在地・到着実績】</p></li>
+    <li><h3>壊さない開錠技術</h3><p>【要確認：非破壊開錠の対応範囲・資格】</p></li>
+    <li><h3>累計◯件の作業実績</h3><p>【要確認：根拠のある件数】</p></li>
+    <li><h3>交換後の保証</h3><p>【要確認：保証期間・内容】</p></li>
+  </ul>
+</section>
+
+<!-- ======================================================================
+     7. 対応エリア・到着目安：エリアページへのハブ（地域SEO）
+     ====================================================================== -->
+<section class="section section--alt" id="area">
+  <h2 class="section__title">対応エリアと到着の目安</h2>
+  <table class="area-table">
+    <thead><tr><th scope="col">エリア</th><th scope="col">到着目安</th></tr></thead>
+    <tbody>
+      <tr><td><a href="/area/{市区町村A}/">{市区町村A}</a></td><td>約◯分</td></tr>
+      <tr><td><a href="/area/{市区町村B}/">{市区町村B}</a></td><td>約◯分</td></tr>
+      <tr><td><a href="/area/{市区町村C}/">{市区町村C}</a></td><td>約◯分</td></tr>
+    </tbody>
+  </table>
+  <p class="notes">交通状況により前後します。上記以外の地域もお気軽にお問い合わせください。</p>
+</section>
+
+<!-- ======================================================================
+     8. 作業事例：一次情報（SEO・AIO・信頼すべてに効く）
+     実在の事例が揃うまで非表示にする（hidden属性を外して公開）
+     ====================================================================== -->
+<section class="section" id="case" hidden>
+  <h2 class="section__title">最近の作業事例</h2>
+  <ul class="case">
+    <li>
+      <img src="images/case-01.webp" alt="{市区町村A}のマンション玄関 鍵開け作業" width="600" height="400" loading="lazy" />
+      <dl>
+        <dt>エリア</dt><dd>{市区町村A}</dd>
+        <dt>内容</dt><dd>鍵紛失による玄関の鍵開け</dd>
+        <dt>到着</dt><dd>お電話から◯分</dd>
+        <dt>作業時間</dt><dd>◯分</dd>
+        <dt>料金</dt><dd>◯◯円（税込）</dd>
+      </dl>
+    </li>
+  </ul>
+  <a href="/case/" class="link-more">作業事例をもっと見る</a>
+</section>
+
+<!-- ======================================================================
+     9. お客様の声：Google口コミ（掲載許諾済みのもののみ）
+     ====================================================================== -->
+<section class="section section--alt" id="voice" hidden>
+  <h2 class="section__title">お客様の声</h2>
+  <p class="voice__rating">Googleクチコミ ★◯.◯（◯件）</p>
+  <ul class="voice">
+    <li><p>「（口コミ本文の抜粋）」</p><span>{市区町村}・◯代</span></li>
+  </ul>
+</section>
+
+<!-- ======================================================================
+     10. スタッフ紹介：顔が見える安心（E-E-A-T）
+     ====================================================================== -->
+<section class="section" id="staff">
+  <h2 class="section__title">お伺いするスタッフ</h2>
+  <div class="staff">
+    <img src="images/staff-01.webp" alt="代表 {氏名}" width="400" height="400" loading="lazy" />
+    <div>
+      <h3>代表 {氏名}</h3>
+      <p>【要確認：経歴・保有資格（防犯設備士 等）・ひと言メッセージ】</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================================
+     11. まずやること：焦りを鎮める／AIOに引用される結論先出し形式
+     ====================================================================== -->
+<section class="section section--alt" id="first">
+  <h2 class="section__title">鍵をなくしたら、まずやること</h2>
+  <p class="section__lead">結論：<strong>安全な場所で落ち着いて、①心当たりを確認 ②賃貸なら管理会社へ連絡 ③入れない場合は鍵屋へ依頼</strong>の順で進めてください。</p>
+  <ol class="checklist">
+    <li><h3>最後に鍵を使った場所を思い出す</h3><p>立ち寄った店・駅・職場に問い合わせます。</p></li>
+    <li><h3>警察に遺失届を出す</h3><p>交番や警察署、オンラインでも届け出できます。</p></li>
+    <li><h3>賃貸の場合は管理会社・大家さんへ連絡</h3><p>合鍵の有無や、鍵交換のルールを確認します。</p></li>
+    <li><h3>住所が分かる物と一緒に落とした場合は鍵交換を検討</h3><p>悪用を防ぐため、交換をおすすめします。</p></li>
+    <li><h3>どうしても入れない時は鍵屋へ</h3><p>24時間受付しています。お電話で到着時間と料金の目安をお伝えします。</p></li>
+  </ol>
+  <a href="/column/kagi-nakushita/" class="link-more">詳しく：鍵をなくした時の対処法</a>
+</section>
+
+<!-- ======================================================================
+     12. お支払い方法
+     ====================================================================== -->
+<section class="section" id="payment">
+  <h2 class="section__title">お支払い方法</h2>
+  <p>現金／クレジットカード（VISA・Mastercard・JCB・AMEX）／QRコード決済（PayPay 等）【要確認】</p>
+</section>
+
+<!-- ======================================================================
+     13. よくある質問：JSON-LD（FAQPage）と内容を一致させる
+     ====================================================================== -->
+<section class="section section--alt" id="faq">
+  <h2 class="section__title">よくある質問</h2>
+  <div class="faq">
+    <details><summary>鍵開けの料金はいくらですか？</summary>
+      <p>玄関の一般的な鍵は◯◯円（出張費・見積もり費込み、税込）です。到着後、作業前に総額をお伝えします。</p></details>
+    <details><summary>見積もり後にキャンセルできますか？</summary>
+      <p>はい。金額にご納得いただけない場合、キャンセル料はかかりません。</p></details>
+    <details><summary>到着までどのくらいかかりますか？</summary>
+      <p>{地域}周辺であれば最短◯分、平均◯分ほどで到着します。お電話の際に目安をお伝えします。</p></details>
+    <details><summary>身分証が必要ですか？</summary>
+      <p>防犯のため、鍵開けの際はご本人確認をお願いしています。身分証が室内にある場合は、開錠後にご提示いただく形で対応します。</p></details>
+    <details><summary>鍵を壊さずに開けられますか？</summary>
+      <p>ほとんどの鍵は壊さずに開錠できます。破壊が必要な場合は、作業前に必ずご説明し、ご了承を得てから行います。</p></details>
+  </div>
+</section>
+
+<!-- ======================================================================
+     14. お役立ちコラム：更新性のシグナル・回遊（WordPress化後は最新3件を自動表示）
+     ====================================================================== -->
+<section class="section" id="column">
+  <h2 class="section__title">鍵のお役立ちコラム</h2>
+  <ul class="column-list">
+    <li><a href="/column/kagi-nakushita/">鍵をなくした時にまずやること｜警察・管理会社・鍵屋の順番</a></li>
+    <li><a href="/column/chintai-kagi-funshitsu/">賃貸で鍵をなくしたら？費用は誰が払う？</a></li>
+    <li><a href="/column/kagiake-souba/">鍵開けの料金相場｜鍵の種類・時間帯別に解説</a></li>
+  </ul>
+  <a href="/column/" class="link-more">コラム一覧</a>
+</section>
+
+<!-- ======================================================================
+     15. 最終CTA
+     ====================================================================== -->
+<section class="section section--cta" id="contact">
+  <h2 class="section__title">鍵のトラブル、今すぐご相談ください</h2>
+  <p>作業前に総額をお伝えします。お見積もり後のキャンセルは無料です。</p>
+  <a href="tel:0120000000" class="btn btn--tel js-tel" data-cta="bottom">
+    <span class="btn__sub">通話無料・24時間受付</span>
+    <span class="btn__main">0120-000-000</span>
+  </a>
+  <a href="https://lin.ee/XXXXXXX" class="btn btn--line js-line" data-cta="bottom">LINEで写真を送って見積もり</a>
+</section>
+
+</main>
+
+<!-- ======================================================================
+     16. 会社概要（NAP）：GBP・構造化データと完全一致させる
+     ====================================================================== -->
+<footer class="site-footer">
+  <dl class="company">
+    <dt>屋号</dt><dd>{屋号}</dd>
+    <dt>運営会社</dt><dd>{会社名}</dd>
+    <dt>代表者</dt><dd>{氏名}</dd>
+    <dt>所在地</dt><dd>〒000-0000 {都道府県}{市区町村}{番地}</dd>
+    <dt>電話番号</dt><dd>0120-000-000</dd>
+    <dt>受付時間</dt><dd>24時間365日</dd>
+    <dt>対応エリア</dt><dd>{市区町村A}・{市区町村B}・{市区町村C}</dd>
+  </dl>
+  <nav class="footer-nav">
+    <a href="/price/">料金表</a><a href="/case/">作業事例</a><a href="/column/">コラム</a>
+    <a href="/company/">会社概要</a><a href="/privacy/">プライバシーポリシー</a>
+  </nav>
+  <p class="copyright">&copy; {屋号}</p>
+</footer>
+
+<!-- 画面下固定バー：FVの電話ボタンが見えなくなったら表示 -->
+<div class="fixed-cta" id="fixed-cta" aria-hidden="true">
+  <a href="tel:0120000000" class="fixed-cta__tel js-tel" data-cta="fixed">📞 電話する（24時間）</a>
+  <a href="https://lin.ee/XXXXXXX" class="fixed-cta__line js-line" data-cta="fixed">LINE</a>
+</div>
+
+<script src="script.js" defer></script>
+</body>
+</html>
