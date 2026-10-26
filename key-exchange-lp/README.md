@@ -15,6 +15,7 @@
 | [docs/03-wireframe.md](docs/03-wireframe.md) | トップ（LP）のワイヤーと各ブロックの要件 |
 | [docs/04-content-ops.md](docs/04-content-ops.md) | 運用ガイド：コラムの型、作業事例の投稿手順、GBP・口コミ、月次の振り返り |
 | [docs/05-current-site-audit.md](docs/05-current-site-audit.md) | 現行サイトの分析（WordPress＋Lightning）と、子テーマ化による移行方針 |
+| [docs/06-focus-strategy.md](docs/06-focus-strategy.md) | 勝ちに行く分野の選定：鍵の紛失と安否確認の鍵開けの比較（自然流入メイン） |
 
 ## 骨組み
 
