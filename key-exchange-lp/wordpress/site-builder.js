@@ -108,7 +108,7 @@ async function kmBuildSite(cssText) {
       ? B("core/list", { className: "km-cases" }, list.slice(0, max).map((c) =>
           B("core/list-item", { content: `<a href="${c.link}">${c.date.replace(/-/g, "/")}　${c.place}</a><br>${c.ask}` })))
       : P("この地域の作業事例は準備中です。", "km-note");
-  const isLost = (c) => /紛失|なく|無く|置いて|忘れ/.test(c.ask);
+  const isLost = (c) => /紛失|なくし|無くし|置いて|おいて|忘れ/.test(c.ask);
   const isStuck = (c) => /開かな|開けられな|回らな|刺さらな|折れ|変形|不具合/.test(c.ask) && !/車|バイク|ロッカー|金庫/.test(c.ask);
   const isHome = (c) => !/車|バイク|ロッカー|金庫|メットイン/.test(c.ask);
 
