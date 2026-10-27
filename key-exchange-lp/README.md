@@ -17,6 +17,8 @@
 | [docs/05-current-site-audit.md](docs/05-current-site-audit.md) | 現行サイトの分析（WordPress＋Lightning）と、子テーマ化による移行方針 |
 | [docs/06-focus-strategy.md](docs/06-focus-strategy.md) | 勝ちに行く分野の選定：鍵の紛失と安否確認の鍵開けの比較（自然流入メイン） |
 | [docs/07-anpi-100-strategy.md](docs/07-anpi-100-strategy.md) | 安否確認の鍵開け：競合調査と、月100件までの戦略（法人・検索・広告・紹介） |
+| [docs/08-plan-for-friend.html](docs/08-plan-for-friend.html) | 友人向けの自社集客プラン（公開版：https://claude.ai/artifact/YWDyGXeVGhCHbpiAvP3ydH） |
+| [docs/09-keyword-volume.md](docs/09-keyword-volume.md) | キーワードプランナーでの検索数の実測と、目標件数の修正 |
 
 ## 骨組み
 
