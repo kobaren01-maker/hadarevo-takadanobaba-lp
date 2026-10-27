@@ -4,7 +4,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@700;800&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap">
 <style>
-  /* 構成：1カラムの「社内向け提案書」。結論を先頭に置き、根拠→数字→費用→次の行動の順に読む */
+  /* 構成：1カラムの「社内向け提案書」。結論を先頭に置き、今の状況→物差し→攻める場所→数字→進め方→費用→確認事項の順に読む */
   :root {
     --paper: #f5f7f9;
     --sheet: #ffffff;
@@ -12,9 +12,9 @@
     --muted: #5b6573;
     --line: #d8dee6;
     --navy: #1f3b5c;      /* 全体の基調・見出し */
-    --sage: #2b6b5f;      /* 安否確認＝進む方向 */
+    --sage: #2b6b5f;      /* 進む方向・狙う */
     --sage-soft: #e3f0ec;
-    --rust: #a2462b;      /* 鍵の紛失＝注意 */
+    --rust: #a2462b;      /* 注意・避ける */
     --rust-soft: #f6e7e1;
     --navy-soft: #e6edf5;
     --display: "Shippori Mincho B1", "Hiragino Mincho ProN", "Yu Mincho", serif;
@@ -109,6 +109,14 @@
   .bar__fill--sage { background: var(--sage); }
   .bar__fill--rust { background: var(--rust); }
   .bar__val { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); font-size: 13px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--muted); }
+
+  /* 元請けとぶつからない4つの場所 */
+  .lanes { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+  .lane { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+  .lane__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 8px; }
+  .lane h3 { margin: 0; font-size: 17px; }
+  .lane p { font-size: 14.5px; }
 
   /* 進め方の時系列 */
   .steps { list-style: none; padding: 0; display: grid; gap: 0; }
@@ -131,295 +139,234 @@
   <header class="cover">
     <p class="eyebrow">鍵マッハ24（株式会社hgate）向け</p>
     <h1>鍵マッハ24 自社集客プラン</h1>
-    <p class="meta">2026年10月作成。広告に頼りきらず、自社のサイトとGoogleマップから依頼が来る状態を作るための方針です。</p>
+    <p class="meta">2026年10月作成（10月27日更新）。元請けからの仕事で売上を守りながら、自社に直接依頼が来る道を、お金のかからない順に育てるための方針です。</p>
   </header>
 
   <!-- 結論 -->
   <section class="verdict" aria-labelledby="h-verdict">
     <h2 id="h-verdict" style="border-top:0;padding-top:0">結論</h2>
     <ol>
-      <li><strong>「鍵の紛失」だけで勝負するのは厳しい。</strong>検索の上位は大手チェーンと比較サイトが押さえていて、広告は1クリック1,000円を超える言葉もあります。紛失はやめるのではなく、Googleマップと作業事例で拾う「サブの柱」にします。</li>
-      <li><strong>メインの柱は「安否確認の鍵開け」。</strong>需要は増え続けているのに、専門で取り組む鍵屋がほぼいません。単価が高く、管理会社などから繰り返し依頼が来るので、月100件を目指せる分野です。</li>
-      <li><strong>検索数を実測すると、安否確認は「検索で待つ」だけでは月100件に届かない。</strong>Googleのキーワードプランナーで調べたところ、安否確認まわりの検索は東京都で月数百回規模でした。そこで<strong>法人からの継続依頼と紹介で約8割、検索と広告で約2割</strong>を取る設計にします。記事や検索対策は、家族からの直接の依頼と、法人に信頼してもらうための土台として欠かせません。</li>
-      <li><strong>すべて業者に頼むと、1年目で約700万〜1,700万円。</strong>このプランは自分たちで進める前提なので、外注費はかかりません。必要なのは広告費とサーバー代、それと作業の時間です。</li>
+      <li><strong>元請けの仕事は続ける。</strong>今の売上の土台です。自社集客は、元請けの代わりではなく「上乗せ」として始めます。</li>
+      <li><strong>元請けとぶつからない場所から攻める。</strong>Googleマップ、赤羽を中心とした北側だけの地域広告、大家・不動産屋、警察との信頼。元請けが広告を出している「鍵開け」「緊急」のような言葉は買いません。</li>
+      <li><strong>お金のかからない順に進める。</strong>まず0円でできること（マップ登録、依頼の記録、作業事例）。次に月数万円の広告テスト。結果を見てから広げます。</li>
+      <li><strong>判断の物差しは1つ。</strong>「自社で1件取る費用」が「元請けに払う1件あたりの手数料」より安ければ、自社で取るほうが得です。言葉ごとにこの比較で広げるかやめるかを決めます。</li>
+      <li><strong>実測で、安くて量がある言葉が見つかった。</strong>東京都で「鍵交換 費用」は月1,000〜1万回、1クリック146〜504円。「鍵屋 赤羽」は245〜1,061円。一方「鍵屋 緊急」は1,639〜4,390円でした。同じ鍵屋の言葉でも、選び方で1件の費用が約9倍変わります。</li>
     </ol>
   </section>
 
-  <!-- 1. 紛失が厳しい理由 -->
-  <section aria-labelledby="h-funshitsu">
-    <h2 id="h-funshitsu">なぜ「鍵の紛失」一本では厳しいのか</h2>
-    <p>紛失の依頼は数が多い一方で、ネット上の取り合いが最も激しい分野です。理由は4つあります。</p>
-
-    <h3>1. 検索の上位を大手が押さえている</h3>
-    <p>「鍵開け」「鍵 なくした」で上位に出るのは、ミツモア、くらしのマーケット、生活110番などの比較サイトと、鍵の110番救急車、鍵猿、アンロックなどの大手チェーンです。どこも何年も前から地域別のページと記事を大量に作っています。今から記事を書いても、この差は1〜2年では埋まりません。</p>
-
-    <h3>2. 広告が高い</h3>
-    <p>キーワードプランナーで東京都の1クリックの目安を調べると、「鍵開け」が617〜2,747円、「鍵 なくした」が499〜1,973円、「鍵開け 東京」は1,482〜3,980円でした。安否確認（150〜343円）の約10倍です。しかも大手は「4,400円から」「1,500円〜」のような安い入口価格で広告を出しています。</p>
-
-    <h3>3. スマホでは広告とマップが先に出る</h3>
-    <p>焦っている人はスマホで検索し、画面の上に出る広告か、その下のGoogleマップの3件に電話します。記事で検索1位を取っても、そこまで画面を下にスクロールしてもらえません。</p>
-
-    <h3>4. Googleマップは住所で決まる</h3>
-    <p>マップの順位は、登録した住所からの距離で大きく決まります。バーチャルオフィスの住所は登録できないので、赤羽の自宅を拠点に「出張型の業者」として登録します。この場合、マップで強く出られるのは赤羽を中心とした東京の北側（北区・板橋区・足立区など）が中心になります。</p>
-
-    <div class="note note--info">
-      <strong>紛失はやめません。</strong>Googleマップ、作業事例の積み上げ、絞った広告、管理会社や駆けつけサービスとの提携で取ります。「記事で検索の上位を取りに行く」ことだけをやめる、という判断です。
-    </div>
-  </section>
-
-  <!-- 2. 安否確認を選ぶ理由 -->
-  <section aria-labelledby="h-anpi">
-    <h2 id="h-anpi">なぜ「安否確認の鍵開け」なのか</h2>
+  <!-- 1. 今の状況 -->
+  <section aria-labelledby="h-now">
+    <h2 id="h-now">今の状況</h2>
+    <p>鍵マッハ24は今、自社で集客をしていません。元請け（駆けつけサービスの会社）がYahoo!広告などで「緊急 鍵 開け」のような言葉に広告を出し、入った仕事を振ってもらっています。作業員は10数名が都内各地で待機していて、拠点は赤羽です。</p>
 
     <div class="duo">
-      <div class="side side--rust">
-        <h3>鍵の紛失</h3>
-        <ul>
-          <li>需要：とても大きい</li>
-          <li>競合：大手・比較サイトが非常に強い</li>
-          <li>単価：安値競争になりやすい</li>
-          <li>繰り返しの依頼：ほぼない</li>
-          <li>自然検索での勝ちやすさ：低い</li>
-        </ul>
-      </div>
       <div class="side side--sage">
-        <h3>安否確認の鍵開け</h3>
+        <h3>元請けの仕事の良いところ</h3>
         <ul>
-          <li>需要：増え続けている</li>
-          <li>競合：専門で取り組む鍵屋がほぼいない</li>
-          <li>単価：高い</li>
-          <li>繰り返しの依頼：管理会社などから継続して来る</li>
-          <li>自然検索での勝ちやすさ：高い</li>
+          <li>広告費がかからない</li>
+          <li>仕事が安定して来る</li>
+          <li>都内全域の仕事を受けられる</li>
+        </ul>
+      </div>
+      <div class="side side--rust">
+        <h3>元請けだけに頼る弱いところ</h3>
+        <ul>
+          <li>1件ごとに手数料を払っている</li>
+          <li>件数も料金も元請けしだい</li>
+          <li>お客様が「鍵マッハ24」を覚えない。口コミも紹介も自社に残らない</li>
         </ul>
       </div>
     </div>
 
-    <h3>需要は増え続けている</h3>
-    <ul>
-      <li>2024年に、自宅で亡くなった一人暮らしの人は全国で<strong>76,020人</strong>（警察庁）。約76%が65歳以上です。</li>
-      <li>死後8日以上たって見つかる「孤立死」の政府推計は、2024年21,856人、2025年22,222人と増えています。</li>
-      <li>東京都は一人暮らしの世帯が全国で最も多く、約363万世帯（全世帯の約50%、全国の一人暮らし世帯の約17%）です。</li>
-    </ul>
-    <p>全国の数字に東京の一人暮らし世帯の割合（約17%）をかけると、<strong>東京で一人暮らしの人が自宅で亡くなるのは年間約1.3万人、月に約1,100人</strong>という計算になります。安否確認の依頼は、亡くなっているケースだけでなく、入院や外出で連絡が取れないだけのケースも含むので、実際にはこれより多く発生しています。</p>
-    <p class="muted">※全国の数字を世帯の割合で按分した概算です。東京都の正式な統計ではありません。月100件は、この発生件数の1割未満にあたります。</p>
-
-    <h3>競合はほぼ空いている</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>相手</th><th>例</th><th>弱いところ</th></tr></thead>
-        <tbody>
-          <tr><td>鍵屋の安否確認ページ</td><td>スターキーロック、東京玄関鍵開け救急センター24（15,400円〜）</td><td>ブログ1本やFAQの1項目程度。手順や警察との関係まで書いていない</td></tr>
-          <tr><td>駆けつけ代行（鍵屋ではない）</td><td>マルチ救急24（日中13,200円・深夜17,600円）</td><td>自分では鍵を開けられないので、開錠は別料金・別手配</td></tr>
-          <tr><td>見守りサービス大手</td><td>セコム、ALSOK、日本郵便</td><td>契約者しか使えない。突然「親と連絡が取れない」人には応えられない</td></tr>
-          <tr><td>比較サイト</td><td>ミツモア、くらしのマーケット</td><td>安否確認に特化していない</td></tr>
-        </tbody>
-      </table>
+    <div class="note">
+      <strong>先に確認したいこと：</strong>元請けとの契約で禁止されていること（元請け経由のお客様への名刺・ステッカー配布、直接の受注、同じ地域での集客など）。ここが分かるまでは、元請け経由のお客様には何もしません。
     </div>
+  </section>
 
-    <h3>実際の検索結果（「安否確認 鍵開け」、2026年10月にスマホで確認）</h3>
-    <ul>
-      <li><strong>広告：</strong>カギの110番と鍵のレスキューが出ているが、どちらも安否確認のことを一言も書いていない。「鍵開け」で広く出した広告がたまたま表示されているだけ。</li>
-      <li><strong>検索の上位4件：</strong>カギ本舗、レスキューなび、鍵のレスキュー、鍵猿。どれも全国展開の大手の「解説記事1本」で、専門のサービスページはない。</li>
-      <li><strong>「警察の立ち会いは必要か」で各社の説明が食い違っている。</strong>検索する人が一番知りたいことに、まだ誰もはっきり答えていない。</li>
-      <li><strong>「関連する質問」に関係ない質問が混ざっている</strong>（「オタク用語の鍵開けとは」など）。Googleがこのテーマの良い情報をまだそろえきれていない、というサインです。</li>
+  <!-- 2. 物差し -->
+  <section aria-labelledby="h-measure">
+    <h2 id="h-measure">判断の物差し：1件取るのにいくらかかるか</h2>
+    <p>広告で1件の作業を取る費用を、検索の言葉ごとに試算しました。「クリックした人の8%が電話し、その7割が作業になる」と仮定し、1クリックの単価はキーワードプランナー（Googleの無料の調査ツール）が出した安い側と高い側の真ん中で計算しています（東京都）。</p>
+
+    <div class="bars" role="img" aria-label="1件あたりの費用：鍵交換 費用 約5,800円、鍵屋 赤羽 約11,700円、鍵屋 近く 約19,500円、家の鍵 なくした 約25,300円、鍵開け 約30,000円、鍵屋 緊急 約53,800円">
+      <div class="bar"><span>鍵交換 費用</span><div class="bar__track"><div class="bar__fill bar__fill--sage" style="width:10.8%"></div><span class="bar__val">約5,800円</span></div></div>
+      <div class="bar"><span>鍵屋 赤羽</span><div class="bar__track"><div class="bar__fill bar__fill--sage" style="width:21.7%"></div><span class="bar__val">約11,700円</span></div></div>
+      <div class="bar"><span>鍵屋 近く</span><div class="bar__track"><div class="bar__fill" style="width:36.2%"></div><span class="bar__val">約19,500円</span></div></div>
+      <div class="bar"><span>家の鍵 なくした</span><div class="bar__track"><div class="bar__fill" style="width:47%"></div><span class="bar__val">約25,300円</span></div></div>
+      <div class="bar"><span>鍵開け</span><div class="bar__track"><div class="bar__fill bar__fill--rust" style="width:55.8%"></div><span class="bar__val">約30,000円</span></div></div>
+      <div class="bar"><span>鍵屋 緊急</span><div class="bar__track"><div class="bar__fill bar__fill--rust" style="width:100%"></div><span class="bar__val">約53,800円</span></div></div>
+    </div>
+    <p class="legend"><span><span class="chip chip--good">狙う</span> 安い</span><span><span class="chip chip--mid">少額で試す</span></span><span><span class="chip chip--bad">買わない</span> 高い・元請けとぶつかる</span></p>
+
+    <p>この金額と、元請けに払っている1件あたりの手数料を比べます。たとえば手数料が1件1万5千円なら、「鍵交換 費用」と「鍵屋 赤羽」は自社で取るほうが得で、「鍵開け」「鍵屋 緊急」は元請けに任せるほうが得、という判断になります。</p>
+    <p class="muted">※電話になる割合と成約率は仮の数字です。広告を少額で試し、実際の数字で計算し直します。</p>
+  </section>
+
+  <!-- 3. 攻める場所 -->
+  <section aria-labelledby="h-lanes">
+    <h2 id="h-lanes">元請けとぶつからない4つの場所</h2>
+    <p>お金のかからない順に並べています。</p>
+    <ul class="lanes">
+      <li class="lane">
+        <div class="lane__head"><h3>Googleマップ</h3><span class="chip chip--good">0円</span></div>
+        <p>赤羽の自宅を拠点に「出張型の業者」として登録します（住所は表示しません）。マップの順位は拠点からの距離で決まるので、北区・板橋区・足立区など北側で強く出られます。口コミが増えるほど強くなります。</p>
+      </li>
+      <li class="lane">
+        <div class="lane__head"><h3>北側だけの地域広告</h3><span class="chip chip--mid">月3万〜5万円から</span></div>
+        <p>広告を出す地域を赤羽まわりに絞り、「鍵交換」「鍵屋＋地名」のような安い言葉だけに出します。元請けが出している「緊急」「24時間」の言葉には出しません。</p>
+      </li>
+      <li class="lane">
+        <div class="lane__head"><h3>大家・不動産屋・管理会社</h3><span class="chip chip--good">0円（時間）</span></div>
+        <p>入居者の鍵の紛失、退去時の鍵交換、入居者と連絡が取れないときの安否確認。検索しない相手なので、北側の不動産屋から直接案内します。一度取引すると繰り返し依頼が来ます。</p>
+      </li>
+      <li class="lane">
+        <div class="lane__head"><h3>警察・安否確認</h3><span class="chip chip--good">0円（時間）</span></div>
+        <p>安否確認は単価が高く件数も多い仕事です。依頼者は多い順に個人のお客様、警察、大家。警察の立ち会いに慣れていること、作業報告書をきちんと出すことが信頼になります。</p>
+      </li>
     </ul>
   </section>
 
-  <!-- 3. 検索ワード -->
+  <!-- 4. 紛失・鍵交換の検索 -->
   <section aria-labelledby="h-kw">
-    <h2 id="h-kw">検索数の実測</h2>
-    <p>Googleのキーワードプランナーで、2026年10月に計測しました。広告を出していないアカウントでは、検索数は「10〜100回」のように幅で表示されます。「—」は東京都で計測していない言葉です。</p>
+    <h2 id="h-kw">検索数の実測（紛失・鍵交換）</h2>
+    <p>Googleのキーワードプランナーで、2026年10月27日に計測しました（期間は2025年10月〜2026年9月）。広告を出していないアカウントでは、検索数は「10〜100回」のように幅で表示されます。「1クリックの単価」は、広告を検索結果の上の方に出すために1クリックごとに払う金額の目安です。</p>
 
     <div class="table-wrap">
       <table>
-        <thead><tr><th>検索する人</th><th>検索ワード</th><th class="num">月間検索数（日本）</th><th class="num">月間検索数（東京都）</th><th class="num">1クリックの目安</th></tr></thead>
+        <thead><tr><th>判定</th><th>検索ワード</th><th class="num">月間検索数（東京都）</th><th class="num">1クリックの単価（東京都）</th></tr></thead>
         <tbody>
-          <tr><td rowspan="5">鍵屋を探している人</td><td>安否確認 鍵開け</td><td class="num">10〜100</td><td class="num">10〜100</td><td class="num">—</td></tr>
-          <tr><td>安否確認 鍵開け 費用</td><td class="num">10〜100</td><td class="num">0〜10</td><td class="num">150〜343円</td></tr>
-          <tr><td>安否確認 鍵屋</td><td class="num">0〜10</td><td class="num">0〜10</td><td class="num">—</td></tr>
-          <tr><td>安否確認 鍵開け 東京</td><td class="num">0〜10</td><td class="num">0〜10</td><td class="num">—</td></tr>
-          <tr><td>孤独死 鍵開け</td><td class="num">0〜10</td><td class="num">0〜10</td><td class="num">—</td></tr>
-          <tr><td rowspan="5"><strong>警察への頼み方を調べる人</strong></td><td><strong>安否確認 警察</strong></td><td class="num"><strong>100〜1,000</strong></td><td class="num"><strong>100〜1,000</strong></td><td class="num">—</td></tr>
-          <tr><td>警察 安否確認</td><td class="num">100〜1,000</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr><td>連絡取れない 安否確認 警察</td><td class="num">100〜1,000</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr><td>安否確認 警察 立会い</td><td class="num">10〜100</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr><td>ほかに「家族」「マンション」「一人暮らし」「方法」「遠方」「警察署」「法律」と組み合わせた言葉</td><td class="num">各10〜100</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr><td rowspan="4">家族</td><td>親と連絡が取れない</td><td class="num">100〜1,000</td><td class="num">10〜100</td><td class="num">—</td></tr>
-          <tr><td>親 連絡取れない 警察</td><td class="num">10〜100</td><td class="num">10〜100</td><td class="num">—</td></tr>
-          <tr><td>遠方の親と連絡が取れない</td><td class="num">10〜100</td><td class="num">—</td><td class="num">6〜308円</td></tr>
-          <tr><td>一人暮らしの親と連絡が取れない／一人暮らし 親 連絡つかない</td><td class="num">各10〜100</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr><td rowspan="3">管理会社・大家</td><td>入居者 連絡取れない</td><td class="num">10〜100</td><td class="num">10〜100</td><td class="num">—</td></tr>
-          <tr><td>賃貸 安否確認</td><td class="num">10〜100</td><td class="num">10〜100</td><td class="num">—</td></tr>
-          <tr><td>入居者と連絡が取れない／家賃滞納 連絡取れない／賃貸オーナー 連絡取れない</td><td class="num">各10〜100</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr><td rowspan="2">会社の総務</td><td>無断欠勤 連絡取れない</td><td class="num">100〜1,000</td><td class="num">10〜100</td><td class="num">108〜272円（東京都）</td></tr>
-          <tr><td>社員 連絡取れない</td><td class="num">10〜100</td><td class="num">10〜100</td><td class="num">—</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>鍵の紛失との比較（東京都）</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>検索ワード</th><th class="num">月間検索数（東京都）</th><th class="num">1クリックの目安（東京都）</th></tr></thead>
-        <tbody>
-          <tr><td>鍵開け</td><td class="num">1,000〜1万</td><td class="num">617〜2,747円</td></tr>
-          <tr><td>鍵屋 近く</td><td class="num">100〜1,000</td><td class="num">467〜1,716円</td></tr>
-          <tr><td>鍵 なくした</td><td class="num">100〜1,000</td><td class="num">499〜1,973円</td></tr>
-          <tr><td>鍵開け 東京</td><td class="num">10〜100</td><td class="num">1,482〜3,980円</td></tr>
-          <tr class="total"><td>（参考）安否確認 鍵開け 費用</td><td class="num">0〜10</td><td class="num">150〜343円（日本）</td></tr>
+          <tr><td rowspan="4"><span class="chip chip--good">狙う</span></td><td>鍵交換 費用</td><td class="num">1,000〜1万</td><td class="num">146〜504円</td></tr>
+          <tr><td>鍵交換</td><td class="num">1,000〜1万</td><td class="num">311〜941円</td></tr>
+          <tr><td>シリンダー交換／ディンプルキー 交換</td><td class="num">各100〜1,000</td><td class="num">166〜539円</td></tr>
+          <tr><td>鍵屋 赤羽／王子／十条／北区</td><td class="num">各10〜100</td><td class="num">240〜1,112円</td></tr>
+          <tr><td rowspan="4"><span class="chip chip--mid">少額で試す</span></td><td>鍵屋</td><td class="num">1万〜10万</td><td class="num">516〜1,972円</td></tr>
+          <tr><td>鍵屋 近く</td><td class="num">100〜1,000</td><td class="num">467〜1,715円</td></tr>
+          <tr><td>家の鍵 なくした</td><td class="num">100〜1,000</td><td class="num">628〜2,206円</td></tr>
+          <tr><td>鍵 なくした／鍵 落とした</td><td class="num">各100〜1,000</td><td class="num">499〜2,219円</td></tr>
+          <tr><td rowspan="4"><span class="chip chip--bad">買わない</span></td><td>鍵開け</td><td class="num">1,000〜1万</td><td class="num">617〜2,746円</td></tr>
+          <tr><td>鍵開け 緊急</td><td class="num">100〜1,000</td><td class="num">1,184〜3,550円</td></tr>
+          <tr><td>鍵屋 緊急</td><td class="num">10〜100</td><td class="num">1,639〜4,390円</td></tr>
+          <tr><td>鍵開け 24時間／鍵開け 深夜</td><td class="num">各10〜100</td><td class="num">1,144〜3,314円</td></tr>
         </tbody>
       </table>
     </div>
 
     <h3>数字から分かったこと</h3>
     <ol>
-      <li><strong>「安否確認で鍵屋を探す」検索は月数十回と少ない。</strong>鍵屋を指名して探す人は、まだほとんどいません。</li>
-      <li><strong>一番多いのは「警察」まわりの検索。</strong>「安否確認 警察」だけで東京都で月100〜1,000回あります。家族はまず「警察にどう頼むか」を調べるので、<strong>記事の柱は「警察への頼み方と立ち会い」</strong>にします。上位の記事で、警察の立ち会いのもとで鍵屋が必要になる場面を正しく説明し、そこから依頼につなげます。</li>
-      <li><strong>「無断欠勤」「入居者」「賃貸」など、会社や管理会社の検索も一定数ある。</strong>法人向けページの入口になります。</li>
-      <li><strong>広告の単価は、安否確認が紛失のおよそ10分の1。</strong>競合が少ないためです。</li>
-      <li><strong>ただし検索の量そのものが小さい。</strong>東京都で計測できた主な言葉を合計しても、月170〜1,700回です。検索と広告だけで月100件は取れません。</li>
+      <li><strong>「鍵交換」まわりは安くて量がある。</strong>鍵開けの約5分の1の単価です。鍵をなくした後に交換を考える人も多く、元請けが狙う「緊急の鍵開け」とも重なりません。</li>
+      <li><strong>「鍵屋＋地名」は安く、「鍵開け＋地名」は高い。</strong>「鍵屋 赤羽」は245〜1,061円、「鍵開け 板橋区」は1,643〜3,748円。同じ地域でも言葉で約3倍違います。</li>
+      <li><strong>「緊急」「24時間」「深夜」は高い割に少ない。</strong>この言葉は元請けに任せます。「24時間・深夜も対応」は、サイトで安心してもらうための一言として使います。</li>
+      <li><strong>「鍵屋」単体は量が多いが、合鍵作りや営業時間を調べる人も混ざる。</strong>地域を絞り、「合鍵」「営業時間」などには広告を出さない設定（除外キーワード）とセットで試します。</li>
+      <li><strong>紛失の人は自分の状況で検索する。</strong>「家の鍵 なくした」「鍵が開かない」「締め出された」「鍵 なくした 賃貸」。これをサイトの見出しにそのまま使います。</li>
     </ol>
+    <p class="muted">※車・バイク・自転車・スーツケース・金庫の鍵は、今回は対象外にしています。</p>
   </section>
 
-  <!-- 4. 月100件の設計 -->
-  <section aria-labelledby="h-100">
-    <h2 id="h-100">月100件の作り方</h2>
-    <p>検索数の実測をふまえて、<strong>法人からの継続依頼と紹介・提携で約8割</strong>、検索と広告で約2割を取る設計にします。安否確認は「検索で待つ」より「信頼関係で依頼が来る」分野です。記事やサイトは、法人が取引を決めるときの信頼の材料にもなります。</p>
+  <!-- 5. 安否確認 -->
+  <section aria-labelledby="h-anpi">
+    <h2 id="h-anpi">安否確認は「信頼」で取る</h2>
+    <p>安否確認の鍵開けは単価が高く、需要も増えています。ただ、検索で鍵屋を探す人は少なく、取り方が紛失とは違います。</p>
 
-    <div class="bars" role="img" aria-label="月100件の内訳：法人60件、紹介・提携20件、自然検索・AI検索10件、広告10件">
-      <div class="bar"><span>法人からの継続依頼</span><div class="bar__track"><div class="bar__fill" style="width:100%"></div><span class="bar__val">60件</span></div></div>
-      <div class="bar"><span>紹介・提携</span><div class="bar__track"><div class="bar__fill" style="width:33.3%"></div><span class="bar__val">20件</span></div></div>
-      <div class="bar"><span>自然検索・AI検索</span><div class="bar__track"><div class="bar__fill bar__fill--sage" style="width:16.7%"></div><span class="bar__val">10件</span></div></div>
-      <div class="bar"><span>広告</span><div class="bar__track"><div class="bar__fill bar__fill--sage" style="width:16.7%"></div><span class="bar__val">10件</span></div></div>
-    </div>
+    <h3>需要は増え続けている</h3>
+    <ul>
+      <li>2024年に、自宅で亡くなった一人暮らしの人は全国で<strong>76,020人</strong>（警察庁）。約76%が65歳以上です。</li>
+      <li>東京都は一人暮らしの世帯が全国で最も多く、約363万世帯（全世帯の約50%）です。</li>
+      <li>全国の数字を世帯の割合で割り振ると、東京で一人暮らしの人が自宅で亡くなるのは<strong>月に約1,100人</strong>。入院や外出で連絡が取れないだけのケースも含めると、依頼の発生はこれより多くなります。</li>
+    </ul>
 
+    <h3>検索は「警察」まわりに集まる</h3>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>経路</th><th class="num">月の目標</th><th>依頼してくる人</th><th>立ち上がりの目安</th></tr></thead>
+        <thead><tr><th>検索ワード</th><th class="num">月間検索数（日本）</th><th class="num">月間検索数（東京都）</th></tr></thead>
         <tbody>
-          <tr><td>法人からの継続依頼</td><td class="num">60件</td><td>管理会社、家賃保証会社、社宅代行、会社の総務、介護事業所、地域包括支援センター</td><td>3〜6か月</td></tr>
-          <tr><td>紹介・提携</td><td class="num">20件</td><td>区の見守り制度、特殊清掃・遺品整理・葬儀社・弁護士、警察に鍵屋を探すよう言われた家族</td><td>3〜9か月</td></tr>
-          <tr><td>自然検索・AI検索</td><td class="num">10件</td><td>離れて暮らす家族、小さな管理会社・大家</td><td>6〜12か月</td></tr>
-          <tr><td>広告</td><td class="num">10件</td><td>家族、小さな管理会社・大家</td><td>すぐ</td></tr>
-          <tr class="total"><td>合計</td><td class="num">100件</td><td colspan="2">1日あたり約3.3件</td></tr>
+          <tr><td><strong>安否確認 警察</strong></td><td class="num"><strong>100〜1,000</strong></td><td class="num"><strong>100〜1,000</strong></td></tr>
+          <tr><td>親と連絡が取れない</td><td class="num">100〜1,000</td><td class="num">10〜100</td></tr>
+          <tr><td>無断欠勤 連絡取れない</td><td class="num">100〜1,000</td><td class="num">10〜100</td></tr>
+          <tr><td>入居者 連絡取れない／賃貸 安否確認</td><td class="num">各10〜100</td><td class="num">各10〜100</td></tr>
+          <tr><td>安否確認 鍵開け</td><td class="num">10〜100</td><td class="num">10〜100</td></tr>
+          <tr><td>安否確認 鍵屋</td><td class="num">0〜10</td><td class="num">0〜10</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="muted">※件数は目標値です。法人1社が月に何件の安否確認を抱えているかはまだ分からないので、最初の数社と取引した実績で見直します。</p>
+    <p>「安否確認で鍵屋を探す」検索は月数十回しかありません。家族はまず「警察にどう頼むか」を調べます。東京都で計測できた主な言葉を合計しても月170〜1,700回なので、検索と広告だけでは大きな件数になりません。</p>
 
-    <h3>数字の考え方（試算）</h3>
+    <h3>だから取り方はこうする</h3>
     <ul>
-      <li><strong>自然検索で10件：</strong>問い合わせの7割が作業になるとすると、月に約14件の問い合わせが必要です。ページを見た人の3%が問い合わせると考えると、<strong>月500人前後の訪問</strong>が目標です。「安否確認 警察」など警察まわりの記事で上位を取ることが前提になります。遠方に住む家族が、東京の親のことで検索するケースも入口になります。</li>
-      <li><strong>広告で10件：</strong>1クリック300円（「安否確認 鍵開け 費用」の上限）、クリックした人の8%が電話し、その7割が作業になるとすると、<strong>1件あたり約5,400円、月の広告費は約5.4万円</strong>です。必要なクリックは月180回ほどで、検索の量から見るとこれが上限に近い数字です。</li>
-      <li><strong>比べると：</strong>同じ計算で「鍵 なくした」（東京都、1クリック499〜1,973円）に広告を出すと、<strong>1件あたり約8,900〜35,200円</strong>かかります。</li>
+      <li><strong>大家・不動産屋・管理会社に直接案内する。</strong>繰り返し依頼が来る相手です。請求書払いと作業報告書で「任せて大丈夫」と思ってもらいます。</li>
+      <li><strong>警察との信頼を積む。</strong>警察からの依頼が元請け経由か直接かを確認し、直接なら対応の質で次につなげます。</li>
+      <li><strong>サイトの記事の柱は「警察への頼み方と立ち会い」。</strong>一番検索される話題に正しく答え、鍵屋が必要になる場面から依頼につなげます。</li>
+      <li><strong>広告は少額で。</strong>安否確認の言葉は1クリック150〜343円と、紛失の約10分の1です。</li>
     </ul>
   </section>
 
-  <!-- 5. 全体の流れ -->
-  <section aria-labelledby="h-flow">
-    <h2 id="h-flow">集客の全体像</h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>施策</th><th>ひとことで言うと</th><th>何をするか</th><th>主に効く分野</th></tr></thead>
-        <tbody>
-          <tr><td><strong>SEO</strong></td><td>Google検索で上に出す</td><td>安否確認の専用ページと記事を積み上げる。作業事例も地名入りで全件載せる</td><td><span class="chip chip--good">安否確認</span> <span class="chip chip--mid">紛失（地域）</span></td></tr>
-          <tr><td><strong>AIO</strong></td><td>AIの答えに使われる</td><td>質問の形の見出しに、最初の1〜2文で答える書き方にする。監修者・更新日・実例を明記する</td><td><span class="chip chip--good">安否確認</span></td></tr>
-          <tr><td><strong>MEO</strong></td><td>Googleマップに出る</td><td>赤羽の自宅で出張型として登録し、口コミを集める</td><td><span class="chip chip--mid">紛失（北側）</span></td></tr>
-          <tr><td><strong>リスティング広告</strong></td><td>検索結果に広告を出す</td><td>安否確認の言葉だけに絞って配信する。紛失は到着が早いエリアと緊急の言葉だけに絞る</td><td><span class="chip chip--good">安否確認</span> <span class="chip chip--mid">紛失</span></td></tr>
-          <tr><td><strong>法人営業</strong></td><td>検索しない相手に直接届ける</td><td>管理会社・保証会社・介護事業所に案内する。区の見守り制度にも参加する</td><td><span class="chip chip--good">安否確認</span> <span class="chip chip--mid">紛失</span></td></tr>
-        </tbody>
-      </table>
+  <!-- 6. サイト -->
+  <section aria-labelledby="h-site">
+    <h2 id="h-site">サイトの入口</h2>
+    <p>トップページは1つにして、開いてすぐの画面で2つのボタンに分けます。</p>
+    <div class="duo">
+      <div class="side side--rust">
+        <h3>鍵をなくした・開かない</h3>
+        <ul>
+          <li>ご本人が、今すぐ家に入りたいとき</li>
+          <li>見出しの例：「家の鍵をなくした・家に入れない」「締め出された・オートロックで入れない」「賃貸でも大丈夫」</li>
+          <li>料金表と「鍵交換の費用」も、ここから見られるようにする</li>
+        </ul>
+      </div>
+      <div class="side side--sage">
+        <h3>家族・入居者と連絡が取れない</h3>
+        <ul>
+          <li>家族・大家・管理会社・会社の総務が、安否確認を頼みたいとき</li>
+          <li>警察への頼み方、立ち会い、料金の流れを先に説明する</li>
+          <li>法人向けには請求書払い・作業報告書の案内を置く</li>
+        </ul>
+      </div>
     </div>
-
-    <h3>競合に勝つための約束</h3>
-    <ol>
-      <li><strong>鍵屋が直接行く。</strong>駆けつけ代行と違い、開錠まで1回で済む。</li>
-      <li><strong>都内各地に10数名が待機している。</strong>東京のどこでも早く着ける（実測した到着時間を載せる）。</li>
-      <li><strong>警察とのやりとりに慣れている。</strong>何をすればいいか分からない家族に手順を案内できる。</li>
-      <li><strong>料金を先に伝える。</strong>警察を待つ時間も含めた総額を、作業前に確定する。</li>
-      <li><strong>開けた後まで任せられる。</strong>施錠、鍵交換、管理会社への報告まで対応する。</li>
-      <li><strong>法人は請求書払い・作業報告書付き。</strong></li>
-    </ol>
   </section>
 
-  <!-- 6. 進め方 -->
+  <!-- 7. 進め方 -->
   <section aria-labelledby="h-steps">
     <h2 id="h-steps">進め方</h2>
     <ol class="steps">
       <li class="step">
         <span class="step__when">最初の1か月</span>
         <div>
-          <strong>受け入れ体制を固める</strong>
-          <p>電話受付の台本、依頼者の権限確認の手順、警察との連携手順、法人向けの作業報告書、料金表、賠償責任保険、24時間の電話受付体制。法人は「この業者に任せて大丈夫か」をここで判断します。</p>
+          <strong>0円でできることから</strong>
+          <p>元請けとの契約内容と手数料を確認する。Googleビジネスプロフィールを赤羽の自宅で登録する（住所は非表示）。依頼が来るたびに「日時・依頼者の種類・どうやって知ったか・結果・料金」を記録する。料金表、作業報告書、電話受付の流れを決める。</p>
+          <span class="chip chip--good step__goal">費用 0円</span>
         </div>
       </li>
       <li class="step">
         <span class="step__when">1〜3か月目</span>
         <div>
-          <strong>入口を作る</strong>
-          <p>サイトの作り直し、安否確認の専用ページと法人向けページの公開、記事10本、Googleマップ登録、広告の少額テスト、北側の管理会社から営業開始、区の見守り制度への参加。既存の作業事例39件のタイトルに地名を入れる。</p>
+          <strong>入口を作って、少額で試す</strong>
+          <p>サイトの作り直し（上の2つの入口）、作業事例のタイトルに地名を入れる、口コミのお願いを始める。北側だけの地域広告を「鍵交換」「鍵屋＋地名」で月3万〜5万円から試し、実際の1件の費用を測る。北側の不動産屋への案内を始める。</p>
+          <span class="chip chip--mid step__goal">広告費 月3万〜5万円</span>
         </div>
       </li>
       <li class="step">
         <span class="step__when">4〜6か月目</span>
         <div>
-          <strong>積み上げる</strong>
-          <p>記事を月6〜8本、作業事例は全件投稿、取引している法人を10社に、紹介・提携先を作る。</p>
-          <span class="chip chip--mid step__goal">目標 月30件</span>
+          <strong>元請けの手数料と比べて決める</strong>
+          <p>言葉ごとに「1件の費用」と「元請けの手数料」を比べ、得な言葉だけ広告を増やす。損な言葉はやめる。取引する不動産屋・管理会社を増やし、安否確認の記事（警察への頼み方）を書き始める。</p>
         </div>
       </li>
       <li class="step">
         <span class="step__when">7〜12か月目</span>
         <div>
-          <strong>広げる</strong>
-          <p>取引している法人を20〜30社に。検索で表示されている記事を書き直して強化する。</p>
-          <span class="chip chip--good step__goal">目標 月60〜100件</span>
+          <strong>自社の割合を上げる</strong>
+          <p>マップの口コミと作業事例で北側の自社の依頼を増やす。取引している法人を増やし、安否確認の紹介先（特殊清掃・遺品整理・葬儀社・区の見守り制度）を作る。元請けの仕事は空いている時間で続ける。</p>
         </div>
       </li>
     </ol>
-    <p class="muted">記事は公開から評価されるまで3〜6か月かかるのが普通です。最初の半年は自然検索の数字がほとんど動かなくても、計画どおりです。</p>
+    <p class="muted">サイトの記事は、公開から検索で評価されるまで3〜6か月かかるのが普通です。最初の半年は、マップと地域広告と直接の案内が中心になります。</p>
   </section>
 
-  <!-- 7. 費用 -->
+  <!-- 8. 費用 -->
   <section aria-labelledby="h-cost">
-    <h2 id="h-cost">すべて業者に頼んだ場合の費用</h2>
-    <p>サイトを作るだけでなく、記事の作成や毎月の運用まで外注した場合の目安です。業者の公開料金や業界記事の相場をもとにしています。</p>
+    <h2 id="h-cost">すべて業者に頼んだ場合との比較</h2>
+    <p>サイト制作・記事作成・毎月の運用まで外注した場合の目安です。業者の公開料金や業界記事の相場をもとにしています。このプランは自分たちで進めるので、外注費はかかりません。</p>
 
-    <h3>最初にかかる費用</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>項目</th><th>内容</th><th class="num">安く抑えた場合</th><th class="num">標準的な場合</th></tr></thead>
-        <tbody>
-          <tr><td>サイトの作り直し</td><td>WordPressで10ページ前後（トップ、料金、安否確認、法人向けなど）</td><td class="num">30万円</td><td class="num">80万円</td></tr>
-          <tr><td>広告の初期設定</td><td>アカウント作成、広告文・キーワードの設計</td><td class="num">0円</td><td class="num">10万円</td></tr>
-          <tr><td>AI検索対策の初期診断</td><td>サイトの現状調査と改善案</td><td class="num">15万円</td><td class="num">30万円</td></tr>
-          <tr class="total"><td colspan="2">初期費用の合計</td><td class="num">45万円</td><td class="num">120万円</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h3>毎月かかる費用</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>項目</th><th>内容</th><th>相場</th><th class="num">安く抑えた場合</th><th class="num">標準的な場合</th></tr></thead>
-        <tbody>
-          <tr><td>SEOのコンサルティング</td><td>戦略、キーワード選び、順位の分析</td><td>月10万〜50万円</td><td class="num">10万円</td><td class="num">30万円</td></tr>
-          <tr><td>記事の作成</td><td>月8本（構成・執筆・編集・投稿）</td><td>1本1万〜15万円</td><td class="num">12万円<br><span class="muted">1本1.5万円</span></td><td class="num">32万円<br><span class="muted">1本4万円</span></td></tr>
-          <tr><td>作業事例の投稿代行</td><td>写真とメモから事例ページを作る</td><td>1件5千〜1万円（目安）</td><td class="num">5万円<br><span class="muted">10件</span></td><td class="num">20万円<br><span class="muted">20件</span></td></tr>
-          <tr><td>Googleマップの運用（MEO）</td><td>投稿、口コミへの返信、順位の計測</td><td>月1万〜5万円</td><td class="num">2万円</td><td class="num">4万円</td></tr>
-          <tr><td>AI検索対策（AIO）</td><td>AIに引用されやすい形への改善</td><td>月10万〜50万円（中央値30万円）</td><td class="num">10万円</td><td class="num">30万円</td></tr>
-          <tr><td>広告の運用代行</td><td>入札・広告文・除外キーワードの調整</td><td>広告費の約20%</td><td class="num">3万円</td><td class="num">3万円</td></tr>
-          <tr><td>サイトの保守</td><td>WordPressの更新、バックアップ、セキュリティ</td><td>月3千〜5万円</td><td class="num">0.5万円</td><td class="num">2万円</td></tr>
-          <tr class="total"><td colspan="3">外注費の合計（月）</td><td class="num">42.5万円</td><td class="num">121万円</td></tr>
-          <tr><td colspan="3">広告費（別途。外注しても自社でやってもかかる。安否確認 約5万円＋紛失 約10万円）</td><td class="num">15万円</td><td class="num">15万円</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="muted">※作業事例の投稿代行の単価は、記事制作の相場から出した目安です。広告の運用代行の手数料は、広告費15万円の20%で計算しています。</p>
-
-    <h3>1年目の総額</h3>
-    <div class="bars" role="img" aria-label="1年目の総額：すべて外注・標準で1,752万円、すべて外注・安く抑えて735万円、自社で進める場合は広告費180万円とサーバー代など">
+    <div class="bars" role="img" aria-label="1年目の総額：すべて外注・標準で約1,752万円、すべて外注・安く抑えて約735万円、自社で進める場合は広告費の上限とサーバー代で約184万円">
       <div class="bar"><span>すべて外注（標準）</span><div class="bar__track"><div class="bar__fill bar__fill--rust" style="width:100%"></div><span class="bar__val">約1,752万円</span></div></div>
       <div class="bar"><span>すべて外注（安く）</span><div class="bar__track"><div class="bar__fill bar__fill--rust" style="width:42%"></div><span class="bar__val">約735万円</span></div></div>
       <div class="bar"><span>自社で進める</span><div class="bar__track"><div class="bar__fill bar__fill--sage" style="width:10.5%"></div><span class="bar__val">約184万円</span></div></div>
@@ -431,34 +378,37 @@
         <tbody>
           <tr><td>すべて外注（標準的な場合）</td><td class="num">120万円</td><td class="num">1,452万円</td><td class="num">180万円</td><td class="num"><strong>約1,752万円</strong></td></tr>
           <tr><td>すべて外注（安く抑えた場合）</td><td class="num">45万円</td><td class="num">510万円</td><td class="num">180万円</td><td class="num"><strong>約735万円</strong></td></tr>
-          <tr><td>自社で進める（このプラン）</td><td class="num">0円</td><td class="num">0円</td><td class="num">180万円</td><td class="num"><strong>約184万円</strong><br><span class="muted">サーバー・ドメイン代 約4万円を含む</span></td></tr>
+          <tr><td>自社で進める（このプラン）</td><td class="num">0円</td><td class="num">0円</td><td class="num">最大180万円</td><td class="num"><strong>最大 約184万円</strong><br><span class="muted">サーバー・ドメイン代 約4万円を含む</span></td></tr>
         </tbody>
       </table>
     </div>
+    <p class="muted">※広告費は月15万円（北側の地域広告 約10万円＋安否確認 約5万円）を上限とした場合です。実際は月3万〜5万円から始め、元請けの手数料より安く取れる言葉だけ増やすので、多くの場合これより少なくなります。外注の毎月の内訳は、SEOのコンサルティング月10万〜30万円、記事作成月12万〜32万円、作業事例の投稿代行月5万〜20万円、マップの運用月2万〜4万円、AI検索対策月10万〜30万円、広告の運用代行月3万円、サイトの保守月0.5万〜2万円です。</p>
 
     <div class="note note--info">
-      このプランでは、サイト制作・記事作成・運用を自分たちで進めます。外注費はかかりませんが、その分の作業時間は必要です。友達側にお願いしたいのは、<strong>作業事例の写真とメモを残すこと、口コミのお願い、電話対応、法人への案内</strong>の4つです。
+      友達側にお願いしたいのは、<strong>依頼の記録、作業事例の写真とメモ、口コミのお願い、電話対応、不動産屋への案内</strong>の5つです。
     </div>
   </section>
 
-  <!-- 8. 次にやること -->
+  <!-- 9. 確認したいこと -->
   <section aria-labelledby="h-next">
-    <h2 id="h-next">次にやること</h2>
-    <h3>友達に確認したいこと</h3>
+    <h2 id="h-next">友達に確認したいこと</h2>
+    <h3>元請けとの関係</h3>
     <ul>
-      <li>ここ半年の安否確認の依頼は月に何件か、1件あたりの料金はいくらか</li>
-      <li>依頼してくるのは誰が多いか（家族／管理会社・大家／警察から呼ばれて／会社／介護・福祉関係）</li>
-      <li>その人たちはどうやって鍵マッハ24を知ったか</li>
-      <li>同じところから繰り返し依頼が来ることはあるか</li>
+      <li>契約で禁止されていること（元請け経由のお客様への名刺・ステッカー配布、直接の受注、同じ地域での集客など）</li>
+      <li>元請けに払う1件あたりの手数料（または1件の受け取り額）</li>
+      <li>元請けから来る月の件数と、その内訳（鍵開け・鍵交換・安否確認）</li>
+    </ul>
+    <h3>安否確認</h3>
+    <ul>
+      <li>警察からの依頼は元請け経由か、鍵マッハ24に直接か</li>
+      <li>個人のお客様や警察が、どうやって鍵マッハ24を知ったか</li>
+    </ul>
+    <h3>料金と体制</h3>
+    <ul>
+      <li>料金（鍵開け・鍵交換・安否確認）、深夜の割増、キャンセル料、支払い方法</li>
       <li>深夜の電話は誰が取っているか</li>
       <li>賠償責任保険に入っているか</li>
       <li>会社の正式名称と法人番号</li>
-    </ul>
-    <h3>すぐ始めること</h3>
-    <ul>
-      <li>WordPressの管理者アカウントを発行する</li>
-      <li>Googleビジネスプロフィールを赤羽の自宅で登録する（住所は非表示）</li>
-      <li>依頼が来るたびに「日時・依頼者の種類・どうやって知ったか・結果・料金」を記録する</li>
     </ul>
   </section>
 
@@ -470,14 +420,8 @@
       <li>警察庁 2024年の一人暮らしの自宅死亡者数（Japan Times）: <a href="https://japantimes.co.jp/article/624607">japantimes.co.jp/article/624607</a></li>
       <li>孤立死の政府推計（熊本日日新聞）: <a href="https://kumanichi.com/articles/1980476">kumanichi.com/articles/1980476</a></li>
       <li>令和2年国勢調査 東京都の世帯人員別一般世帯数（新宿区資料）: <a href="https://www.city.shinjuku.lg.jp/content/000363536.pdf">city.shinjuku.lg.jp</a></li>
-      <li>東京都監察医務院 事業概要: <a href="https://www.hokeniryo.metro.tokyo.lg.jp/documents/d/hokeniryo/r7-1_4">hokeniryo.metro.tokyo.lg.jp</a></li>
       <li>東京都消費生活総合センター 鍵開けサービスの注意喚起: <a href="https://www.shouhiseikatu.metro.tokyo.lg.jp/sodan/kinkyu/documents/kagi_kaijou_service.pdf">shouhiseikatu.metro.tokyo.lg.jp</a></li>
       <li>鍵開け業者のリスティング広告キーワード分析（ラスタライズ）: <a href="https://rasterize.co.jp/kaketsuke/blog/locked-out-keyword-analysis/">rasterize.co.jp</a></li>
-      <li>マルチ救急24 安否確認: <a href="https://www.axs-k.com/anpi.html">axs-k.com/anpi.html</a></li>
-      <li>セコム 安否みまもりサービス: <a href="https://www.secom.co.jp/homesecurity/plan/senior/anpimimamori.html">secom.co.jp</a></li>
-      <li>日本郵便 みまもりサービス: <a href="https://www.post.japanpost.jp/life/mimamori/">post.japanpost.jp</a></li>
-      <li>東京玄関鍵開け救急センター24: <a href="https://www.kagi-99365.com/h_d__open/tokyo/">kagi-99365.com</a></li>
-      <li>ミツモア 東京都の鍵開け: <a href="https://meetsmore.com/services/lock-opening/tokyo">meetsmore.com</a></li>
       <li>SEO対策の費用相場（施策別の料金表）: <a href="https://www.shapewin.co.jp/blog17747">shapewin.co.jp</a>、<a href="https://tanto-chokunyu.com/seo-cost/">tanto-chokunyu.com</a></li>
       <li>LLMO・AIO対策の費用相場（19社の公開料金）: <a href="https://nake.co.jp/llmo-cost">nake.co.jp/llmo-cost</a></li>
       <li>MEO対策代行の費用: <a href="https://atsoho.com/blog/meo-outsourcing-cost">atsoho.com</a></li>
