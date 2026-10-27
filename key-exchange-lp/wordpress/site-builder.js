@@ -82,6 +82,7 @@ async function kmBuildSite(cssText) {
     "@type": "FAQPage",
     mainEntity: faqs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: strip(a) } })),
   });
+  // 記事の構造化データ（Article）はテーマ側が自動で出すので、ここでは使わない
   const articleLd = (headline, path, description) => ({
     "@context": "https://schema.org",
     "@type": "Article",
@@ -536,7 +537,6 @@ async function kmBuildSite(cssText) {
         P(`住所が分かる物（免許証、郵便物など）と一緒になくした場合や、どこでなくしたか分からない場合は、悪用を防ぐために鍵交換をおすすめします。${A("/kagi-koukan-hiyou/", "鍵交換の費用とタイミング")}も参考にしてください。`),
         G("km-section", [H("家に入れなくてお困りの方へ"), P(`鍵マッハ24は24時間受付で、東京都内に最短5分で到着します。${A("/kagi-funshitsu/", "鍵をなくした・家に入れないときの鍵開け")}`), telButton()]),
         supervisor(),
-        LD(articleLd("家の鍵をなくしたときにまずやること", "/kagi-nakushita/", "家の鍵をなくしたときの探す順番と、入れないときの対処法。")),
       ]),
     },
     {
@@ -560,7 +560,6 @@ async function kmBuildSite(cssText) {
         P("鍵は部屋の設備の一部で、多くの賃貸契約では交換に管理会社や大家さんの許可が必要です。無断で交換すると、退去時に元に戻す費用を求められることがあります。"),
         G("km-section", [H("賃貸のお部屋の鍵開け・鍵交換"), P("鍵マッハ24は24時間受付。作業前に総額をお伝えするので、管理会社への報告にもそのままお使いいただけます。"), telButton()]),
         supervisor(),
-        LD(articleLd("賃貸で鍵をなくしたら？管理会社への連絡と費用", "/chintai-kagi-funshitsu/", "賃貸で鍵をなくした時の連絡の順番と、費用の考え方。")),
       ]),
     },
     {
@@ -590,7 +589,6 @@ async function kmBuildSite(cssText) {
         P("ディンプルキーは表面に小さなくぼみが並んだ鍵で、鍵穴の仕組みが複雑なため、不正に開けられにくい鍵です。防犯を重視するならディンプルキー、費用を抑えたいなら普通の鍵、という選び方が基本です。"),
         G("km-section", [H("鍵交換のご相談"), P(A("/kagi-koukan/", "鍵交換・シリンダー交換のページを見る →")), telButton()]),
         supervisor(),
-        LD(articleLd("鍵交換の費用と、交換したほうがいいタイミング", "/kagi-koukan-hiyou/", "鍵交換の費用が変わるポイントと、交換のタイミング。")),
       ]),
     },
     {
@@ -625,7 +623,6 @@ async function kmBuildSite(cssText) {
         P("ご家族が遠方にいる場合でも、警察や管理会社と連絡を取りながら進められます。鍵マッハ24にお電話いただければ、現地での立ち会いの段取りもご相談に乗ります。" + TODO()),
         G("km-section km-anpi", [H("安否確認の鍵開けのご依頼"), P(A("/anpi-kakunin/", "安否確認の鍵開けのページを見る →")), telButton()]),
         supervisor(),
-        LD(articleLd("家族と連絡が取れないときの安否確認｜警察への頼み方と、鍵開けの流れ", "/anpi-kakunin-keisatsu/", "家族と連絡が取れない時の警察への相談方法と、鍵開けまでの流れ。")),
       ], "km-anpi-page"),
     },
   ];
