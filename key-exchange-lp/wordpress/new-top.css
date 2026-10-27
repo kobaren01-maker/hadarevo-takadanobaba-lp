@@ -77,6 +77,7 @@
 .km-lp .wp-block-table th, .km-lp .wp-block-table td { border: 0; border-bottom: 1px solid var(--km-line); padding: 12px 8px; text-align: left; vertical-align: top; }
 .km-lp .wp-block-table td:last-child { text-align: right; white-space: nowrap; font-weight: 700; }
 .km-lp .km-area-table td:last-child { font-weight: 400; }
+.km-lp .wp-block-table td .km-todo { white-space: normal; }
 
 /* 手順・リスト */
 .km-lp ol.km-steps { counter-reset: km; list-style: none; padding: 0; display: grid; gap: 12px; }
