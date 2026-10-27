@@ -642,7 +642,9 @@ async function kmBuildSite(cssText) {
     return list[0]?.id;
   };
   const upsert = async (type, def, extra = {}) => {
-    const id = await findDraft(type, def.slug);
+    let id = await findDraft(type, def.slug);
+    // WAFは「長い本文つきの新規作成」を止めるので、先に空の下書きを作ってから本文を入れる
+    if (!id) id = (await wp.apiFetch({ path: `/wp/v2/${type}`, method: "POST", data: { title: def.slug, slug: def.slug, status: "draft" } })).id;
     const data = {
       title: def.title,
       slug: def.slug,
@@ -653,7 +655,7 @@ async function kmBuildSite(cssText) {
       meta: { _veu_custom_css: css + (def.hideHeader ? hideHeaderCss : ""), _lightning_design_setting: design },
       ...extra,
     };
-    const res = await wp.apiFetch({ path: id ? `/wp/v2/${type}/${id}` : `/wp/v2/${type}`, method: "POST", data });
+    const res = await wp.apiFetch({ path: `/wp/v2/${type}/${id}`, method: "POST", data });
     return { type, id: res.id, slug: def.slug, len: data.content.length };
   };
 
