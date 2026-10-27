@@ -19,6 +19,9 @@
 | [docs/07-anpi-100-strategy.md](docs/07-anpi-100-strategy.md) | 安否確認の鍵開け：競合調査と、月100件までの戦略（法人・検索・広告・紹介） |
 | [docs/08-plan-for-friend.html](docs/08-plan-for-friend.html) | 友人向けの自社集客プラン（公開版：https://claude.ai/artifact/YWDyGXeVGhCHbpiAvP3ydH） |
 | [docs/09-keyword-volume.md](docs/09-keyword-volume.md) | キーワードプランナーでの検索数の実測と、目標件数の修正 |
+| [docs/10-handoff.md](docs/10-handoff.md) | 引き継ぎメモ |
+| [docs/11-seo-site-structure.md](docs/11-seo-site-structure.md) | 検索対策を徹底した新サイトの構成（WordPressに下書きで作成済み） |
+| [wordpress/](wordpress/) | WordPressに下書きを作るスクリプトとCSS |
 
 ## 骨組み
 

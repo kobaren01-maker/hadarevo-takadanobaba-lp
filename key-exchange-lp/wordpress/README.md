@@ -1,3 +1,5 @@
+> **2026年10月27日更新：** サイト一式は `site-builder.js` で作る（トップ案・サービス・料金・地域・コラムの17件）。`new-top-builder.js` はトップ案だけの古い版。構成は `../docs/11-seo-site-structure.md`。
+
 # WordPress 用の新トップ案（2つの入口）
 
 h-gate.jp の WordPress に、固定ページの**下書き**として入れる新トップ案。公開サイトには影響しない。
