@@ -21,6 +21,7 @@
 | [docs/09-keyword-volume.md](docs/09-keyword-volume.md) | キーワードプランナーでの検索数の実測と、目標件数の修正 |
 | [docs/10-handoff.md](docs/10-handoff.md) | 引き継ぎメモ |
 | [docs/11-seo-site-structure.md](docs/11-seo-site-structure.md) | 検索対策を徹底した新サイトの構成（WordPressに下書きで作成済み） |
+| [docs/12-hearing-results.md](docs/12-hearing-results.md) | 友人へのヒアリング結果（料金・安否確認の対応手順）と、サイトに載せる前に決めること |
 | [wordpress/](wordpress/) | WordPressに下書きを作るスクリプトとCSS |
 
 ## 骨組み
