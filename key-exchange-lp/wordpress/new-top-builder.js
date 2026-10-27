@@ -197,6 +197,8 @@ async function kmBuildNewTop(cssText) {
   ];
 
   const content = wp.blocks.serialize(blocks);
+  // サーバーの防御機能（WAF）が「/* */」を攻撃と見なして保存を止めるので、CSSのコメントは外して送る
+  cssText = cssText.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\n\s*\n/g, "\n").trim();
   const SLUG = "new-top-draft";
   const found = await wp.apiFetch({ path: `/wp/v2/pages?status=draft&slug=${SLUG}&context=edit&_fields=id` });
   const data = {
