@@ -15,10 +15,6 @@
   color: var(--km-ink);
   line-height: 1.8;
 }
-/* このページだけ、テーマのページ見出し帯とパンくずを消す（FVの見出しをh1にするため） */
-.page-header, .breadcrumb { display: none; }
-.site-body { padding-top: 16px; }
-
 .km-lp > * + * { margin-top: 0; }
 .km-lp .km-section { padding: 40px 0; border-top: 1px solid var(--km-line); }
 /* テーマ側のブロック余白に負けないよう !important で間隔をそろえる */
@@ -95,3 +91,21 @@
 /* 最後の電話 */
 .km-lp .km-cta { background: var(--km-navy); color: #fff; border-radius: 16px; padding: 28px 20px; text-align: center; border-top: 0; margin-top: 24px; }
 .km-lp .km-cta h2 { color: #fff; }
+
+/* 結論ボックス（検索やAIに引用されやすいよう、ページの最初に答えを書く） */
+.km-lp .km-answer { border-left: 5px solid var(--km-navy); background: var(--km-navy-soft); border-radius: 0 12px 12px 0; padding: 16px 20px; }
+.km-lp .km-answer p { margin: 0; }
+.km-lp .km-anpi .km-answer, .km-lp.km-anpi-page .km-answer { border-left-color: var(--km-sage); background: var(--km-sage-soft); }
+
+/* 作業事例の一覧 */
+.km-lp ul.km-cases { list-style: none; padding: 0; display: grid; gap: 10px; }
+.km-lp ul.km-cases > li { margin: 0; border: 1px solid var(--km-line); border-radius: 10px; padding: 12px 14px; background: #fff; font-size: 15px; line-height: 1.6; }
+.km-lp ul.km-cases a { font-weight: 700; color: var(--km-navy); }
+
+/* 地域・関連ページへのリンク */
+.km-lp ul.km-links { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.km-lp ul.km-links > li { margin: 0; }
+.km-lp ul.km-links a { display: block; border: 1px solid var(--km-line); border-radius: 8px; padding: 10px 12px; font-weight: 700; color: var(--km-navy); text-decoration: none; background: #fff; }
+
+/* 監修者 */
+.km-lp .km-supervisor { border: 1px solid var(--km-line); border-radius: 12px; padding: 14px 18px; font-size: 14px; color: var(--km-muted); }
