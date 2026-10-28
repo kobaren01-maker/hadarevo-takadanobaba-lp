@@ -106,7 +106,8 @@ async function kmBuildSite(cssText) {
       const t = new DOMParser().parseFromString(p.content.rendered, "text/html").body.textContent.replace(/\s+/g, " ").trim();
       const place = ((t.match(/依頼現場[：:]\s*(\S+)/) || [])[1] || "").replace(/^東京都/, "");
       const ask = ((t.match(/依頼内容[：:]\s*(.+?)。/) || [])[1] || "").trim();
-      return { id: p.id, date: p.date.slice(0, 10), link: p.link, place, ask, tokyo: /依頼現場[：:]\s*東京都/.test(t) };
+      const voice = ((t.match(/ご感想[：:]\s*(.+?)(。|$)/) || [])[1] || "").trim();
+      return { id: p.id, date: p.date.slice(0, 10), link: p.link, place, ask, voice, tokyo: /依頼現場[：:]\s*東京都/.test(t) };
     })
     .filter((c) => c.tokyo && c.ask);
   const caseList = (list, max = 6) =>
@@ -114,6 +115,14 @@ async function kmBuildSite(cssText) {
       ? B("core/list", { className: "km-cases" }, list.slice(0, max).map((c) =>
           B("core/list-item", { content: `<a href="${c.link}">${c.date.replace(/-/g, "/")}　${c.place}</a><br>${c.ask}` })))
       : P("この地域の作業事例は準備中です。", "km-note");
+  // お客様の声：作業事例の投稿にある本物の「お客様ご感想」を、町名つきで抜き出す（口コミの構造化データは付けない）
+  const voiceList = (list, max = 4) => {
+    const v = list.filter((c) => c.voice).slice(0, max);
+    return v.length
+      ? B("core/list", { className: "km-voices" }, v.map((c) =>
+          B("core/list-item", { content: `「${c.voice}」<small>${c.place}のお客様／<a href="${c.link}">${c.ask}</a></small>` })))
+      : P("この地域のお客様の声は準備中です。", "km-note");
+  };
   const isLost = (c) => /紛失|なくし|無くし|置いて|おいて|忘れ/.test(c.ask);
   const isStuck = (c) => /開かな|開けられな|回らな|刺さらな|折れ|変形|不具合/.test(c.ask) && !/車|バイク|ロッカー|金庫/.test(c.ask);
   const isHome = (c) => !/車|バイク|ロッカー|金庫|メットイン/.test(c.ask);
@@ -201,7 +210,53 @@ async function kmBuildSite(cssText) {
       A("/price/", "料金表"),
       A("/area/", "対応エリア"),
     ], "km-links");
-  const lp = (inner, extraClass = "") => [G(("km-lp " + extraClass).trim(), inner)];
+  // 1. 画面下に固定の電話の帯（CSSで画面下に固定する）
+  const fixedCta = () =>
+    G("km-fixed-cta", [BTN("km-fixed-cta__btns", [
+      [`<small>24時間受付・最短5分</small>${TEL_TEXT}`, TEL, "km-fixed-cta__tel"],
+      ["メールで相談", SITE + "/%e3%81%8a%e5%95%8f%e3%81%84%e5%90%88%e3%82%8f%e3%81%9b/", "km-fixed-cta__mail"],
+    ])]);
+  const lp = (inner, extraClass = "") => [G(("km-lp " + extraClass).trim(), [...inner, fixedCta()])];
+
+  // 2. 困りごとを絵で選ぶ入口（線だけの簡単な絵。自作）
+  const ICON = {
+    lost: '<path d="M14 30a8 8 0 1 1 8-8"/><path d="M20 26l14-14 4 4M30 16l4 4"/><path d="M38 34l4 4M42 34l-4 4"/>',
+    out: '<rect x="12" y="6" width="22" height="36" rx="2"/><circle cx="29" cy="25" r="1.6"/><path d="M38 24h8M42 20l4 4-4 4"/>',
+    stuck: '<rect x="12" y="20" width="24" height="20" rx="3"/><path d="M17 20v-6a7 7 0 0 1 14 0v6"/><path d="M24 28v5"/>',
+    broken: '<circle cx="12" cy="24" r="6"/><path d="M18 24h8l2-3 2 6 2-3h4"/><path d="M38 20l6 8"/>',
+    change: '<path d="M10 18h22l-5-5M38 30H16l5 5"/><circle cx="40" cy="18" r="3"/><circle cx="8" cy="30" r="3"/>',
+    anpi: '<circle cx="18" cy="14" r="5"/><path d="M8 38v-6a10 10 0 0 1 20 0v6"/><path d="M32 22a8 8 0 1 1 8 8M40 30v4"/>',
+  };
+  const tiles = () =>
+    HTML('<ul class="km-tiles">' + [
+      ["lost", "鍵をなくした", "/kagi-funshitsu/"],
+      ["out", "締め出された", "/kagi-funshitsu/"],
+      ["stuck", "鍵が開かない・回らない", "/kagi-funshitsu/"],
+      ["broken", "鍵が折れた・曲がった", "/kagi-funshitsu/"],
+      ["change", "鍵を交換したい", "/kagi-koukan/"],
+      ["anpi", "家族と連絡が取れない", "/anpi-kakunin/"],
+    ].map(([k, label, path]) =>
+      `<li><a href="${SITE}${path}"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg><span>${label}</span></a></li>`).join("") + "</ul>");
+
+  // 3. 数字を大きく見せる信頼のバッジ
+  const stats = () =>
+    L(["最短<strong>5</strong>分で到着", "年間<strong>3,000</strong>件以上", "<strong>10</strong>名以上が24時間待機", "<strong>賠償責任保険</strong>に加入"], "km-stats");
+
+  // 4. 安すぎる表示への注意（他社の名前は出さない）
+  const cheapWarning = () =>
+    G("km-box km-box--warn", [
+      H("「◯千円〜」の安すぎる広告にご注意ください", 3),
+      P('鍵開けの広告では、安い金額だけを大きく見せて、現地で高い料金を請求されたという相談が寄せられています。東京都消費生活総合センターも、鍵開けサービスのトラブルに<a href="https://www.shouhiseikatu.metro.tokyo.lg.jp/sodan/kinkyu/documents/kagi_kaijou_service.pdf">注意を呼びかけています</a>。'),
+      P("<strong>鍵マッハ24は、作業前に書面でお見積もりをお出しし、作業内容と金額にご納得いただいてから作業に入ります。</strong>提示した金額以上は請求しません。"),
+    ]);
+
+  // 5. 鍵交換を3段階で選ぶ（金額は正式な料金が決まってから）
+  const plans = () =>
+    L([
+      "<strong>費用を抑える</strong>一般的なシリンダーへの交換。入居時や、とにかく前の鍵を使えなくしたいときに<span>◯◯円〜</span>",
+      "<strong>バランスよく</strong>ディンプルキーへの交換。防犯性と費用のバランスを取りたいときに<span>◯◯円〜</span>",
+      "<strong>防犯性を高める</strong>防犯性の高いディンプルキー＋補助錠。空き巣が心配なとき、玄関の鍵を2つにしたいときに<span>◯◯円〜</span>",
+    ], "km-plans");
 
   // ======================================================================
   // ページの定義
@@ -226,8 +281,9 @@ async function kmBuildSite(cssText) {
           ["<strong>家族・入居者と連絡が取れない</strong>安否確認の鍵開け（ご家族・大家さん・管理会社）", SITE + "/anpi-kakunin/", "km-entry-anpi"],
         ]),
         telButton(),
-        L(["作業前に<br>書面でお見積もり", "最短5分で<br>到着", "24時間<br>365日受付", "賠償責任保険<br>に加入"], "km-promise"),
+        stats(),
       ]),
+      G("km-section", [H("どんなお困りですか？"), tiles()]),
       G("km-section", [
         H("ご依頼の多い作業"),
         H(A("/kagi-funshitsu/", "家の鍵をなくした・家に入れない"), 3),
@@ -239,8 +295,9 @@ async function kmBuildSite(cssText) {
         H(A("/houjin/", "管理会社・大家さん・法人の方へ"), 3),
         P("入居者の安否確認、退去・入居時の鍵交換を継続してお任せいただけます。"),
       ]),
-      G("km-section", [H("鍵開け・鍵交換の料金"), T([...priceOpen.slice(0, 2), priceChange[0]]), priceNote(), P(A("/price/", "料金表をすべて見る →"))]),
+      G("km-section", [H("鍵開け・鍵交換の料金"), T([...priceOpen.slice(0, 2), priceChange[0]]), priceNote(), P(A("/price/", "料金表をすべて見る →")), cheapWarning()]),
       G("km-section", rules()),
+      G("km-section", [H("お客様の声"), voiceList(cases.filter(isHome), 4), P("作業事例に掲載しているお客様のご感想から抜粋しています。", "km-note")]),
       G("km-section", [H("最近の作業事例"), caseList(cases.filter(isHome), 5)]),
       G("km-section", [H("対応エリア"), P("赤羽を拠点に、東京都内と埼玉県南部に出張しています。" + FAST_WARDS.join("・") + "と、埼玉県の" + SAITAMA.join("・") + "は最短5分です。作業事例の多い地域はこちらです。"), areaLinks(), P(A("/area/", "対応エリアをすべて見る →"))]),
       G("km-section", [
@@ -278,7 +335,9 @@ async function kmBuildSite(cssText) {
           "バーロック（内側の補助ロック）がかかってしまった",
         ]),
       ]),
-      G("km-section", [H("鍵開けの料金"), T(priceOpen), priceNote(), P(A("/price/", "料金表をすべて見る →"))]),
+      stats(),
+      G("km-section", [H("どんなお困りですか？"), tiles()]),
+      G("km-section", [H("鍵開けの料金"), T(priceOpen), priceNote(), P(A("/price/", "料金表をすべて見る →")), cheapWarning()]),
       G("km-section", [...rules(), ...flow()]),
       G("km-section", [
         H("本人確認について"),
@@ -302,6 +361,7 @@ async function kmBuildSite(cssText) {
         ], "km-steps", true),
         P(A("/kagi-nakushita/", "詳しく：家の鍵をなくしたときにまずやること →")),
       ]),
+      G("km-section", [H("鍵をなくしたお客様の声"), voiceList(cases.filter((c) => isHome(c) && (isLost(c) || isStuck(c))), 4)]),
       G("km-section", [H("鍵の紛失・締め出しの作業事例"), caseList(cases.filter((c) => isHome(c) && (isLost(c) || isStuck(c))), 8)]),
       G("km-section", faqBlocks(FAQ_LOST)),
       G("km-section", [H("対応エリア"), areaLinks()]),
@@ -330,7 +390,9 @@ async function kmBuildSite(cssText) {
           "<strong>防犯性を上げたい。</strong>ディンプルキーや補助錠への交換",
         ]),
       ]),
-      G("km-section", [H("鍵交換の料金（部品込み）"), T(priceChange), priceNote(), P(A("/price/", "料金表をすべて見る →"))]),
+      stats(),
+      G("km-section", [H("鍵交換は3つの考え方から選べます"), plans(), P("どれにするか迷ったら、お電話でご相談ください。ドアに合う部品と総額をお伝えします。", "km-note")]),
+      G("km-section", [H("鍵交換の料金（部品込み）"), T(priceChange), priceNote(), P(A("/price/", "料金表をすべて見る →")), cheapWarning()]),
       G("km-section", [
         H("普通の鍵とディンプルキーの違い"),
         T([
@@ -367,6 +429,7 @@ async function kmBuildSite(cssText) {
     blocks: () => lp([
       answer("<strong>家族や入居者と連絡が取れないときは、警察に相談し、鍵マッハ24にも直接お電話ください。</strong>部屋に入る必要があり、合鍵がないときに駆けつけて鍵を開けます。スタッフは全員、警察の立ち会いでの作業を経験しています。"),
       telButton(),
+      stats(),
       G("km-section km-anpi", [
         H("こんなときにご依頼ください"),
         L([
@@ -455,6 +518,7 @@ async function kmBuildSite(cssText) {
     excerpt: "鍵マッハ24の鍵開け・鍵交換・鍵修理・安否確認の鍵開けの料金表です。表示は出張費・見積もり費込みの税込総額。作業前に書面でお見積もりをお出しし、ご納得いただいてから作業に入ります。",
     blocks: () => lp([
       answer("<strong>料金は税込の総額で表示しています。</strong>到着後、作業前に書面でお見積もりをお出しし、作業内容と金額にご納得いただいてから作業に入ります。" + TODO("【要確認：出張費・見積もり費を料金に含むか】")),
+      cheapWarning(),
       G("km-section", [H("鍵開け"), T(priceOpen)]),
       G("km-section", [H("鍵交換（部品込み）"), T(priceChange)]),
       G("km-section", [H("鍵の修理"), T(priceOther)]),
@@ -504,11 +568,13 @@ async function kmBuildSite(cssText) {
       blocks: () => lp([
         answer(`<strong>${a.name}の鍵開け・鍵交換は、鍵マッハ24が24時間うかがいます。</strong>${a.note || ""}最短${a.min}分で到着し、作業前に書面でお見積もりをお出しします。`),
         telButton(),
+        stats(),
         G("km-section", [
           H(`${a.name}での作業事例`),
           P(here.length ? `${a.name}${towns.length ? "（" + towns.join("・") + "）" : ""}で、これまでに${here.length}件の作業をご紹介しています。` : `${a.name}の作業事例は準備中です。`),
           caseList(here, 10),
         ]),
+        G("km-section", [H(`${a.name}のお客様の声`), voiceList(here, 4)]),
         G("km-section", [H(`${a.name}で多いご依頼`), serviceLinks()]),
         G("km-section", [H("料金の目安"), T([...priceOpen.slice(0, 1), priceChange[0]]), priceNote(), P(A("/price/", "料金表をすべて見る →"))]),
         G("km-section", rules()),
