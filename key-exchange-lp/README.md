@@ -22,6 +22,7 @@
 | [docs/10-handoff.md](docs/10-handoff.md) | 引き継ぎメモ |
 | [docs/11-seo-site-structure.md](docs/11-seo-site-structure.md) | 検索対策を徹底した新サイトの構成（WordPressに下書きで作成済み） |
 | [docs/12-hearing-results.md](docs/12-hearing-results.md) | 友人へのヒアリング結果（料金・安否確認の対応手順）と、サイトに載せる前に決めること |
+| [docs/13-competitor-lp-analysis.md](docs/13-competitor-lp-analysis.md) | 大手鍵屋のLP分析と、取り入れる点・取り入れない点 |
 | [wordpress/](wordpress/) | WordPressに下書きを作るスクリプトとCSS |
 
 ## 骨組み
