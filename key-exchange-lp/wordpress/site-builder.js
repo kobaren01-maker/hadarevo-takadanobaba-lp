@@ -34,7 +34,8 @@ async function kmBuildSite(cssText) {
   const telButton = () => BTN("km-tel", [[`<small>24時間受付・年中無休</small>${TEL_TEXT}`, TEL]]);
   const answer = (html) => G("km-answer", [P(html)]);
   const cta = (title = "鍵のトラブル、今すぐご相談ください") =>
-    G("km-section km-cta", [H(title), P("作業前に書面でお見積もりをお出しし、ご納得いただいてから作業に入ります。"), telButton()]);
+    G("km-section km-cta", [H(title), P("作業前に書面でお見積もりをお出しし、ご納得いただいてから作業に入ります。"), telButton(),
+      P(`メールでのご相談は<a href="${SITE}/%e3%81%8a%e5%95%8f%e3%81%84%e5%90%88%e3%82%8f%e3%81%9b/">お問い合わせフォーム</a>から。お急ぎのときはお電話ください。`, "km-cta__mail")]);
   const faqBlocks = (faqs) => [H("よくある質問"), ...faqs.map(([q, a]) => D(q, a))];
   const supervisor = () =>
     G("km-supervisor", [P(`監修：鍵マッハ24 代表 ${TODO("【要確認：氏名・経歴】")}<br>鍵マッハ24は、年間3,000件以上の鍵の作業に対応しています。<br>運営：${TODO("【要確認：株式会社H-GATE（正式名称）】")}`)]);
@@ -42,12 +43,30 @@ async function kmBuildSite(cssText) {
   // ---- 構造化データ（Googleに「ここは鍵屋で、何をしていて、どこに行けるか」を伝える） ----
   const LD = (obj) => HTML(`<script type="application/ld+json">${JSON.stringify(obj)}</script>`);
   const AREAS = [
-    { slug: "kita", name: "北区", min: 5, note: "鍵マッハ24の拠点がある区です。" },
-    { slug: "koto", name: "江東区", min: 5 },
-    { slug: "edogawa", name: "江戸川区", min: 15 },
-    { slug: "sumida", name: "墨田区", min: 5 },
-    { slug: "katsushika", name: "葛飾区", min: 5 },
-    { slug: "adachi", name: "足立区", min: 5 },
+    { slug: "kita", name: "北区", min: 5, note: "鍵マッハ24の拠点がある区です。",
+      police: ["赤羽警察署", "王子警察署", "滝野川警察署"],
+      stations: ["赤羽", "東十条", "十条", "王子", "田端", "王子神谷", "赤羽岩淵", "浮間舟渡"],
+      near: ["板橋区", "豊島区", "文京区", "荒川区", "足立区", "埼玉県川口市", "埼玉県戸田市"] },
+    { slug: "koto", name: "江東区", min: 5,
+      police: ["深川警察署", "城東警察署", "東京湾岸警察署"],
+      stations: ["門前仲町", "木場", "東陽町", "南砂町", "亀戸", "大島", "清澄白河", "森下", "住吉", "豊洲"],
+      near: ["墨田区", "江戸川区", "中央区"] },
+    { slug: "edogawa", name: "江戸川区", min: 15,
+      police: ["小松川警察署", "葛西警察署", "小岩警察署"],
+      stations: ["葛西", "西葛西", "船堀", "一之江", "瑞江", "篠崎", "小岩", "平井"],
+      near: ["江東区", "墨田区", "葛飾区", "千葉県市川市", "千葉県浦安市"] },
+    { slug: "sumida", name: "墨田区", min: 5,
+      police: ["本所警察署", "向島警察署"],
+      stations: ["錦糸町", "両国", "押上", "曳舟", "東向島", "鐘ヶ淵", "本所吾妻橋", "菊川"],
+      near: ["台東区", "荒川区", "葛飾区", "江戸川区", "江東区", "中央区"] },
+    { slug: "katsushika", name: "葛飾区", min: 5,
+      police: ["亀有警察署", "葛飾警察署"],
+      stations: ["亀有", "金町", "新小岩", "青砥", "高砂", "立石", "堀切菖蒲園", "お花茶屋", "柴又"],
+      near: ["足立区", "墨田区", "江戸川区", "千葉県松戸市", "埼玉県八潮市", "埼玉県三郷市"] },
+    { slug: "adachi", name: "足立区", min: 5,
+      police: ["千住警察署", "西新井警察署", "竹の塚警察署", "綾瀬警察署"],
+      stations: ["北千住", "綾瀬", "北綾瀬", "竹ノ塚", "西新井", "五反野", "梅島", "六町"],
+      near: ["北区", "荒川区", "葛飾区", "埼玉県川口市", "埼玉県草加市", "埼玉県八潮市"] },
   ];
   // 到着の目安と支払い方法（友人の回答 2026/10/28）
   const FAST_WARDS = ["北区", "板橋区", "足立区", "豊島区", "練馬区", "荒川区", "江東区", "墨田区", "葛飾区", "文京区", "台東区"];
@@ -250,6 +269,14 @@ async function kmBuildSite(cssText) {
       P("<strong>鍵マッハ24は、作業前に書面でお見積もりをお出しし、作業内容と金額にご納得いただいてから作業に入ります。</strong>提示した金額以上は請求しません。"),
     ]);
 
+  // 8. 本人確認に使える書類（友人の回答 2026/10/28：顔写真付きの身分証。ない場合は不動産の契約書・公共料金の支払い書など）
+  const idDocs = () =>
+    G("km-box", [
+      H("本人確認に使える書類", 3),
+      L(["運転免許証", "マイナンバーカード", "パスポート", "在留カード"]),
+      P("顔写真付きの身分証をお持ちでない場合は、不動産の契約書や公共料金の支払い書などで確認します。身分証が家の中にある場合は、開けた後にご提示ください。", "km-note"),
+    ]);
+
   // 5. 鍵交換を3段階で選ぶ（金額は正式な料金が決まってから）
   const plans = () =>
     L([
@@ -342,6 +369,7 @@ async function kmBuildSite(cssText) {
       G("km-section", [
         H("本人確認について"),
         P("鍵開けは、防犯のため必ずご本人であることを確認してから行います。確認は顔写真付きの身分証（運転免許証、マイナンバーカードなど）で行います。身分証が家の中にある場合は、開けた後に確認させていただきます。顔写真付きの身分証をお持ちでない場合は、不動産の契約書や公共料金の支払い書などで確認します。ご本人以外のお部屋は開けられません。"),
+        idDocs(),
       ]),
       G("km-section", [
         H("賃貸のお部屋の場合"),
@@ -450,7 +478,8 @@ async function kmBuildSite(cssText) {
       G("km-section", [
         H("ご依頼いただける方"),
         L(["ご家族・ご親族", "大家さん・管理会社", "会社の総務・人事のご担当者", "警察からのご依頼"]),
-        P("防犯のため、顔写真付きの身分証でご依頼の方を確認します。お持ちでない場合は、不動産の契約書や公共料金の支払い書などで確認します。", "km-note"),
+        P("防犯のため、顔写真付きの身分証でご依頼の方を確認します。", "km-note"),
+        idDocs(),
       ]),
       G("km-section", [H("安否確認の鍵開けの料金"), T(priceAnpi), priceNote()]),
       G("km-section", [
@@ -575,6 +604,15 @@ async function kmBuildSite(cssText) {
           caseList(here, 10),
         ]),
         G("km-section", [H(`${a.name}のお客様の声`), voiceList(here, 4)]),
+        G("km-section", [
+          H(`${a.name}の地域の情報`),
+          H("主な駅", 3),
+          P(a.stations.join("・") + "など、区内全域に伺います。"),
+          H(`${a.name}を管轄する警察署`, 3),
+          P(`${a.police.join("・")}。家族や入居者と連絡が取れないときは、お住まいの地域を管轄する警察署に相談します。命に関わりそうなときは110番、急ぎでない相談は警察相談専用電話（#9110）です。<a href="https://www.keishicho.metro.tokyo.lg.jp/about_mpd/shokai/ichiran/kensaku/${a.slug}.html">${a.name}の警察署の所在地と電話番号（警視庁）</a>`),
+          H("近くの地域", 3),
+          P(a.near.map((n) => { const x = AREAS.find((y) => y.name === n); return x ? A(`/area/${x.slug}/`, n) : n; }).join("・") + "にも伺います。"),
+        ]),
         G("km-section", [H(`${a.name}で多いご依頼`), serviceLinks()]),
         G("km-section", [H("料金の目安"), T([...priceOpen.slice(0, 1), priceChange[0]]), priceNote(), P(A("/price/", "料金表をすべて見る →"))]),
         G("km-section", rules()),

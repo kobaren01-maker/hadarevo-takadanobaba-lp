@@ -149,3 +149,7 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 @media (min-width: 768px) { .km-lp ul.km-voices { grid-template-columns: 1fr 1fr; } }
 .km-lp ul.km-voices li { margin: 0; background: #fff; border: 1px solid var(--km-line); border-radius: 12px; padding: 14px 16px; font-size: 15px; line-height: 1.7; }
 .km-lp ul.km-voices small { display: block; margin-top: 6px; color: var(--km-muted); font-size: 13px; }
+
+/* 9. 最後の囲みのメール相談 */
+.km-lp .km-cta .km-cta__mail { font-size: 14px; margin-top: 12px !important; }
+.km-lp .km-cta a { color: #fff; }
