@@ -72,7 +72,7 @@
 .km-lp .wp-block-table table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
 .km-lp .wp-block-table th, .km-lp .wp-block-table td { border: 0; border-bottom: 1px solid var(--km-line); padding: 12px 8px; text-align: left; vertical-align: top; }
 .km-lp .wp-block-table td:last-child { text-align: right; white-space: nowrap; font-weight: 700; }
-.km-lp .km-area-table td:last-child { font-weight: 400; }
+.km-lp .km-area-table td:last-child { font-weight: 400; white-space: normal; }
 .km-lp .wp-block-table td .km-todo { white-space: normal; }
 
 /* 手順・リスト */
