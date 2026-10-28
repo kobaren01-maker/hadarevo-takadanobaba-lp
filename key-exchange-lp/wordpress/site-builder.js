@@ -126,13 +126,16 @@ async function kmBuildSite(cssText) {
       const place = ((t.match(/依頼現場[：:]\s*(\S+)/) || [])[1] || "").replace(/^東京都/, "");
       const ask = ((t.match(/依頼内容[：:]\s*(.+?)。/) || [])[1] || "").trim();
       const voice = ((t.match(/ご感想[：:]\s*(.+?)(。|$)/) || [])[1] || "").trim();
-      return { id: p.id, date: p.date.slice(0, 10), link: p.link, place, ask, voice, tokyo: /依頼現場[：:]\s*東京都/.test(t) };
+      const srcset = (p.content.rendered.match(/srcset="([^"]+)"/) || [])[1] || "";
+      const img = (srcset.split(",").map((x) => x.trim().split(" ")).find((x) => x[1] === "225w") || [])[0]
+        || (p.content.rendered.match(/<img[^>]+src="([^"]+)"/) || [])[1] || "";
+      return { id: p.id, date: p.date.slice(0, 10), link: p.link, place, ask, voice, img, tokyo: /依頼現場[：:]\s*東京都/.test(t) };
     })
     .filter((c) => c.tokyo && c.ask);
   const caseList = (list, max = 6) =>
     list.length
       ? B("core/list", { className: "km-cases" }, list.slice(0, max).map((c) =>
-          B("core/list-item", { content: `<a href="${c.link}">${c.date.replace(/-/g, "/")}　${c.place}</a><br>${c.ask}` })))
+          B("core/list-item", { content: `${c.img ? `<img src="${c.img}" alt="${c.place}での作業の写真" width="225" height="300" loading="lazy">` : ""}<a href="${c.link}">${c.date.replace(/-/g, "/")}　${c.place}</a><br>${c.ask}` })))
       : P("この地域の作業事例は準備中です。", "km-note");
   // お客様の声：作業事例の投稿にある本物の「お客様ご感想」を、町名つきで抜き出す（口コミの構造化データは付けない）
   const voiceList = (list, max = 4) => {
@@ -206,7 +209,7 @@ async function kmBuildSite(cssText) {
       "<strong>作業前に、書面でお見積もりをお出しします。</strong>作業内容と金額にご納得いただき、書類にサインをいただいてから作業に入ります。",
       "<strong>提示した金額以上は請求しません。</strong>追加の作業が必要なときは、必ず先にご相談します。",
       "<strong>作業の後、お客様と一緒に傷の確認をします。</strong>万一のときのため、賠償責任保険にも加入しています。",
-    ], "km-steps", true),
+    ], "km-promises", true),
   ];
   const flow = () => [
     H("お電話から作業完了まで", 3),
@@ -217,7 +220,7 @@ async function kmBuildSite(cssText) {
       "<strong>サイン・作業</strong>　作業内容と金額にご納得いただき、書類にサインをいただいてから作業に入ります。",
       "<strong>傷の確認</strong>　作業が終わったら、お客様と一緒にドアや鍵に傷がないかを確認します。",
       `<strong>お支払い</strong>　${PAY}。`,
-    ], "km-steps", true),
+    ], "km-steps km-flow", true),
   ];
   const areaLinks = () => L(AREAS.map((a) => A(`/area/${a.slug}/`, a.name + "の鍵屋")), "km-links");
   const serviceLinks = () =>
@@ -256,6 +259,20 @@ async function kmBuildSite(cssText) {
       ["anpi", "家族と連絡が取れない", "/anpi-kakunin/"],
     ].map(([k, label, path]) =>
       `<li><a href="${SITE}${path}"><svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg><span>${label}</span></a></li>`).join("") + "</ul>");
+
+  // 現場の写真（WordPressに入っている作業事例の写真。個人情報はモザイク済み）
+  const UP = SITE + "/wp-content/uploads/";
+  const fvPhotos = () =>
+    HTML('<figure class="km-fv-photos">' + ["2026/08/8-3-2-225x300.jpg", "2026/07/0730-2-225x300.jpg", "2026/07/0723-2-225x300.jpg"]
+      .map((f) => `<img src="${UP}${f}" alt="鍵マッハ24の作業現場の写真" width="225" height="300">`).join("") +
+      '<figcaption>実際の作業現場（個人情報は加工しています）</figcaption></figure>');
+  const serviceCards = () =>
+    HTML('<ul class="km-services">' + [
+      ["/kagi-funshitsu/", "2026/08/0817-225x300.jpg", "家の鍵をなくした・家に入れない", "鍵の紛失、締め出し、オートロック。壊さずに開けるのが基本です"],
+      ["/kagi-koukan/", "2026/07/0730-2-225x300.jpg", "鍵交換・シリンダー交換", "なくした後の交換、入居時の交換、ディンプルキーへの交換"],
+      ["/anpi-kakunin/", "2026/07/0721-225x300.jpg", "安否確認の鍵開け", "家族や入居者と連絡が取れないとき。警察の立ち会いに慣れています"],
+      ["/houjin/", "2026/07/0728-225x300.jpg", "管理会社・大家さん・法人の方へ", "入居者の安否確認、退去・入居時の鍵交換。請求書払いに対応"],
+    ].map(([path, f, t, d]) => `<li><a href="${SITE}${path}"><img src="${UP}${f}" alt="" width="225" height="300" loading="lazy"><strong>${t}</strong><span>${d}</span></a></li>`).join("") + "</ul>");
 
   // 3. 数字を大きく見せる信頼のバッジ
   const stats = () =>
@@ -301,7 +318,7 @@ async function kmBuildSite(cssText) {
       G("km-section km-fv", [
         P("赤羽を拠点に、東京都内へ駆けつける鍵屋", "km-eyebrow"),
         H("鍵開け・鍵交換・安否確認の鍵開けは<br>鍵マッハ24", 1),
-        P("24時間受付。最短5分で到着します。年間3,000件以上の鍵の作業に対応しています。", "km-fv__lead"),
+        P('24時間受付。<mark class="km-mk">最短5分</mark>で到着します。年間3,000件以上の鍵の作業に対応しています。', "km-fv__lead"),
         P("<strong>どちらでお困りですか？</strong>"),
         BTN("km-entry", [
           ["<strong>鍵をなくした・開かない</strong>ご本人で、今すぐ家に入りたい方", SITE + "/kagi-funshitsu/", "km-entry-self"],
@@ -309,22 +326,13 @@ async function kmBuildSite(cssText) {
         ]),
         telButton(),
         stats(),
+        fvPhotos(),
       ]),
       G("km-section", [H("どんなお困りですか？"), tiles()]),
-      G("km-section", [
-        H("ご依頼の多い作業"),
-        H(A("/kagi-funshitsu/", "家の鍵をなくした・家に入れない"), 3),
-        P("鍵の紛失、締め出し、オートロックで入れないときの鍵開け。壊さずに開けるのが基本です。"),
-        H(A("/kagi-koukan/", "鍵交換・シリンダー交換"), 3),
-        P("鍵をなくした後の交換、入居時の交換、防犯性の高いディンプルキーへの交換。"),
-        H(A("/anpi-kakunin/", "安否確認の鍵開け"), 3),
-        P("離れて暮らす家族や入居者と連絡が取れないとき。警察やご家族の立ち会いのもとで鍵を開けます。"),
-        H(A("/houjin/", "管理会社・大家さん・法人の方へ"), 3),
-        P("入居者の安否確認、退去・入居時の鍵交換を継続してお任せいただけます。"),
-      ]),
+      G("km-section", [H("ご依頼の多い作業"), serviceCards()]),
       G("km-section", [H("鍵開け・鍵交換の料金"), T([...priceOpen.slice(0, 2), priceChange[0]]), priceNote(), P(A("/price/", "料金表をすべて見る →")), cheapWarning()]),
-      G("km-section", rules()),
-      G("km-section", [H("お客様の声"), voiceList(cases.filter(isHome), 4), P("作業事例に掲載しているお客様のご感想から抜粋しています。", "km-note")]),
+      G("km-section km-band", rules()),
+      G("km-section km-band", [H("お客様の声"), voiceList(cases.filter(isHome), 4), P("作業事例に掲載しているお客様のご感想から抜粋しています。", "km-note")]),
       G("km-section", [H("最近の作業事例"), caseList(cases.filter(isHome), 5)]),
       G("km-section", [H("対応エリア"), P("赤羽を拠点に、東京都内と埼玉県南部に出張しています。" + FAST_WARDS.join("・") + "と、埼玉県の" + SAITAMA.join("・") + "は最短5分です。作業事例の多い地域はこちらです。"), areaLinks(), P(A("/area/", "対応エリアをすべて見る →"))]),
       G("km-section", [
@@ -389,9 +397,9 @@ async function kmBuildSite(cssText) {
         ], "km-steps", true),
         P(A("/kagi-nakushita/", "詳しく：家の鍵をなくしたときにまずやること →")),
       ]),
-      G("km-section", [H("鍵をなくしたお客様の声"), voiceList(cases.filter((c) => isHome(c) && (isLost(c) || isStuck(c))), 4)]),
+      G("km-section km-band", [H("鍵をなくしたお客様の声"), voiceList(cases.filter((c) => isHome(c) && (isLost(c) || isStuck(c))), 4)]),
       G("km-section", [H("鍵の紛失・締め出しの作業事例"), caseList(cases.filter((c) => isHome(c) && (isLost(c) || isStuck(c))), 8)]),
-      G("km-section", faqBlocks(FAQ_LOST)),
+      G("km-section km-band", faqBlocks(FAQ_LOST)),
       G("km-section", [H("対応エリア"), areaLinks()]),
       cta(),
       LD(service("家の鍵の鍵開け（紛失・締め出し）", "鍵開け", "/kagi-funshitsu/", "家の鍵をなくした、締め出された時の鍵開け。東京都内に24時間出張。")),
@@ -439,7 +447,7 @@ async function kmBuildSite(cssText) {
         ], "km-steps", true),
         P("賃貸の場合は、交換の前に管理会社か大家さんの許可を取ってください。", "km-note"),
       ]),
-      G("km-section", faqBlocks(FAQ_KOUKAN)),
+      G("km-section km-band", faqBlocks(FAQ_KOUKAN)),
       G("km-section", [H("対応エリア"), areaLinks()]),
       cta("鍵交換のご相談・お見積もり"),
       LD(service("鍵交換・シリンダー交換", "鍵交換", "/kagi-koukan/", "鍵の紛失後、入居時、防犯のための鍵交換・シリンダー交換。部品込みの総額を作業前に提示。")),
@@ -486,7 +494,7 @@ async function kmBuildSite(cssText) {
         H("管理会社・大家さん・法人の方へ"),
         P(`入居者や社員の安否確認を継続してお任せいただけます。請求書でのお支払い（法人のお客様のみ）と、作業報告書の発行に対応します。　${A("/houjin/", "法人の方へ →")}`),
       ]),
-      G("km-section", faqBlocks(FAQ_ANPI)),
+      G("km-section km-band", faqBlocks(FAQ_ANPI)),
       cta("安否確認の鍵開け、今すぐご相談ください"),
       supervisor(),
       LD(service("安否確認の鍵開け", "鍵開け", "/anpi-kakunin/", "家族・入居者と連絡が取れない時の安否確認の鍵開け。警察やご家族の立ち会いのもとで作業。")),
@@ -528,7 +536,7 @@ async function kmBuildSite(cssText) {
         ], "km-steps", true),
       ]),
       G("km-section", [H("管理物件での作業事例"), caseList(cases.filter((c) => /賃貸|物件|管理/.test(c.ask)), 4)]),
-      G("km-section", faqBlocks(FAQ_HOUJIN)),
+      G("km-section km-band", faqBlocks(FAQ_HOUJIN)),
       G("km-section", [
         H("お取引のご相談"),
         P(`お電話（${TEL_TEXT}）か、${A("/%e3%81%8a%e5%95%8f%e3%81%84%e5%90%88%e3%82%8f%e3%81%9b/", "お問い合わせフォーム")}からご連絡ください。`),
@@ -562,8 +570,8 @@ async function kmBuildSite(cssText) {
         priceNote(),
       ]),
       G("km-section", [H("お支払い方法"), T([["現金", "対応"], ["クレジットカード", "VISA・Mastercard・JCB・American Express"], ["QRコード決済", "PayPayなど"], ["請求書", "法人のお客様のみ"]], "km-area-table")]),
-      G("km-section", rules()),
-      G("km-section", faqBlocks(FAQ_PRICE)),
+      G("km-section km-band", rules()),
+      G("km-section km-band", faqBlocks(FAQ_PRICE)),
       cta(),
       LD(faqLd(FAQ_PRICE)),
     ]),
@@ -603,7 +611,7 @@ async function kmBuildSite(cssText) {
           P(here.length ? `${a.name}${towns.length ? "（" + towns.join("・") + "）" : ""}で、これまでに${here.length}件の作業をご紹介しています。` : `${a.name}の作業事例は準備中です。`),
           caseList(here, 10),
         ]),
-        G("km-section", [H(`${a.name}のお客様の声`), voiceList(here, 4)]),
+        G("km-section km-band", [H(`${a.name}のお客様の声`), voiceList(here, 4)]),
         G("km-section", [
           H(`${a.name}の地域の情報`),
           H("主な駅", 3),
@@ -615,7 +623,7 @@ async function kmBuildSite(cssText) {
         ]),
         G("km-section", [H(`${a.name}で多いご依頼`), serviceLinks()]),
         G("km-section", [H("料金の目安"), T([...priceOpen.slice(0, 1), priceChange[0]]), priceNote(), P(A("/price/", "料金表をすべて見る →"))]),
-        G("km-section", rules()),
+        G("km-section km-band", rules()),
         G("km-section", [H("ほかの対応エリア"), areaLinks()]),
         cta(`${a.name}の鍵のトラブル、今すぐご相談ください`),
         LD({ ...service(`${a.name}の鍵開け・鍵交換`, "鍵開け", `/area/${a.slug}/`, `東京都${a.name}への鍵開け・鍵交換の出張。`), areaServed: { "@type": "City", name: "東京都" + a.name } }),
