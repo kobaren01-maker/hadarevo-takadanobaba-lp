@@ -99,7 +99,6 @@ html, body { overflow-x: clip; }
 .km-lp .km-tel .wp-block-button__link small { display: block; font-size: 13px; font-weight: 700; letter-spacing: 0; }
 .km-lp .km-tel .wp-block-button__link::before, .km-lp .km-fixed-cta__tel .wp-block-button__link::before {
   content: ""; position: absolute; left: 22px; top: 50%; width: 30px; height: 30px; margin-top: -15px; border-radius: 50%; background: #fff;
-  -webkit-mask: radial-gradient(circle, #000 0 0) ;
 }
 .km-lp .km-tel .wp-block-button__link::after, .km-lp .km-fixed-cta__tel .wp-block-button__link::after {
   content: ""; position: absolute; left: 22px; top: 50%; width: 30px; height: 30px; margin-top: -15px; background: var(--km-orange);
