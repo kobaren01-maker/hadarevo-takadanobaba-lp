@@ -260,3 +260,53 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
   .km-lp .km-fixed-cta__mail .wp-block-button__link { font-size: 12px; padding: 14px 10px; }
   .km-lp .km-tel .wp-block-button__link { font-size: 26px; padding-left: 58px; padding-right: 12px; }
 }
+
+
+/* ==========================================================================
+   第3版（2026/10/30）：緊急の人がスマホで迷わないように、読む量を減らす
+   画像（背景・印・絵）は飾りで、意味はすべてテキストで書く
+   ========================================================================== */
+.km-lp { font-size: 16px; }
+.km-lp h2 { font-size: clamp(22px, 5.4vw, 30px); }
+.km-lp .km-section { padding: 40px 0; }
+
+/* 最初の画面：本物の現場写真を暗くした背景に、見出しと電話だけ */
+.km-lp .km-fv {
+  position: relative;
+  padding-top: 32px !important; padding-bottom: 32px !important;
+  background: linear-gradient(rgba(11,42,91,0.35), rgba(11,42,91,0.35)), url("/wp-content/uploads/2026/10/kagimach24-fv-bg.webp") center / cover no-repeat, #0b2a5b;
+}
+.km-lp .km-fv h1 { font-size: clamp(32px, 9vw, 54px); line-height: 1.25; margin-top: 8px; max-width: 14em; }
+.km-lp .km-fv h1 .km-mk { font-size: 1.15em; }
+.km-lp .km-fv .km-eyebrow { font-size: 14px; color: #fff; opacity: 0.9; letter-spacing: 0.04em; }
+.km-lp .km-medal { position: absolute; right: max(12px, calc(50vw - 560px)); top: 18px; width: 92px; height: 92px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+@media (min-width: 768px) { .km-lp .km-medal { width: 168px; height: 168px; top: 36px; } }
+.km-lp .km-fv .km-tel { margin-top: 24px !important; max-width: 640px; }
+.km-lp ul.km-chips { list-style: none; padding: 0; margin: 16px 0 0 !important; display: flex; flex-wrap: wrap; gap: 8px; }
+.km-lp ul.km-chips li { margin: 0; border: 1.5px solid rgba(255,255,255,0.7); border-radius: 999px; padding: 4px 12px; font-size: 13px; font-weight: 700; color: #fff; }
+.km-lp ul.km-chips li::before { content: "✓ "; color: var(--km-yellow); }
+.km-lp .km-fv__sub { margin-top: 18px !important; font-size: 14px; }
+.km-lp .km-fv__sub a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+
+/* 枠線を減らし、影と背景色で区切る */
+.km-lp ul.km-tiles a { border: 0; box-shadow: 0 2px 8px rgba(11,42,91,0.12); }
+.km-lp .km-band ul.km-tiles a, .km-lp .km-band .wp-block-details, .km-lp .km-band ul.km-voices li { border-color: transparent; }
+.km-lp ul.km-cases > li { border: 0; box-shadow: 0 2px 8px rgba(11,42,91,0.10); }
+
+/* 依頼の流れ：絵（画像）＋太字1行＋説明1行 */
+.km-lp ol.km-flow > li { padding: 14px 14px 14px 72px; min-height: 48px; border: 0; box-shadow: 0 2px 8px rgba(11,42,91,0.10); }
+.km-lp ol.km-flow > li::before { content: ""; left: 14px; top: 50%; width: 44px; height: 44px; margin-top: -22px; padding: 0; border-radius: 50%; background: var(--km-navy-soft) center / 26px 26px no-repeat; }
+.km-lp ol.km-flow > li > strong { display: block; font-size: 17px; font-weight: 900; color: var(--km-navy); }
+.km-lp ol.km-flow > li > strong::before { content: "STEP" counter(km) "　"; font-size: 12px; color: var(--km-orange); }
+.km-lp ol.km-flow > li:nth-child(1)::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2a5b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2'/%3E%3C/svg%3E"); }
+.km-lp ol.km-flow > li:nth-child(2)::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2a5b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 16v-4l2-5h14l2 5v4'/%3E%3Cpath d='M3 12h18'/%3E%3Ccircle cx='7' cy='17' r='2'/%3E%3Ccircle cx='17' cy='17' r='2'/%3E%3C/svg%3E"); }
+.km-lp ol.km-flow > li:nth-child(3)::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2a5b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='3' width='14' height='18' rx='2'/%3E%3Cpath d='M9 8h6M9 12h6M9 16h4'/%3E%3C/svg%3E"); }
+.km-lp ol.km-flow > li:nth-child(4)::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2a5b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20l4-1 11-11-3-3L5 16z'/%3E%3Cpath d='M14 6l3 3'/%3E%3C/svg%3E"); }
+.km-lp ol.km-flow > li:nth-child(5)::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2a5b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='6' width='18' height='13' rx='2'/%3E%3Cpath d='M3 10h18M16 15h2'/%3E%3C/svg%3E"); }
+
+/* 3つの約束：絵（画像）を右上に */
+.km-lp ol.km-promises > li { position: relative; padding-right: 64px; }
+.km-lp ol.km-promises > li::after { content: ""; position: absolute; right: 14px; top: 16px; width: 40px; height: 40px; border-radius: 50%; background: var(--km-navy-soft) center / 24px 24px no-repeat; }
+.km-lp ol.km-promises > li:nth-child(1)::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2a5b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='3' width='14' height='18' rx='2'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E"); }
+.km-lp ol.km-promises > li:nth-child(2)::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2a5b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z'/%3E%3Cpath d='M9 9l3 4 3-4M12 13v4M9.5 14.5h5'/%3E%3C/svg%3E"); }
+.km-lp ol.km-promises > li:nth-child(3)::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2a5b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='6'/%3E%3Cpath d='M20 20l-4.5-4.5'/%3E%3C/svg%3E"); }

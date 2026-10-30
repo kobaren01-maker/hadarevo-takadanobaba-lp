@@ -206,21 +206,21 @@ async function kmBuildSite(cssText) {
   const rules = () => [
     H("安心してお任せいただくための3つの約束"),
     L([
-      "<strong>作業前に、書面でお見積もりをお出しします。</strong>作業内容と金額にご納得いただき、書類にサインをいただいてから作業に入ります。",
-      "<strong>提示した金額以上は請求しません。</strong>追加の作業が必要なときは、必ず先にご相談します。",
-      "<strong>作業の後、お客様と一緒に傷の確認をします。</strong>万一のときのため、賠償責任保険にも加入しています。",
+      "<strong>作業前に、書面でお見積もり</strong>ご納得いただき、サインをいただいてから作業します。",
+      "<strong>提示した金額以上は請求しません</strong>追加の作業は、必ず先にご相談します。",
+      "<strong>作業後に、一緒に傷の確認</strong>賠償責任保険にも加入しています。",
     ], "km-promises", true),
   ];
-  const flow = () => [
-    H("お電話から作業完了まで", 3),
+  const flow = (level = 3) => [
+    H("ご依頼の流れ", level),
     L([
-      "<strong>お電話</strong>　場所と鍵の状況をうかがい、到着時間と料金の目安をお伝えします。いたずら防止のため、お客様のご都合によるキャンセルにはキャンセル料がかかることも、この時点でご説明します。",
-      "<strong>到着</strong>　最短5分で伺います。",
-      "<strong>本人確認・お見積もり</strong>　顔写真付きの身分証でご本人であることを確認し、書面でお見積もりをお出しします。",
-      "<strong>サイン・作業</strong>　作業内容と金額にご納得いただき、書類にサインをいただいてから作業に入ります。",
-      "<strong>傷の確認</strong>　作業が終わったら、お客様と一緒にドアや鍵に傷がないかを確認します。",
-      `<strong>お支払い</strong>　${PAY}。`,
+      "<strong>お電話</strong>場所と鍵の状況をうかがい、到着時間と料金の目安をお伝えします。",
+      "<strong>最短5分で到着</strong>到着前にスタッフからお電話します。",
+      "<strong>書面でお見積もり</strong>顔写真付きの身分証で本人確認をして、金額を書面でお出しします。",
+      "<strong>サインをいただいて作業</strong>終わったら、一緒にドアや鍵に傷がないかを確認します。",
+      `<strong>お支払い</strong>現金・クレジットカード・QRコード決済が使えます。`,
     ], "km-steps km-flow", true),
+    P("いたずら防止のため、お客様のご都合によるキャンセルにはキャンセル料がかかります。お電話の段階で必ずご説明します。", "km-note"),
   ];
   const areaLinks = () => L(AREAS.map((a) => A(`/area/${a.slug}/`, a.name + "の鍵屋")), "km-links");
   const serviceLinks = () =>
@@ -274,6 +274,10 @@ async function kmBuildSite(cssText) {
       ["/houjin/", "2026/07/0728-225x300.jpg", "管理会社・大家さん・法人の方へ", "入居者の安否確認、退去・入居時の鍵交換。請求書払いに対応"],
     ].map(([path, f, t, d]) => `<li><a href="${SITE}${path}"><img src="${UP}${f}" alt="" width="225" height="300" loading="lazy"><strong>${t}</strong><span>${d}</span></a></li>`).join("") + "</ul>");
 
+  // 最初の画面の「最短5分」の丸い印（飾り。aria-hiddenで読み上げない。同じ言葉は見出しにある）
+  const medal = () =>
+    HTML('<svg class="km-medal" viewBox="0 0 160 160" width="160" height="160" aria-hidden="true" focusable="false"><circle cx="80" cy="80" r="76" fill="#ffd83d"/><circle cx="80" cy="80" r="66" fill="none" stroke="#0b2a5b" stroke-width="3" stroke-dasharray="4 6"/><text x="80" y="62" text-anchor="middle" font-size="22" font-weight="900" fill="#0b2a5b">最短</text><text x="74" y="112" text-anchor="middle" font-size="58" font-weight="900" fill="#0b2a5b">5</text><text x="112" y="112" text-anchor="middle" font-size="22" font-weight="900" fill="#0b2a5b">分</text><text x="80" y="134" text-anchor="middle" font-size="13" font-weight="700" fill="#0b2a5b">で到着</text></svg>');
+
   // 3. 数字を大きく見せる信頼のバッジ
   const stats = () =>
     L(["最短<strong>5</strong>分で到着", "年間<strong>3,000</strong>件以上", "<strong>10</strong>名以上が24時間待機", "<strong>賠償責任保険</strong>に加入"], "km-stats");
@@ -282,8 +286,7 @@ async function kmBuildSite(cssText) {
   const cheapWarning = () =>
     G("km-box km-box--warn", [
       H("「◯千円〜」の安すぎる広告にご注意ください", 3),
-      P('鍵開けの広告では、安い金額だけを大きく見せて、現地で高い料金を請求されたという相談が寄せられています。東京都消費生活総合センターも、鍵開けサービスのトラブルに<a href="https://www.shouhiseikatu.metro.tokyo.lg.jp/sodan/kinkyu/documents/kagi_kaijou_service.pdf">注意を呼びかけています</a>。'),
-      P("<strong>鍵マッハ24は、作業前に書面でお見積もりをお出しし、作業内容と金額にご納得いただいてから作業に入ります。</strong>提示した金額以上は請求しません。"),
+      P('現地で高い料金を請求される相談が増えています（<a href="https://www.shouhiseikatu.metro.tokyo.lg.jp/sodan/kinkyu/documents/kagi_kaijou_service.pdf">東京都消費生活総合センター</a>）。<strong>鍵マッハ24は作業前に書面で金額をお出しし、それ以上は請求しません。</strong>'),
     ]);
 
   // 8. 本人確認に使える書類（友人の回答 2026/10/28：顔写真付きの身分証。ない場合は不動産の契約書・公共料金の支払い書など）
@@ -316,25 +319,21 @@ async function kmBuildSite(cssText) {
     hideHeader: true,
     blocks: () => lp([
       G("km-section km-fv", [
-        P("赤羽を拠点に、東京都内へ駆けつける鍵屋", "km-eyebrow"),
-        H("鍵開け・鍵交換・安否確認の鍵開けは<br>鍵マッハ24", 1),
-        P('24時間受付。<mark class="km-mk">最短5分</mark>で到着します。年間3,000件以上の鍵の作業に対応しています。', "km-fv__lead"),
-        P("<strong>どちらでお困りですか？</strong>"),
-        BTN("km-entry", [
-          ["<strong>鍵をなくした・開かない</strong>ご本人で、今すぐ家に入りたい方", SITE + "/kagi-funshitsu/", "km-entry-self"],
-          ["<strong>家族・入居者と連絡が取れない</strong>安否確認の鍵開け（ご家族・大家さん・管理会社）", SITE + "/anpi-kakunin/", "km-entry-anpi"],
-        ]),
+        medal(),
+        P("東京都内・埼玉県南部｜24時間受付", "km-eyebrow"),
+        H('鍵開け・鍵交換<br><mark class="km-mk">最短5分</mark>で駆けつけ', 1),
         telButton(),
-        stats(),
-        fvPhotos(),
+        L(["作業前に書面でお見積もり", "24時間365日受付", "賠償責任保険に加入"], "km-chips"),
+        P(A("/anpi-kakunin/", "家族・入居者と連絡が取れない方（安否確認）はこちら"), "km-fv__sub"),
       ]),
       G("km-section", [H("どんなお困りですか？"), tiles()]),
-      G("km-section", [H("ご依頼の多い作業"), serviceCards()]),
-      G("km-section", [H("鍵開け・鍵交換の料金"), T([...priceOpen.slice(0, 2), priceChange[0]]), priceNote(), P(A("/price/", "料金表をすべて見る →")), cheapWarning()]),
+      G("km-section km-band", [H("料金の目安"), T([...priceOpen.slice(0, 2), priceChange[0]]), priceNote(), P(A("/price/", "料金表をすべて見る")), cheapWarning()]),
+      G("km-section", flow(2)),
       G("km-section km-band", rules()),
+      G("km-section", [H("鍵マッハ24が選ばれる理由"), stats(), fvPhotos()]),
+      G("km-section", [H("最近の作業事例"), caseList(cases.filter(isHome), 4)]),
       G("km-section km-band", [H("お客様の声"), voiceList(cases.filter(isHome), 4), P("作業事例に掲載しているお客様のご感想から抜粋しています。", "km-note")]),
-      G("km-section", [H("最近の作業事例"), caseList(cases.filter(isHome), 5)]),
-      G("km-section", [H("対応エリア"), P("赤羽を拠点に、東京都内と埼玉県南部に出張しています。" + FAST_WARDS.join("・") + "と、埼玉県の" + SAITAMA.join("・") + "は最短5分です。作業事例の多い地域はこちらです。"), areaLinks(), P(A("/area/", "対応エリアをすべて見る →"))]),
+      G("km-section", [H("対応エリア"), P("東京23区の北部・東部と埼玉県南部は最短5分、そのほかの23区は最短15分です。"), areaLinks(), P(A("/area/", "対応エリアをすべて見る"))]),
       G("km-section", [
         H("鍵のお役立ちコラム"),
         L([
