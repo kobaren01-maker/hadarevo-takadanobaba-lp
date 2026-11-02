@@ -208,7 +208,7 @@ async function kmBuildSite(cssText) {
     L([
       "<strong>作業前に、書面でお見積もり</strong>ご納得いただき、サインをいただいてから作業します。",
       "<strong>提示した金額以上は請求しません</strong>追加の作業は、必ず先にご相談します。",
-      "<strong>作業後に、一緒に傷の確認</strong>賠償責任保険にも加入しています。",
+      "<strong>作業後に、一緒に傷の確認</strong>ドアや鍵に傷がないか、お客様と一緒に確かめてからお支払いいただきます。",
     ], "km-promises", true),
   ];
   const flow = (level = 3) => [
@@ -280,7 +280,7 @@ async function kmBuildSite(cssText) {
 
   // 3. 数字を大きく見せる信頼のバッジ
   const stats = () =>
-    L(["最短<strong>5</strong>分で到着", "年間<strong>3,000</strong>件以上", "<strong>10</strong>名以上が24時間待機", "<strong>賠償責任保険</strong>に加入"], "km-stats");
+    L(["最短<strong>5</strong>分で到着", "年間<strong>3,000</strong>件以上", "<strong>10</strong>名以上が24時間待機", "全スタッフが<strong>警察立ち会い</strong>を経験"], "km-stats");
 
   // 4. 安すぎる表示への注意（他社の名前は出さない）
   const cheapWarning = () =>
@@ -323,7 +323,7 @@ async function kmBuildSite(cssText) {
         P("東京都内・埼玉県南部｜24時間受付", "km-eyebrow"),
         H('鍵開け・鍵交換<br><mark class="km-mk">最短5分</mark>で駆けつけ', 1),
         telButton(),
-        L(["作業前に書面でお見積もり", "24時間365日受付", "賠償責任保険に加入"], "km-chips"),
+        L(["作業前に書面でお見積もり", "24時間365日受付", "年間3,000件以上の実績"], "km-chips"),
         P(A("/anpi-kakunin/", "家族・入居者と連絡が取れない方（安否確認）はこちら"), "km-fv__sub"),
       ]),
       G("km-section", [H("どんなお困りですか？"), tiles()]),
