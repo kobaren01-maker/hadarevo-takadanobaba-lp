@@ -211,15 +211,17 @@ async function kmBuildSite(cssText) {
       "<strong>作業後に、一緒に傷の確認</strong>ドアや鍵に傷がないか、お客様と一緒に確かめてからお支払いいただきます。",
     ], "km-promises", true),
   ];
+  // 写真は wordpress/flow/ の240px WebP をメディアに入れたもの（2026/11）。仮の画像で、本物のスタッフの写真が届いたら差し替える
+  const flowImg = (name, alt) => `<img class="km-flow__img" src="${SITE}/wp-content/uploads/2026/11/kagimach24-flow-${name}.webp" alt="${alt}" width="240" height="240" loading="lazy" decoding="async">`;
   const flow = (level = 3) => [
     H("ご依頼の流れ", level),
     L([
-      "<strong>お電話</strong>場所と鍵の状況をうかがい、到着時間と料金の目安をお伝えします。",
-      "<strong>最短5分で到着</strong>到着前にスタッフからお電話します。",
-      "<strong>書面でお見積もり</strong>顔写真付きの身分証で本人確認をして、金額を書面でお出しします。",
-      "<strong>サインをいただいて作業</strong>終わったら、一緒にドアや鍵に傷がないかを確認します。",
-      `<strong>お支払い</strong>現金・クレジットカード・QRコード決済が使えます。`,
-    ], "km-steps km-flow", true),
+      flowImg("1-call", "玄関の前から鍵屋に電話する女性") + "<strong>お電話</strong>場所と鍵の状況をうかがい、到着時間と料金の目安をお伝えします。",
+      flowImg("2-arrive", "工具バッグを持って玄関へ向かうスタッフ") + "<strong>最短5分で到着</strong>到着前にスタッフからお電話します。",
+      flowImg("3-estimate", "玄関先で見積書を見せて説明するスタッフ") + "<strong>書面でお見積もり</strong>顔写真付きの身分証で本人確認をして、金額を書面でお出しします。",
+      flowImg("4-work", "玄関ドアの鍵の部品を交換するスタッフの手元") + "<strong>サインをいただいて作業</strong>終わったら、一緒にドアや鍵に傷がないかを確認します。",
+      flowImg("5-pay", "スマホのタッチ決済で支払うお客様") + `<strong>お支払い</strong>現金・クレジットカード・QRコード決済が使えます。`,
+    ], "km-steps km-flow km-flow--photo", true),
     P("いたずら防止のため、お客様のご都合によるキャンセルにはキャンセル料がかかります。お電話の段階で必ずご説明します。", "km-note"),
   ];
   const areaLinks = () => L(AREAS.map((a) => A(`/area/${a.slug}/`, a.name + "の鍵屋")), "km-links");
@@ -305,6 +307,25 @@ async function kmBuildSite(cssText) {
       "<strong>防犯性を高める</strong>防犯性の高いディンプルキー＋補助錠。空き巣が心配なとき、玄関の鍵を2つにしたいときに<span>◯◯円〜</span>",
     ], "km-plans");
 
+  // ---- コラムのテーマ別カテゴリー（トピッククラスター） ----
+  // 「最新の投稿」ブロックは公開済みの記事だけを出すので、予約投稿で毎日1本ずつ公開されるたびに一覧が自動で増え、リンク切れも起きない
+  const CLUSTERS = {
+    nakushita: { slug: "column-nakushita", name: "鍵をなくした・開かない", description: "家の鍵をなくした、締め出された、鍵が回らない・抜けない、閉じ込められたときの対処法をまとめています。",
+      posts: ["kagi-nakushita", "chintai-kagi-funshitsu", "mansion-kagi-funshitsu", "kagi-otoshita-keisatsu", "shimedashi", "autolock-kagi-wasureta", "kagi-mawaranai", "kagi-nukenai-oreta", "toilet-heya-kagi-akanai", "kagi-funshitsu-hoken", "dimple-key-nakushita"] },
+    koukan: { slug: "column-koukan", name: "鍵交換・防犯", description: "鍵交換の費用とタイミング、シリンダー交換、ディンプルキー、補助錠、合鍵、鍵の手入れなど、鍵交換と玄関の防犯の情報をまとめています。",
+      posts: ["kagi-koukan-hiyou", "cylinder-koukan-jibun", "dimple-key-koukan", "dimple-key-aikagi", "hikkoshi-kagi-koukan", "chintai-aikagi", "genkan-hojojou", "kagi-shurui", "kagiana-junkatsuzai", "smartlock-chuui"] },
+    ryoukin: { slug: "column-ryoukin", name: "料金・鍵屋の選び方", description: "鍵開けの料金の考え方、安い広告の注意点、安心して頼める鍵屋の選び方をまとめています。",
+      posts: ["kagiake-ryoukin", "kagiya-yasui-chuui", "kagiya-erabikata"] },
+    anpi: { slug: "column-anpi", name: "安否確認", description: "家族や入居者と連絡が取れないときの安否確認、警察への相談のしかた、鍵開けの流れをまとめています。",
+      posts: ["anpi-kakunin-keisatsu"] },
+  };
+  const CAT = {}; // 保存の直前にカテゴリーを用意して入れる（column と各テーマ）
+  const relatedCols = (key, title, n = 12) => G("km-section km-related", [
+    H(title),
+    B("core/latest-posts", { categories: [{ id: CAT[key].id, value: CAT[key].name }], postsToShow: n, displayPostDate: false, order: "desc", orderBy: "date", className: "km-related-list" }),
+    P(`<a href="${CAT[key].link}">${CAT[key].name}の記事をすべて見る →</a>`),
+  ]);
+
   // ======================================================================
   // ページの定義
   // ======================================================================
@@ -334,15 +355,7 @@ async function kmBuildSite(cssText) {
       G("km-section", [H("最近の作業事例"), caseList(cases.filter(isHome), 4)]),
       G("km-section km-band", [H("お客様の声"), voiceList(cases.filter(isHome), 4), P("作業事例に掲載しているお客様のご感想から抜粋しています。", "km-note")]),
       G("km-section", [H("対応エリア"), P("東京23区の北部・東部と埼玉県南部は最短5分、そのほかの23区は最短15分です。"), areaLinks(), P(A("/area/", "対応エリアをすべて見る"))]),
-      G("km-section", [
-        H("鍵のお役立ちコラム"),
-        L([
-          A("/kagi-nakushita/", "家の鍵をなくしたときにまずやること"),
-          A("/chintai-kagi-funshitsu/", "賃貸で鍵をなくしたら？管理会社への連絡と費用"),
-          A("/kagi-koukan-hiyou/", "鍵交換の費用と、交換したほうがいいタイミング"),
-          A("/anpi-kakunin-keisatsu/", "家族と連絡が取れないときの安否確認と、警察への頼み方"),
-        ]),
-      ]),
+      relatedCols("column", "鍵のお役立ちコラム", 6),
       cta("鍵のトラブル・安否確認、今すぐご相談ください"),
       LD(business),
       LD({ "@context": "https://schema.org", "@type": "WebSite", name: "鍵マッハ24", url: SITE + "/" }),
@@ -399,6 +412,7 @@ async function kmBuildSite(cssText) {
       G("km-section km-band", [H("鍵をなくしたお客様の声"), voiceList(cases.filter((c) => isHome(c) && (isLost(c) || isStuck(c))), 4)]),
       G("km-section", [H("鍵の紛失・締め出しの作業事例"), caseList(cases.filter((c) => isHome(c) && (isLost(c) || isStuck(c))), 8)]),
       G("km-section km-band", faqBlocks(FAQ_LOST)),
+      relatedCols("nakushita", "鍵をなくした・開かないときのコラム"),
       G("km-section", [H("対応エリア"), areaLinks()]),
       cta(),
       LD(service("家の鍵の鍵開け（紛失・締め出し）", "鍵開け", "/kagi-funshitsu/", "家の鍵をなくした、締め出された時の鍵開け。東京都内に24時間出張。")),
@@ -447,6 +461,7 @@ async function kmBuildSite(cssText) {
         P("賃貸の場合は、交換の前に管理会社か大家さんの許可を取ってください。", "km-note"),
       ]),
       G("km-section km-band", faqBlocks(FAQ_KOUKAN)),
+      relatedCols("koukan", "鍵交換・防犯のコラム"),
       G("km-section", [H("対応エリア"), areaLinks()]),
       cta("鍵交換のご相談・お見積もり"),
       LD(service("鍵交換・シリンダー交換", "鍵交換", "/kagi-koukan/", "鍵の紛失後、入居時、防犯のための鍵交換・シリンダー交換。部品込みの総額を作業前に提示。")),
@@ -494,6 +509,7 @@ async function kmBuildSite(cssText) {
         P(`入居者や社員の安否確認を継続してお任せいただけます。請求書でのお支払い（法人のお客様のみ）と、作業報告書の発行に対応します。　${A("/houjin/", "法人の方へ →")}`),
       ]),
       G("km-section km-band", faqBlocks(FAQ_ANPI)),
+      relatedCols("anpi", "安否確認のコラム"),
       cta("安否確認の鍵開け、今すぐご相談ください"),
       supervisor(),
       LD(service("安否確認の鍵開け", "鍵開け", "/anpi-kakunin/", "家族・入居者と連絡が取れない時の安否確認の鍵開け。警察やご家族の立ち会いのもとで作業。")),
@@ -571,6 +587,7 @@ async function kmBuildSite(cssText) {
       G("km-section", [H("お支払い方法"), T([["現金", "対応"], ["クレジットカード", "VISA・Mastercard・JCB・American Express"], ["QRコード決済", "PayPayなど"], ["請求書", "法人のお客様のみ"]], "km-area-table")]),
       G("km-section km-band", rules()),
       G("km-section km-band", faqBlocks(FAQ_PRICE)),
+      relatedCols("ryoukin", "料金・鍵屋の選び方のコラム"),
       cta(),
       LD(faqLd(FAQ_PRICE)),
     ]),
@@ -668,6 +685,17 @@ async function kmBuildSite(cssText) {
     return { type, id: res.id, slug: def.slug, len: data.content.length };
   };
 
+  // コラム用のカテゴリー（スラッグ column）と、テーマ別の子カテゴリー。なければ作る（記事がない間はサイトに表示されない）
+  const ensureCat = async (slug, name, description, parent = 0) => {
+    let c = (await wp.apiFetch({ path: `/wp/v2/categories?slug=${slug}&_fields=id,name,link,parent` }))[0];
+    if (!c) c = await wp.apiFetch({ path: "/wp/v2/categories", method: "POST", data: { name, slug, description, parent } });
+    else c = await wp.apiFetch({ path: `/wp/v2/categories/${c.id}`, method: "POST", data: { name, description, parent } });
+    return { id: c.id, name: c.name, link: c.link };
+  };
+  CAT.column = await ensureCat("column", "鍵のお役立ちコラム", "鍵をなくしたとき、鍵交換、防犯、料金、安否確認について、鍵屋が分かりやすく解説するコラムです。");
+  for (const [key, c] of Object.entries(CLUSTERS)) CAT[key] = await ensureCat(c.slug, c.name, c.description, CAT.column.id);
+  const clusterOf = (slug) => Object.keys(CLUSTERS).find((k) => CLUSTERS[k].posts.includes(slug));
+
   const results = [];
   const ids = {};
   for (const def of PAGES.filter((p) => !p.parentSlug)) {
@@ -679,11 +707,10 @@ async function kmBuildSite(cssText) {
     results.push(await upsert("pages", def, { parent: ids[def.parentSlug] }));
   }
 
-  // コラム用のカテゴリー（スラッグ column）。なければ作る
-  let cat = (await wp.apiFetch({ path: "/wp/v2/categories?slug=column&_fields=id" }))[0];
-  if (!cat) cat = await wp.apiFetch({ path: "/wp/v2/categories", method: "POST", data: { name: "鍵のお役立ちコラム", slug: "column" } });
   for (const def of COLUMNS) {
-    results.push(await upsert("posts", def, { categories: [cat.id] }));
+    const key = clusterOf(def.slug);
+    if (!key) throw new Error("テーマが決まっていないコラム: " + def.slug);
+    results.push(await upsert("posts", def, { categories: [CAT.column.id, CAT[key].id] }));
   }
   return results;
 }

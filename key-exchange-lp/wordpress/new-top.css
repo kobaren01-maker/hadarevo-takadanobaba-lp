@@ -312,3 +312,19 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 .km-lp ol.km-promises > li:nth-child(3)::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230b2a5b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='6'/%3E%3Cpath d='M20 20l-4.5-4.5'/%3E%3C/svg%3E"); }
 .km-lp .km-section:not(.km-fv) .km-fv-photos figcaption { color: var(--km-muted); }
 .km-lp .km-section:not(.km-fv) .km-fv-photos img { border-color: #fff; box-shadow: 0 2px 8px rgba(11,42,91,0.12); }
+
+/* 関連コラム（最新の投稿ブロック）。公開済みの記事がまだない間は見出しごと隠す */
+.km-lp .km-related:not(:has(.wp-block-latest-posts li)) { display: none; }
+.km-lp ul.km-related-list { list-style: none; padding: 0; margin: 12px 0 8px !important; border-top: 1px solid #e3e8f0; }
+.km-lp ul.km-related-list li { margin: 0; border-bottom: 1px solid #e3e8f0; }
+.km-lp ul.km-related-list li a { display: block; padding: 12px 28px 12px 4px; color: var(--km-navy, #13284b); font-weight: 700; text-decoration: none; position: relative; line-height: 1.6; }
+.km-lp ul.km-related-list li a::after { content: "›"; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); color: var(--km-orange, #ff7a00); font-size: 20px; }
+
+/* ご依頼の流れ：アイコンの代わりに写真（スマホ88px・パソコン112px） */
+.km-lp ol.km-flow--photo > li { padding: 12px 14px 12px 112px; min-height: 112px; display: flex; flex-direction: column; justify-content: center; }
+.km-lp ol.km-flow--photo > li::before { content: none; display: none; }
+.km-lp ol.km-flow--photo > li > .km-flow__img { position: absolute; left: 12px; top: 50%; width: 88px; height: 88px; margin-top: -44px; border-radius: 10px; object-fit: cover; }
+@media (min-width: 768px) {
+  .km-lp ol.km-flow--photo > li { padding-left: 144px; min-height: 136px; }
+  .km-lp ol.km-flow--photo > li > .km-flow__img { width: 112px; height: 112px; margin-top: -56px; left: 14px; }
+}
