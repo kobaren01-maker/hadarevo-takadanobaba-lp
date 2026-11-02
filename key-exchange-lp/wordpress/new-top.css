@@ -328,3 +328,8 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
   .km-lp ol.km-flow--photo > li { padding-left: 144px; min-height: 136px; }
   .km-lp ol.km-flow--photo > li > .km-flow__img { width: 112px; height: 112px; margin-top: -56px; left: 14px; }
 }
+
+/* お客様の声：人の絵の代わりに、その作業事例の実際の写真 */
+.km-lp ul.km-voices li.km-voice--photo { margin: 0; padding: 14px 16px 14px 104px; min-height: 112px; }
+.km-lp ul.km-voices li.km-voice--photo::before, .km-lp ul.km-voices li.km-voice--photo::after { content: none; display: none; }
+.km-lp ul.km-voices li.km-voice--photo .km-voice__img { position: absolute; left: 14px; top: 14px; width: 76px; height: 76px; border-radius: 10px; object-fit: cover; }

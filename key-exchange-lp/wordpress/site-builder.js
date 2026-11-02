@@ -158,7 +158,8 @@ async function kmBuildSite(cssText) {
     const v = list.filter((c) => c.voice).slice(0, max);
     return v.length
       ? B("core/list", { className: "km-voices" }, v.map((c) =>
-          B("core/list-item", { content: `「${c.voice}」<small>${c.place}のお客様／<a href="${c.link}">${c.ask}</a></small>` })))
+          // 人の絵ではなく、その作業事例の実際の写真を添える（作り物の顔写真は使わない）
+          B("core/list-item", { className: c.img ? "km-voice--photo" : "", content: `${c.img ? `<img class="km-voice__img" src="${c.img}" alt="${c.place}での作業の写真" width="225" height="300" loading="lazy" decoding="async">` : ""}「${c.voice}」<small>${c.date.replace(/-/g, "/")}　${c.place}のお客様／<a href="${c.link}">${c.ask}</a></small>` })))
       : P("この地域のお客様の声は準備中です。", "km-note");
   };
   const isLost = (c) => /紛失|なくし|無くし|置いて|おいて|忘れ/.test(c.ask);
@@ -364,12 +365,12 @@ async function kmBuildSite(cssText) {
         P(A("/anpi-kakunin/", "家族・入居者と連絡が取れない方（安否確認）はこちら"), "km-fv__sub"),
       ]),
       G("km-section", [H("どんなお困りですか？"), tiles()]),
-      G("km-section km-band", [H("料金の目安"), T([...priceOpen.slice(0, 2), priceChange[0]]), priceNote(), P(A("/price/", "料金表をすべて見る")), cheapWarning()]),
+      G("km-section km-band", [H("お客様の声"), voiceList(cases.filter(isHome), 3), P("作業事例に掲載しているお客様のご感想から抜粋しています。", "km-note")]),
+      G("km-section", [H("料金の目安"), T([...priceOpen.slice(0, 2), priceChange[0]]), priceNote(), P(A("/price/", "料金表をすべて見る")), cheapWarning()]),
       G("km-section", flow(2)),
       G("km-section km-band", rules()),
       G("km-section", [H("鍵マッハ24が選ばれる理由"), stats(), fvPhotos()]),
       G("km-section", [H("最近の作業事例"), caseList(cases.filter(isHome), 4)]),
-      G("km-section km-band", [H("お客様の声"), voiceList(cases.filter(isHome), 4), P("作業事例に掲載しているお客様のご感想から抜粋しています。", "km-note")]),
       G("km-section", [H("対応エリア"), P("東京23区の北部・東部と埼玉県南部は最短5分、そのほかの23区は最短15分です。"), areaLinks(), P(A("/area/", "対応エリアをすべて見る"))]),
       relatedCols("column", "鍵のお役立ちコラム", 6),
       cta("鍵のトラブル・安否確認、今すぐご相談ください"),
@@ -401,6 +402,7 @@ async function kmBuildSite(cssText) {
       ]),
       stats(),
       G("km-section", [H("どんなお困りですか？"), tiles()]),
+      G("km-section km-band", [H("鍵をなくしたお客様の声"), voiceList(cases.filter((c) => isHome(c) && (isLost(c) || isStuck(c))), 3)]),
       G("km-section", [H("鍵開けの料金"), T(priceOpen), priceNote(), P(A("/price/", "料金表をすべて見る →")), cheapWarning()]),
       G("km-section", [...rules(), ...flow()]),
       G("km-section", [
@@ -426,7 +428,6 @@ async function kmBuildSite(cssText) {
         ], "km-steps", true),
         P(A("/kagi-nakushita/", "詳しく：家の鍵をなくしたときにまずやること →")),
       ]),
-      G("km-section km-band", [H("鍵をなくしたお客様の声"), voiceList(cases.filter((c) => isHome(c) && (isLost(c) || isStuck(c))), 4)]),
       G("km-section", [H("鍵の紛失・締め出しの作業事例"), caseList(cases.filter((c) => isHome(c) && (isLost(c) || isStuck(c))), 8)]),
       G("km-section km-band", faqBlocks(FAQ_LOST)),
       relatedCols("nakushita", "鍵をなくした・開かないときのコラム"),
