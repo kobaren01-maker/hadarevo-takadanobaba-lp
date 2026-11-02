@@ -13,6 +13,7 @@ async function kmBuildSite(cssText) {
   const TEL = "tel:07091861366";
   const TEL_TEXT = "070-9186-1366";
   const BIZ_ID = SITE + "/#business";
+  const ORG_ID = SITE + "/#organization";
 
   // ---- ブロックの部品 ----
   const B = (name, attrs = {}, inner = []) => wp.blocks.createBlock(name, attrs, inner);
@@ -38,7 +39,7 @@ async function kmBuildSite(cssText) {
       P(`メールでのご相談は<a href="${SITE}/%e3%81%8a%e5%95%8f%e3%81%84%e5%90%88%e3%82%8f%e3%81%9b/">お問い合わせフォーム</a>から。お急ぎのときはお電話ください。`, "km-cta__mail")]);
   const faqBlocks = (faqs) => [H("よくある質問"), ...faqs.map(([q, a]) => D(q, a))];
   const supervisor = () =>
-    G("km-supervisor", [P(`監修：鍵マッハ24 代表 ${TODO("【要確認：氏名・経歴】")}<br>鍵マッハ24は、年間3,000件以上の鍵の作業に対応しています。<br>運営：${TODO("【要確認：株式会社H-GATE（正式名称）】")}`)]);
+    G("km-supervisor", [P(`監修：寺内 大将（株式会社H-GATE 代表取締役・鍵マッハ24 代表）<br>鍵マッハ24は、年間3,000件以上の鍵の作業に対応しています。<br>運営：株式会社H-GATE（2022年6月設立）　${A("/%e4%bc%9a%e7%a4%be%e6%a6%82%e8%a6%81/", "会社概要")}`)]);
 
   // ---- 構造化データ（Googleに「ここは鍵屋で、何をしていて、どこに行けるか」を伝える） ----
   const LD = (obj) => HTML(`<script type="application/ld+json">${JSON.stringify(obj)}</script>`);
@@ -91,6 +92,21 @@ async function kmBuildSite(cssText) {
       closes: "23:59",
     },
     knowsAbout: ["鍵開け", "鍵交換", "シリンダー交換", "ディンプルキー", "安否確認の鍵開け"],
+    parentOrganization: { "@id": ORG_ID },
+  };
+  // 運営会社（会社概要のページの情報 2026/11/3）。鍵マッハ24はこの会社が運営するサービス
+  const organization = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": ORG_ID,
+    name: "株式会社H-GATE",
+    url: SITE + "/",
+    telephone: "+81-70-9186-1366",
+    email: "hgate2022.6@gmail.com",
+    foundingDate: "2022-06",
+    founder: { "@type": "Person", name: "寺内 大将", jobTitle: "代表取締役" },
+    address: { "@type": "PostalAddress", postalCode: "115-0045", addressRegion: "東京都", addressLocality: "北区", streetAddress: "赤羽1-7-9 赤羽第一葉山ビル4F", addressCountry: "JP" },
+    brand: { "@id": BIZ_ID },
   };
   const service = (name, serviceType, path, description) => ({
     "@context": "https://schema.org",
@@ -358,7 +374,8 @@ async function kmBuildSite(cssText) {
       relatedCols("column", "鍵のお役立ちコラム", 6),
       cta("鍵のトラブル・安否確認、今すぐご相談ください"),
       LD(business),
-      LD({ "@context": "https://schema.org", "@type": "WebSite", name: "鍵マッハ24", url: SITE + "/" }),
+      LD(organization),
+      LD({ "@context": "https://schema.org", "@type": "WebSite", name: "鍵マッハ24", url: SITE + "/", publisher: { "@id": ORG_ID } }),
     ]),
   });
 
