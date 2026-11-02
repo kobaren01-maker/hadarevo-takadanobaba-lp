@@ -333,3 +333,9 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 .km-lp ul.km-voices li.km-voice--photo { margin: 0; padding: 14px 16px 14px 104px; min-height: 112px; }
 .km-lp ul.km-voices li.km-voice--photo::before, .km-lp ul.km-voices li.km-voice--photo::after { content: none; display: none; }
 .km-lp ul.km-voices li.km-voice--photo .km-voice__img { position: absolute; left: 14px; top: 14px; width: 76px; height: 76px; border-radius: 10px; object-fit: cover; }
+
+/* 公式LINEの入口（LINE_URL が入っているときだけ出る） */
+.km-lp .km-line { background: #f1fbf4; border: 2px solid #06c755; border-radius: 14px; padding: 20px 16px !important; }
+.km-lp .km-line__btn .wp-block-button__link { background: #06c755 !important; color: #fff !important; font-weight: 900; border-radius: 999px; padding: 14px 28px; }
+.km-lp .km-fixed-cta__line .wp-block-button__link { display: block; box-sizing: border-box; text-align: center; text-decoration: none; background: #06c755; color: #fff; border-radius: 999px; font-size: 13px; font-weight: 900; padding: 15px 14px; line-height: 1.2; }
+@media (max-width: 480px) { .km-lp .km-fixed-cta__line .wp-block-button__link { font-size: 12px; padding: 14px 10px; } }

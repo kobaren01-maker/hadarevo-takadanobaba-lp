@@ -12,6 +12,8 @@ async function kmBuildSite(cssText) {
   const SITE = "https://h-gate.jp";
   const TEL = "tel:07091861366";
   const TEL_TEXT = "070-9186-1366";
+  // 公式LINEの友だち追加URL（https://lin.ee/〜）。空の間は、LINEの入口をどこにも出さない（docs/18-line-strategy.md）
+  const LINE_URL = "";
   const BIZ_ID = SITE + "/#business";
   const ORG_ID = SITE + "/#organization";
 
@@ -255,8 +257,18 @@ async function kmBuildSite(cssText) {
   const fixedCta = () =>
     G("km-fixed-cta", [BTN("km-fixed-cta__btns", [
       [`<small>24時間受付・最短5分</small>${TEL_TEXT}`, TEL, "km-fixed-cta__tel"],
-      ["メールで相談", SITE + "/%e3%81%8a%e5%95%8f%e3%81%84%e5%90%88%e3%82%8f%e3%81%9b/", "km-fixed-cta__mail"],
+      LINE_URL ? ["LINEで相談", LINE_URL, "km-fixed-cta__line"] : ["メールで相談", SITE + "/%e3%81%8a%e5%95%8f%e3%81%84%e5%90%88%e3%82%8f%e3%81%9b/", "km-fixed-cta__mail"],
     ])]);
+  // 写真見積もりの入口（急がない相談をLINEで受ける）。緊急の鍵開けのページには置かない
+  const lineBox = (title = "写真を送るだけで、鍵交換のお見積もり", lead = "LINEで写真を3枚送っていただくと、来る前に部品と金額の目安をお伝えします。夜中でもお送りいただけます。") =>
+    LINE_URL ? [G("km-section km-line", [
+      H(title),
+      P(lead),
+      L(["鍵穴の正面", "ドアを開けたときに見える側面の金属の板（文字が写るように）", "今お使いの鍵"], "km-steps", true),
+      P("あわせて、住所（市区町村まで）をお送りください。正式なお見積もりは、現地で確認して作業前に書面でお出しします。", "km-note"),
+      BTN("km-line__btn", [["LINEで写真を送る", LINE_URL]]),
+      P(`お急ぎの方は、お電話がいちばん早いです（${TEL_TEXT}・24時間受付）。`, "km-note"),
+    ])] : [];
   const lp = (inner, extraClass = "") => [G(("km-lp " + extraClass).trim(), [...inner, fixedCta()])];
 
   // 2. 困りごとを絵で選ぶ入口（線だけの簡単な絵。自作）
@@ -459,6 +471,7 @@ async function kmBuildSite(cssText) {
       ]),
       stats(),
       G("km-section", [H("鍵交換は3つの考え方から選べます"), plans(), P("どれにするか迷ったら、お電話でご相談ください。ドアに合う部品と総額をお伝えします。", "km-note")]),
+      ...lineBox(),
       G("km-section", [H("鍵交換の料金（部品込み）"), T(priceChange), priceNote(), P(A("/price/", "料金表をすべて見る →")), cheapWarning()]),
       G("km-section", [
         H("普通の鍵とディンプルキーの違い"),
@@ -569,6 +582,7 @@ async function kmBuildSite(cssText) {
         ], "km-steps", true),
       ]),
       G("km-section", [H("管理物件での作業事例"), caseList(cases.filter((c) => /賃貸|物件|管理/.test(c.ask)), 4)]),
+      ...lineBox("物件名と写真を送るだけでご依頼いただけます", "管理会社・大家さんのご依頼は、LINEでも受け付けます。物件名と部屋番号、鍵の写真をお送りいただければ、日程と金額の目安をお返しします。作業報告書もLINEでお送りできます。"),
       G("km-section km-band", faqBlocks(FAQ_HOUJIN)),
       G("km-section", [
         H("お取引のご相談"),
@@ -593,6 +607,7 @@ async function kmBuildSite(cssText) {
       G("km-section", [H("鍵交換（部品込み）"), T(priceChange)]),
       G("km-section", [H("鍵の修理"), T(priceOther)]),
       G("km-section", [H("安否確認の鍵開け"), T(priceAnpi)]),
+      ...lineBox("お家の鍵の場合はいくら？写真で目安をお伝えします"),
       G("km-section", [
         H("追加でかかる費用"),
         T([
