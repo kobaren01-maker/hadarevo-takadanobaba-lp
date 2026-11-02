@@ -637,7 +637,7 @@ async function kmBuildSite(cssText) {
   if (!window.kmColumns) throw new Error("columns.js が読み込まれていません");
   const parts = { B, P, H, L, T, G, A, D, TODO, answer, telButton, supervisor, LD, faqLd, lp };
   // 第1弾（毎日投稿の1〜7本目）は columns2.js。読み込んでいれば一緒に下書きにする
-  const COLUMNS = [...window.kmColumns(parts), ...(window.kmColumns2 ? window.kmColumns2(parts) : []), ...(window.kmColumns3 ? window.kmColumns3(parts) : [])];
+  const COLUMNS = [...window.kmColumns(parts), ...(window.kmColumns2 ? window.kmColumns2(parts) : []), ...(window.kmColumns3 ? window.kmColumns3(parts) : []), ...(window.kmColumns4 ? window.kmColumns4(parts) : [])];
 
   // ======================================================================
   // 保存（下書きのみ）
