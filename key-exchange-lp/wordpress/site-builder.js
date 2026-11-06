@@ -5,7 +5,7 @@
    - 各ページに：検索結果用のタイトル、説明文（抜粋）、構造化データ（JSON-LD）、ページ専用CSS
    使い方：WordPress の「固定ページを追加」画面で、このファイルを読み込んで
      await kmBuildSite(cssText)
-   すべて status: draft。公開済みのページ・投稿には触らない（同じスラッグの下書きだけ上書き）。
+   2026/11/6 公開済み。同じスラッグのページ・投稿を探して中身だけ上書きし、公開・予約の状態はそのまま保つ（新しいものだけ下書きで作る）。
    作業事例は既存の投稿（公開済み）を読み取り、地域・内容ごとに一覧へ差し込む（投稿そのものは変えない）。
    ========================================================================== */
 async function kmBuildSite(cssText) {
@@ -388,8 +388,8 @@ async function kmBuildSite(cssText) {
 
   // ---- トップ ----
   PAGES.push({
-    slug: "new-top-draft",
-    title: "新トップ案（2つの入口）",
+    slug: "top",
+    title: "トップ",
     headTitle: "鍵開け・鍵交換の鍵マッハ24｜赤羽拠点・東京都内24時間受付",
     excerpt: "家の鍵をなくした・家に入れない時の鍵開け、鍵交換、家族や入居者と連絡が取れない時の安否確認の鍵開けは鍵マッハ24へ。赤羽を拠点に東京都内へ24時間出張。作業前に書面でお見積もりをお出しします。",
     hideHeader: true,
@@ -724,8 +724,9 @@ async function kmBuildSite(cssText) {
   const hideHeaderCss = "\n.page-header, .breadcrumb { display: none; }\n.site-body { padding-top: 16px; }\n.lightning_swiper { display: none !important; }";
   const design = { layout: "col-one-no-subsection", site_body_padding: "" };
 
+  // 2026/11/6 公開後：下書きだけでなく、公開中・予約中のページも同じスラッグで探して上書きする（状態はそのまま）
   const findDraft = async (type, slug) => {
-    const list = await wp.apiFetch({ path: `/wp/v2/${type}?status=draft&slug=${slug}&context=edit&_fields=id` });
+    const list = await wp.apiFetch({ path: `/wp/v2/${type}?status=draft,publish,future,pending,private&slug=${slug}&context=edit&_fields=id` });
     return list[0]?.id;
   };
   const upsert = async (type, def, extra = {}) => {
@@ -735,7 +736,6 @@ async function kmBuildSite(cssText) {
     const data = {
       title: def.title,
       slug: def.slug,
-      status: "draft",
       content: wp.blocks.serialize(def.blocks()),
       excerpt: def.excerpt,
       veu_head_title_object: { title: def.headTitle, add_site_title: "" },
