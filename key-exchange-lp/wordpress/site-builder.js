@@ -332,7 +332,7 @@ async function kmBuildSite(cssText) {
   const cheapWarning = () =>
     G("km-box km-box--warn", [
       H("「◯千円〜」の安すぎる広告にご注意ください", 3),
-      P('現地で高い料金を請求される相談が増えています（<a href="https://www.shouhiseikatu.metro.tokyo.lg.jp/sodan/kinkyu/documents/kagi_kaijou_service.pdf">東京都消費生活総合センター</a>）。<strong>鍵マッハ24は作業前に書面で金額をお出しし、それ以上は請求しません。</strong>'),
+      P('現地で高い料金を請求される相談が増えています（<a href="https://www.shouhiseikatu.metro.tokyo.lg.jp/sodan/kinkyu/documents/kagi_kaijou_service.pdf">東京都消費生活総合センター</a>）。<br><strong>鍵マッハ24は、作業の前に書面でお見積もりをお出しし、金額にご納得いただいてから作業を始めます。現場でお出ししたお見積もりより高く請求することはありませんので、どうぞご安心ください。</strong>'),
     ]);
 
   // 8. 本人確認に使える書類（友人の回答 2026/10/28：顔写真付きの身分証。ない場合は不動産の契約書・公共料金の支払い書など）
