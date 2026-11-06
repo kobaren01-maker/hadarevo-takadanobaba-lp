@@ -320,12 +320,17 @@ async function kmBuildSite(cssText) {
   const stats = () =>
     L(["最短<strong>5</strong>分で到着", "年間<strong>3,000</strong>件以上", "<strong>10</strong>名以上が24時間待機", "全スタッフが<strong>警察立ち会い</strong>を経験"], "km-stats");
 
-  // 代表からのひとこと（友人の回答 2026/11/6 のきっかけをもとにした文。11/6 本人の了承済み）
-  const founderNote = () =>
-    G("km-box km-founder", [
-      H("代表から", 3),
-      P("私自身、鍵をなくして困ったときに、駆けつけてくれた鍵屋さんの丁寧な対応に救われました。あのときの安心を、今度は自分がお客様に届けたいと思い、鍵マッハ24を始めました。どんな時間でも、まずはお電話ください。"),
-      P("株式会社H-GATE 代表取締役　寺内 大将（鍵の仕事に携わって3年）", "km-note"),
+  // 私たちの想い（トップのFVのすぐ下）。代表のきっかけ（2026/11/6 友人の回答）と、鍵マッハ24の約束からまとめた文。見本サイトの文は使わない
+  const message = () =>
+    G("km-section km-message", [
+      P("私たちの想い", "km-message__eyebrow"),
+      H('<mark class="km-mk">鍵で困ったとき、</mark><br><mark class="km-mk">いちばんに思い出してもらえる鍵屋へ。</mark>'),
+      HTML('<figure class="km-message__photos">' + [["2-arrive", "玄関へ向かうスタッフ"], ["3-estimate", "見積書を見せて説明するスタッフ"], ["4-work", "鍵の部品を交換するスタッフの手元"]]
+        .map(([n, alt]) => `<img src="${SITE}/wp-content/uploads/2026/11/kagimach24-flow-${n}.webp" alt="${alt}" width="240" height="240" loading="lazy" decoding="async">`).join("") + "</figure>"),
+      P("代表の寺内自身、鍵をなくして途方に暮れたことがあります。そのとき駆けつけてくれた鍵屋さんの丁寧な対応に、心から救われました。あのときの安心を、今度は自分がお客様に届けたい。それが、鍵マッハ24の始まりです。"),
+      P("鍵のトラブルは、急いでいて、ゆっくり比べる余裕がないときに起こります。だからこそ鍵マッハ24は、料金をすべて公開し、作業の前に書面でお見積もりをお出しすることを、当たり前に続けています。鍵が開かなかったときは、料金はいただきません。"),
+      P("早く駆けつけること。料金をはっきりさせること。最後まで丁寧に作業すること。<br>この3つを大切に、「頼んでよかった」と言っていただける鍵屋を目指します。"),
+      P("株式会社H-GATE 代表取締役　寺内 大将", "km-message__sign"),
     ]);
 
   // 4. 安すぎる表示への注意（他社の名前は出さない）
@@ -398,12 +403,13 @@ async function kmBuildSite(cssText) {
         L(["作業前に書面でお見積もり", "鍵が開かなかったら0円", "年間3,000件以上の実績"], "km-chips"),
         P(A("/anpi-kakunin/", "家族・入居者と連絡が取れない方（安否確認）はこちら"), "km-fv__sub"),
       ]),
+      message(),
       G("km-section", [H("どんなお困りですか？"), tiles()]),
       G("km-section km-band", [H("お客様の声"), voiceList(cases.filter(isHome), 3), P("作業事例に掲載しているお客様のご感想から抜粋しています。", "km-note")]),
       G("km-section", [H("料金の目安"), T([priceBase, priceOpen[0], priceChange[0]]), priceNote(), cheapWarning()]),
       G("km-section", flow(2)),
       G("km-section km-band", rules()),
-      G("km-section", [H("鍵マッハ24が選ばれる理由"), stats(), fvPhotos(), founderNote()]),
+      G("km-section", [H("鍵マッハ24が選ばれる理由"), stats(), fvPhotos()]),
       G("km-section", [H("最近の作業事例"), caseList(cases.filter(isHome), 4)]),
       G("km-section", [H("対応エリア"), P("東京都内の各地でスタッフが待機しているので、最短5分で到着します。埼玉県南部と多摩地域にも伺います。到着の目安は、お電話でお伝えします。"), areaLinks(), P(A("/area/", "対応エリアをすべて見る"))]),
       relatedCols("column", "鍵のお役立ちコラム", 6),
