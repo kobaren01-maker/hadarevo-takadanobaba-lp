@@ -385,3 +385,5 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
   .km-lp .km-message h2 { font-size: clamp(18px, 4.6vw, 20px); }
 }
 .km-lp li, .km-lp ul.km-related-list li a { text-wrap: balance; }
+.km-lp ul.km-voices small .km-voice__meta { display: block; }
+.km-lp ul.km-voices small, .km-lp ul.km-voices li { word-break: auto-phrase; }

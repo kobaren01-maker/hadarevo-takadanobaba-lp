@@ -164,7 +164,7 @@ async function kmBuildSite(cssText) {
     return v.length
       ? B("core/list", { className: "km-voices" }, v.map((c) =>
           // 人の絵ではなく、その作業事例の実際の写真を添える（作り物の顔写真は使わない）
-          B("core/list-item", { className: c.img ? "km-voice--photo" : "", content: `${c.img ? `<img class="km-voice__img" src="${c.img}" alt="${c.place}での作業の写真" width="225" height="300" loading="lazy" decoding="async">` : ""}「${c.voice}」<small>${c.date.replace(/-/g, "/")}　${c.place}のお客様／<a href="${c.link}">${c.ask}</a></small>` })))
+          B("core/list-item", { className: c.img ? "km-voice--photo" : "", content: `${c.img ? `<img class="km-voice__img" src="${c.img}" alt="${c.place}での作業の写真" width="225" height="300" loading="lazy" decoding="async">` : ""}「${c.voice}」<small><span class="km-voice__meta">${c.date.replace(/-/g, "/")}　${c.place}のお客様</span><a href="${c.link}">${c.ask}</a></small>` })))
       : P("この地域のお客様の声は準備中です。", "km-note");
   };
   const isLost = (c) => /紛失|なくし|無くし|置いて|おいて|忘れ/.test(c.ask);
