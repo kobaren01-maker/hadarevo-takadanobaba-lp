@@ -9,7 +9,8 @@ async function kmBuildFooter() {
   const B = (name, attrs = {}, inner = []) => wp.blocks.createBlock(name, attrs, inner);
   const P = (content, className) => B("core/paragraph", { content, className });
   const css = `
-.site-footer { background: #0b2a5b; color: #fff; border-top: 0; }
+.site-footer { background: #0b2a5b; color: #fff; border-top: 0; margin-top: 0; }
+.site-body:has(.km-cta) { padding-bottom: 0; }
 .site-footer .footer-nav { background: #08214a; border: 0; padding: 18px 0; }
 .site-footer .footer-nav-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 22px; margin: 0; padding: 0 16px; list-style: none; }
 .site-footer .footer-nav-list li { margin: 0; padding: 0; border: 0 !important; }
