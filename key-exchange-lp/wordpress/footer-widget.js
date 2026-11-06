@@ -17,7 +17,7 @@ async function kmBuildFooter() {
 .site-footer .footer-nav-list a { color: #fff !important; font-size: 14px; text-decoration: none; display: inline-block; padding: 6px 0; }
 .site-footer .footer-nav-list a:hover { text-decoration: underline; }
 .site-footer .site-footer-content { padding-top: 28px; padding-bottom: 28px; }
-.site-footer-copyright { background: #061a3a; padding-bottom: 96px; }
+.site-footer-copyright { background: transparent; border-top: 1px solid rgba(255,255,255,0.15); padding-bottom: 96px; }
 .site-footer-copyright p, .site-footer-copyright a { color: #aab6cc !important; font-size: 12px; }
 .km-footer { text-align: center; color: #fff; display: grid; gap: 12px; justify-items: center; }
 .km-footer p { margin: 0 !important; color: #fff; }
