@@ -720,7 +720,8 @@ async function kmBuildSite(cssText) {
   // 保存（下書きのみ）
   // ======================================================================
   const css = cssText.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\n\s*\n/g, "\n").trim(); // WAFが「/* */」を止めるため外す
-  const hideHeaderCss = "\n.page-header, .breadcrumb { display: none; }\n.site-body { padding-top: 16px; }";
+  // トップは、テーマのスライドショー（古い画像「年間実績3万件以上」など）も隠す
+  const hideHeaderCss = "\n.page-header, .breadcrumb { display: none; }\n.site-body { padding-top: 16px; }\n.lightning_swiper { display: none !important; }";
   const design = { layout: "col-one-no-subsection", site_body_padding: "" };
 
   const findDraft = async (type, slug) => {
