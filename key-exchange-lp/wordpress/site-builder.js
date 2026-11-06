@@ -106,7 +106,6 @@ async function kmBuildSite(cssText) {
     telephone: "+81-70-9186-1366",
     email: "hgate2022.6@gmail.com",
     foundingDate: "2022-06",
-    founder: { "@type": "Person", name: "寺内 大将", jobTitle: "代表取締役", description: "鍵の仕事に携わって3年。鍵マッハ24の代表として、鍵開け・鍵交換・安否確認の鍵開けを監修。" },
     identifier: [
       { "@type": "PropertyValue", propertyID: "法人番号", value: "9012301013027" },
       { "@type": "PropertyValue", propertyID: "適格請求書発行事業者登録番号", value: "T9012301013027" },
