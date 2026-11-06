@@ -13,7 +13,7 @@ async function kmBuildSite(cssText) {
   const TEL = "tel:07091861366";
   const TEL_TEXT = "070-9186-1366";
   // 公式LINEの友だち追加URL（https://lin.ee/〜）。空の間は、LINEの入口をどこにも出さない（docs/18-line-strategy.md）
-  const LINE_URL = "";
+  const LINE_URL = "https://lin.ee/OV5d1Pb"; // 2026/11/6 公式LINE開設
   const BIZ_ID = SITE + "/#business";
   const ORG_ID = SITE + "/#organization";
 
@@ -38,7 +38,9 @@ async function kmBuildSite(cssText) {
   const answer = (html) => G("km-answer", [P(html)]);
   const cta = (title = "鍵のトラブル、今すぐご相談ください") =>
     G("km-section km-cta", [H(title), P("作業前に書面でお見積もりをお出しし、ご納得いただいてから作業に入ります。"), telButton(),
-      P(`メールでのご相談は<a href="${SITE}/%e3%81%8a%e5%95%8f%e3%81%84%e5%90%88%e3%82%8f%e3%81%9b/">お問い合わせフォーム</a>から。お急ぎのときはお電話ください。`, "km-cta__mail")]);
+      // メールの問い合わせはやめて、電話の横にLINE（2026/11/6）
+      BTN("km-line__btn km-cta__line", [["LINEで相談する（友だち追加）", LINE_URL]]),
+      P("LINEでは写真を送っていただくだけで、鍵交換のお見積もりの目安をお伝えします。お急ぎのときはお電話ください。", "km-cta__mail")]);
   const faqBlocks = (faqs) => [H("よくある質問"), ...faqs.map(([q, a]) => D(q, a))];
   const supervisor = () =>
     G("km-supervisor", [P(`監修：寺内 大将（株式会社H-GATE 代表取締役・鍵マッハ24 代表）<br>鍵の仕事に携わって3年。自分が鍵をなくしたときに駆けつけてくれた鍵屋さんの丁寧な対応に感動し、鍵マッハ24を始めました。<br>鍵マッハ24は、年間3,000件以上の鍵の作業に対応しています。<br>運営：株式会社H-GATE（2022年6月設立）　${A("/%e4%bc%9a%e7%a4%be%e6%a6%82%e8%a6%81/", "会社概要")}`)]);
@@ -263,7 +265,7 @@ async function kmBuildSite(cssText) {
   const fixedCta = () =>
     G("km-fixed-cta", [BTN("km-fixed-cta__btns", [
       [`<small>24時間受付・最短5分</small>${TEL_TEXT}`, TEL, "km-fixed-cta__tel"],
-      LINE_URL ? ["LINEで相談", LINE_URL, "km-fixed-cta__line"] : ["メールで相談", SITE + "/%e3%81%8a%e5%95%8f%e3%81%84%e5%90%88%e3%82%8f%e3%81%9b/", "km-fixed-cta__mail"],
+      ["LINEで相談", LINE_URL, "km-fixed-cta__line"],
     ])]);
   // 写真見積もりの入口（急がない相談をLINEで受ける）。緊急の鍵開けのページには置かない
   const lineBox = (title = "写真を送るだけで、鍵交換のお見積もり", lead = "LINEで写真を3枚送っていただくと、来る前に部品と金額の目安をお伝えします。夜中でもお送りいただけます。") =>
@@ -578,7 +580,7 @@ async function kmBuildSite(cssText) {
 
   // ---- 法人の方へ ----
   const FAQ_HOUJIN = [
-    ["取引を始めるには、どうすればいいですか？", "お電話かお問い合わせフォームでご連絡ください。物件の数やご依頼の内容をうかがい、お支払い方法などを決めて、その日からご依頼いただけます。"],
+    ["取引を始めるには、どうすればいいですか？", "お電話かLINEでご連絡ください。物件の数やご依頼の内容をうかがい、お支払い方法などを決めて、その日からご依頼いただけます。"],
     ["請求書の締め日と支払い期限は？", "標準は、当月末締め・翌月末払いです。御社のご都合に合わせてご相談できます。"],
     ["適格請求書（インボイス）に対応していますか？", "はい。株式会社H-GATEは適格請求書発行事業者です（登録番号 T9012301013027）。"],
     ["作業報告書はもらえますか？", "はい。作業ごとに作業報告書を発行します。"],
@@ -616,7 +618,7 @@ async function kmBuildSite(cssText) {
       G("km-section km-band", faqBlocks(FAQ_HOUJIN)),
       G("km-section", [
         H("お取引のご相談"),
-        P(`お電話（${TEL_TEXT}）か、${A("/%e3%81%8a%e5%95%8f%e3%81%84%e5%90%88%e3%82%8f%e3%81%9b/", "お問い合わせフォーム")}からご連絡ください。`),
+        P(`お電話（${TEL_TEXT}）か、<a href="${LINE_URL}">公式LINE</a>からご連絡ください。`),
       ]),
       cta("法人のお取引・ご相談"),
       LD(service("管理会社・法人向けの鍵開け・鍵交換・安否確認", "鍵開け", "/houjin/", "管理会社・大家さん・法人向けに、安否確認の鍵開け、鍵交換、入居者の鍵紛失対応を24時間提供。")),

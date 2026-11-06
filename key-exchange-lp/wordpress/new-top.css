@@ -390,3 +390,6 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 /* 言葉の切れ目で折り返す（対応ブラウザのみ）。本文の段落は右端がそろわなくなるので入れない */
 .km-lp h1, .km-lp h2, .km-lp h3, .km-lp h4, .km-lp summary, .km-lp th, .km-lp li, .km-lp figcaption,
 .km-lp .wp-block-button__link, .km-lp ul.km-tiles a { word-break: auto-phrase; }
+/* 最後の相談の欄：電話の下にLINEのボタン（メールの問い合わせはやめた） */
+.km-lp .km-cta .km-cta__line { justify-content: center; margin-top: 12px !important; }
+.km-lp .km-cta .km-cta__line .wp-block-button__link { font-size: 17px; padding: 14px 32px; }

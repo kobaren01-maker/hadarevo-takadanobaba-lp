@@ -29,6 +29,7 @@ async function kmBuildFooter() {
 .km-footer__lead { font-size: 14px; opacity: 0.9; }
 .km-footer__tel a { display: inline-block; background: #ff7a00; color: #fff !important; text-decoration: none; border-radius: 999px; font-weight: 900; font-size: 26px; line-height: 1.2; padding: 10px 30px 12px; box-shadow: 0 3px 0 #c75400; white-space: nowrap; }
 .km-footer__tel small { display: block; font-size: 12px; font-weight: 700; }
+.km-footer__line a { display: inline-block; background: #06c755; color: #fff !important; text-decoration: none; border-radius: 999px; font-weight: 900; font-size: 15px; padding: 10px 26px; }
 .km-footer__points { font-size: 14px; font-weight: 700; color: #ffd83d !important; }
 .km-footer__company { font-size: 12.5px; line-height: 1.8; opacity: 0.85; }
 @media (max-width: 480px) { .km-footer__tel a { font-size: 22px; padding: 10px 22px 12px; } }
@@ -38,6 +39,7 @@ async function kmBuildFooter() {
       B("core/image", { url: "https://h-gate.jp/wp-content/uploads/2026/10/kagimach24-logo-footer.webp", alt: "鍵マッハ24", id: 928, sizeSlug: "full", align: "center" }),
       P("東京都内・埼玉県南部　鍵開け・鍵交換・安否確認の鍵開け", "km-footer__lead"),
       P('<a href="tel:07091861366"><small>24時間受付・年中無休</small>070-9186-1366</a>', "km-footer__tel"),
+      P('<a href="https://lin.ee/OV5d1Pb">LINEで相談する（友だち追加）</a>', "km-footer__line"),
       P("作業前に書面でお見積もり ／ 鍵が開かなかったら0円", "km-footer__points"),
       P("運営：株式会社H-GATE<br>〒115-0045 東京都北区赤羽1-7-9 赤羽第一葉山ビル4F", "km-footer__company"),
       B("core/html", { content: `<style>${css}</style>` }),
