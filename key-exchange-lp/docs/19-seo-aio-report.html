@@ -1,0 +1,270 @@
+<title>鍵マッハ24 集客対策の報告</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap">
+<style>
+/* 報告書：紺の帯の表紙、その下は一段組みの読みもの。章ごとに「何をしたか」と「なぜ効くか」を対で置く */
+:root {
+  --bg: #f6f7fa;
+  --paper: #ffffff;
+  --ink: #18223a;
+  --muted: #5b6579;
+  --line: #dde2ec;
+  --navy: #0b2a5b;
+  --navy-soft: #e8eef8;
+  --accent: #e86a10;
+  --accent-soft: #fdf0e6;
+  --ok: #1d7a4a;
+  --ok-soft: #e6f4ec;
+  --on-navy: #ffffff;
+  --display: "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", sans-serif;
+  --body: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1522; --paper: #171f30; --ink: #e8ecf4; --muted: #a3adc2; --line: #2b3550;
+    --navy: #0b2a5b; --navy-soft: #1d2b47; --accent: #ff9a52; --accent-soft: #3a2616;
+    --ok: #5fcf93; --ok-soft: #173326; --on-navy: #ffffff; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1522; --paper: #171f30; --ink: #e8ecf4; --muted: #a3adc2; --line: #2b3550;
+  --navy: #0b2a5b; --navy-soft: #1d2b47; --accent: #ff9a52; --accent-soft: #3a2616;
+  --ok: #5fcf93; --ok-soft: #173326; --on-navy: #ffffff; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.85; }
+.wrap { max-width: 760px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.cover { background: var(--navy); color: var(--on-navy); }
+header.cover .wrap { padding-block: 44px 36px; display: grid; gap: 12px; }
+.eyebrow { font-size: 13px; letter-spacing: 0.08em; opacity: 0.85; }
+h1 { font-family: var(--display); font-weight: 900; font-size: clamp(26px, 6vw, 38px); line-height: 1.35; margin: 0; text-wrap: balance; }
+.cover p { margin: 0; opacity: 0.92; }
+.status { display: inline-flex; align-items: center; gap: 8px; justify-self: start; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; padding: 4px 14px; font-size: 14px; font-weight: 700; }
+.status::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #ffb27a; }
+main .wrap { padding-block: 28px 64px; display: grid; gap: 40px; }
+section { display: grid; gap: 14px; min-width: 0; }
+h2 { font-family: var(--display); font-weight: 900; font-size: 23px; line-height: 1.45; margin: 0; color: var(--ink); text-wrap: balance; display: flex; gap: 12px; align-items: baseline; }
+h2 .no { font-family: var(--body); font-size: 14px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+h3 { font-size: 17px; margin: 0; line-height: 1.5; }
+p { margin: 0; }
+.lead { color: var(--muted); }
+.summary { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 20px; display: grid; gap: 10px; }
+.summary strong { color: var(--accent); }
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.stat { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 12px; display: grid; gap: 2px; }
+.stat b { font-family: var(--display); font-size: 28px; line-height: 1.2; color: var(--navy); font-variant-numeric: tabular-nums; }
+:root[data-theme="dark"] .stat b { color: var(--ink); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .stat b { color: var(--ink); } }
+.stat span { font-size: 13px; color: var(--muted); line-height: 1.5; }
+@media (max-width: 560px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.items { display: grid; gap: 10px; }
+.item { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 6px; min-width: 0; }
+.item .why { font-size: 14.5px; color: var(--muted); }
+.item .why::before { content: "なぜ効くか　"; font-weight: 700; color: var(--accent); }
+.tag { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 6px; padding: 1px 8px; margin-left: 6px; vertical-align: 2px; }
+.tag.live { background: var(--ok-soft); color: var(--ok); }
+.tag.draft { background: var(--navy-soft); color: var(--muted); }
+.table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 520px; }
+th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font-size: 13px; color: var(--muted); font-weight: 700; background: var(--navy-soft); }
+.asks { display: grid; gap: 10px; }
+.ask { display: grid; grid-template-columns: 26px 1fr; gap: 10px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.ask .box { width: 20px; height: 20px; border: 2px solid var(--accent); border-radius: 5px; margin-top: 5px; }
+.ask small { display: block; color: var(--muted); font-size: 14px; }
+.ask.must { border-color: var(--accent); background: var(--accent-soft); }
+.timeline { display: grid; gap: 0; border-left: 3px solid var(--line); margin-left: 8px; }
+.step { position: relative; padding: 0 0 18px 22px; }
+.step::before { content: ""; position: absolute; left: -9px; top: 8px; width: 15px; height: 15px; border-radius: 50%; background: var(--paper); border: 3px solid var(--accent); }
+.step b { display: block; }
+.step span { color: var(--muted); font-size: 15px; }
+dl.glossary { display: grid; grid-template-columns: max-content 1fr; gap: 10px 16px; margin: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 18px; }
+dl.glossary dt { font-weight: 700; }
+dl.glossary dd { margin: 0; color: var(--muted); }
+@media (max-width: 560px) { dl.glossary { grid-template-columns: 1fr; gap: 2px; } dl.glossary dd { margin-bottom: 10px; } }
+footer { color: var(--muted); font-size: 13px; }
+a { color: var(--accent); }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+</style>
+
+<header class="cover">
+  <div class="wrap">
+    <div class="eyebrow">寺内さんへ　2026年11月</div>
+    <h1>鍵マッハ24 ホームページの<br>集客対策の報告</h1>
+    <p>鍵のことで困った人が、Googleで調べたときも、ChatGPTなどのAIに聞いたときも、鍵マッハ24にたどり着いて電話してもらえるようにするための準備です。</p>
+    <span class="status">作業事例の題名を除き、すべて下書き。まだ公開していません</span>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <section>
+      <div class="summary">
+        <p><strong>一言でいうと：</strong>「鍵をなくした」「鍵交換」「安否確認」など、お客様が実際に調べている言葉ごとに入口のページを作り、その言葉で検索した人の疑問に答えるコラムを25本用意しました。</p>
+        <p>さらに、Googleや AIが「ここは東京の鍵屋で、何をしていて、どこに来てくれるか」を正しく理解できるよう、ページの中に機械向けの説明も入れています。</p>
+        <p>公開には、<strong>正式な料金</strong>だけが足りていません。料金が決まれば、数日で公開できます。</p>
+      </div>
+      <div class="stats" aria-label="作ったものの数">
+        <div class="stat"><b>13</b><span>新しいページ（下書き）</span></div>
+        <div class="stat"><b>25</b><span>コラム（すべて3,000字以上）</span></div>
+        <div class="stat"><b>38</b><span>作業事例の題名を整理（公開中）</span></div>
+        <div class="stat"><b>6</b><span>区ごとのページ</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="no">1</span>Googleで見つけてもらうための対策（SEO）</h2>
+      <p class="lead">SEOは、Googleの検索結果で上のほうに出るための工夫です。上に出るほど、電話が増えます。</p>
+      <div class="items">
+        <div class="item">
+          <h3>お客様が実際に調べている言葉を、数字で確かめてから作った</h3>
+          <p>Googleの「キーワードプランナー」で、言葉ごとに月に何回検索されているかを調べました。たとえば「鍵が回らない」「シリンダー交換」「ディンプルキー 合鍵」は月1,000〜1万回、「トイレ 鍵 開かない」は月100〜1,000回です。検索がほとんどない言葉は、ページやコラムの題材から外しました。</p>
+          <p class="why">誰も調べていない言葉で上に出ても、お客様は来ません。調べられている言葉に合わせることで、作ったページがそのまま集客につながります。</p>
+        </div>
+        <div class="item">
+          <h3>困りごとごとの入口ページを作った<span class="tag draft">下書き</span></h3>
+          <p>トップ、鍵をなくした・家に入れない、鍵交換、安否確認、管理会社・法人の方へ、料金表、対応エリアの一覧と、北区・江東区・江戸川区・墨田区・葛飾区・足立区のページです。区のページには、到着の目安、その区の警察署、その区での作業事例を載せました。</p>
+          <p class="why">「赤羽 鍵屋」「鍵 なくした」のように、調べる言葉は人によって違います。言葉ごとにぴったりのページがあると、Googleはそのページを上に出しやすくなります。</p>
+        </div>
+        <div class="item">
+          <h3>コラムを25本書いた<span class="tag draft">下書き</span></h3>
+          <p>「鍵が抜けない・折れた」「マンションで鍵をなくした」「鍵穴の潤滑剤」「玄関の補助錠」など、すべて3,000字以上です。どの記事にも、最初に結論を置き、よくある質問を5つずつ付け、「鍵マッハ24の現場から」という現場の話の欄を入れました。監修者として、寺内さんのお名前と会社名を載せています。</p>
+          <p class="why">Googleは、中身が薄い記事より、読んだ人の疑問に最後まで答える記事を評価します。誰が書いて、誰が確かめたかが分かることも評価の材料になります。コラムを読んだ人が、そのまま電話してくれる入口にもなります。</p>
+        </div>
+        <div class="item">
+          <h3>コラムを毎朝1本ずつ公開する計画を立てた</h3>
+          <p>WordPressの予約投稿で、サイト公開の翌日から毎朝7時に1本ずつ公開されるよう設定します。記事どうしのリンクが切れないよう、リンク先の記事が先に出る順番に並べました。</p>
+          <p class="why">サイトが少しずつ育っていると、Googleが頻繁に見に来てくれます。一度に全部出すより、評価が安定しやすくなります。</p>
+        </div>
+        <div class="item">
+          <h3>サービスのページからコラムへ、自動でリンクが増える仕組み</h3>
+          <p>コラムを4つのテーマ（鍵をなくした・開かない／鍵交換・防犯／料金・鍵屋の選び方／安否確認）に分け、それぞれのサービスページに「関連コラム」の欄を付けました。公開された記事だけが自動で並ぶので、毎朝の公開に合わせて一覧が増えていきます。</p>
+          <p class="why">同じテーマのページどうしがつながっていると、Googleは「このテーマに詳しいサイト」と判断します。</p>
+        </div>
+        <div class="item">
+          <h3>作業事例38件の題名とページのアドレスを整理した<span class="tag live">公開中</span></h3>
+          <p>「北区赤羽　鍵の紛失による鍵開け」のように、地域と作業内容が分かる題名に変えました（大阪府の1件はそのまま）。古いアドレスで来た人は、新しいページに自動で移ります。</p>
+          <p class="why">「地域名＋鍵開け」で調べた人に、その地域の実際の事例が見つかりやすくなります。</p>
+        </div>
+        <div class="item">
+          <h3>ページごとに、検索結果に出る題名と説明文を付けた</h3>
+          <p>検索結果に表示される題名（30字前後）と説明文（100字前後）を、全ページ・全コラムに一つずつ書きました。</p>
+          <p class="why">検索結果に並んだとき、困っている人が「これだ」と思って押してくれるかは、題名と説明文で決まります。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="no">2</span>AIに紹介してもらうための対策（AIO）</h2>
+      <p class="lead">最近は、Googleで調べるかわりに、ChatGPTやGoogleの「AIによる概要」に「近くで信頼できる鍵屋は？」と聞く人が増えています。AIは、検索結果、会社の情報がまとまっている場所、ページの中の「質問と答え」を読んで答えを作ります。</p>
+      <div class="items">
+        <div class="item">
+          <h3>機械向けの会社の説明（構造化データ）を入れた<span class="tag draft">下書き</span></h3>
+          <p>ページの裏側に、「鍵マッハ24は鍵屋で、株式会社H-GATEが運営し、代表は寺内大将、電話は070-9186-1366、24時間営業、東京都と埼玉県南部に来てくれる」といった情報を、GoogleやAIが読める決まった形で書き込みました。コラムには、よくある質問の形の情報も入れています。</p>
+          <p class="why">AIは文章を読んで推測するより、決まった形で書かれた情報を確実に使います。間違った情報で紹介されるのも防げます。</p>
+        </div>
+        <div class="item">
+          <h3>AI向けの自己紹介ファイル（llms.txt）を作った</h3>
+          <p>サービス、対応地域、到着の目安、支払い方法、本人確認の方法、対象外のもの（車・バイク・金庫）を、AIが読みやすい短い文章にまとめました。サイトの公開後に、サイトの一番上の場所に置きます。</p>
+          <p class="why">AIがサイトを読むときの「要約」になり、正確に紹介してもらいやすくなります。</p>
+        </div>
+        <div class="item">
+          <h3>会社の情報を、どこでも同じ書き方にそろえる方針を決めた</h3>
+          <p>サイト、Googleビジネスプロフィール（Googleマップの店の情報）、Bing、地域の店の情報サイトで、名前・住所・電話番号を一字一句同じにします。サイトの住所は、会社概要と同じ「赤羽1-7-9 赤羽第一葉山ビル4F」にしました。</p>
+          <p class="why">AIもGoogleも、いろいろな場所の情報が一致しているほど「実在する、信頼できる会社」と判断します。</p>
+        </div>
+        <div class="item">
+          <h3>Bingにも登録する計画にした</h3>
+          <p>公開日に、GoogleのSearch Consoleと一緒に、Microsoftの検索エンジンBingにもサイトを登録します。</p>
+          <p class="why">ChatGPTがインターネットで調べるときは、主にBingの検索結果を使っています。Bingに載っていないと、ChatGPTに紹介されにくくなります。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="no">3</span>見た人に電話してもらうための工夫</h2>
+      <p class="lead">鍵屋のサイトに来る人の多くは、締め出されてスマホで見ています。迷わず電話できることを最優先にしました。</p>
+      <div class="items">
+        <div class="item">
+          <h3>最初の画面で「最短5分」と電話番号が目に入る</h3>
+          <p>電話ボタンは、画面の下にも常に出るようにしました。スマホの幅で、番号が途中で折り返さないことも確かめています。</p>
+        </div>
+        <div class="item">
+          <h3>お客様の声を、料金より前に置いた</h3>
+          <p>人の絵のアイコンをやめ、その作業事例の実際の写真、日付、地域を添えました。作った顔写真や架空の声は使っていません。</p>
+        </div>
+        <div class="item">
+          <h3>ご依頼の流れを、写真つきで5段階に</h3>
+          <p>電話、到着、書面での見積もり、作業、支払いの流れを、写真で見せています。今の写真は仮のもので、スタッフの実際の写真が届いたら差し替えます。</p>
+        </div>
+        <div class="item">
+          <h3>不安を減らす約束と、確かな実績だけを載せた</h3>
+          <p>「作業前に書面で見積もり」「提示した金額以上は請求しない」「作業後に一緒に傷の確認」の3つの約束を載せました。「賠償責任保険に加入」の表記は、お客様が自分の保険について聞いてくる原因になるため外し、「年間3,000件以上の実績」「全スタッフが警察立ち会いを経験」に替えています。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="no">4</span>今のサイトで見つかった問題</h2>
+      <p class="lead">公開中のサイトを点検したところ、次の点が見つかりました。どれも、新しいページの公開に合わせて直します。</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>見つかったこと</th><th>どう直すか</th></tr></thead>
+          <tbody>
+            <tr><td>トップの説明文に「関東地方」「車・バイク・金庫」と書かれている</td><td>新しいトップの公開で、東京都内・埼玉県南部の家の鍵の説明に置き換わる</td></tr>
+            <tr><td>トップの画像に「年間実績3万件以上」とある（正しくは年間3,000〜4,000件）</td><td>公開前に画像を差し替える</td></tr>
+            <tr><td>Googleに、鍵屋であることや電話番号・地域が伝わっていない</td><td>新しいトップに、機械向けの会社の説明を入れ済み</td></tr>
+            <tr><td>作業事例39件の分類名が「Uncategorized（未分類）」のまま</td><td>「作業事例」に名前を変える</td></tr>
+            <tr><td>投稿者のページが公開されていて、ログインの名前を推測されやすい</td><td>投稿者のページを止める</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="no">5</span>寺内さんにお願いしたいこと</h2>
+      <p class="lead">色の付いた項目が、公開に必要なものです。</p>
+      <div class="asks">
+        <div class="ask must"><span class="box" aria-hidden="true"></span><div><b>正式な料金を決める</b><small>鍵開け・鍵交換・安否確認の料金、深夜の割増の有無、出張費が含まれるか、キャンセル料、警察の到着を待つ間の料金</small></div></div>
+        <div class="ask must"><span class="box" aria-hidden="true"></span><div><b>鍵交換にかかる時間の目安と、法人と取引を始めるときの流れ</b><small>ページの「【要確認】」の部分に入れます</small></div></div>
+        <div class="ask must"><span class="box" aria-hidden="true"></span><div><b>下書きを読んで、内容に間違いがないか確かめる</b><small>監修者としてお名前を載せるので、とくにコラムの内容を確認してください</small></div></div>
+        <div class="ask"><span class="box" aria-hidden="true"></span><div><b>Googleビジネスプロフィールを作る</b><small>バーチャルオフィスでは登録できないため、ご自宅の住所で登録し、住所を表示しない設定にします</small></div></div>
+        <div class="ask"><span class="box" aria-hidden="true"></span><div><b>作業のあとに、Googleの口コミをお願いする</b><small>QRコードを印刷したカードを渡します。口コミのお礼に値引きをするのは、Googleの決まりで禁止されています</small></div></div>
+        <div class="ask"><span class="box" aria-hidden="true"></span><div><b>作業事例の写真と内容を、Googleドライブで送る</b><small>1件ごとにフォルダを分け、写真と見積書の写真を入れてください。毎週1〜2件ずつ追加します</small></div></div>
+        <div class="ask"><span class="box" aria-hidden="true"></span><div><b>公式LINEを作る</b><small>鍵交換の写真見積もりと、作業後のお付き合いに使います。受付中は15分以内に最初の返信をする決まりにしました</small></div></div>
+        <div class="ask"><span class="box" aria-hidden="true"></span><div><b>スタッフの作業中の写真を撮る</b><small>ご依頼の流れの仮の写真と差し替えます。顔は写さず、手元だけでも大丈夫です</small></div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="no">6</span>公開したあとの流れ</h2>
+      <div class="timeline">
+        <div class="step"><b>公開日</b><span>新しいページを公開し、新しいトップをホームページに設定。GoogleとBingにサイトを登録し、AI向けの自己紹介ファイルを置く</span></div>
+        <div class="step"><b>翌日から18日間</b><span>毎朝7時に、コラムが1本ずつ自動で公開される（同じ日に2〜3本出る日もある）</span></div>
+        <div class="step"><b>毎週</b><span>作業事例を1〜2件追加する。地域のページが強くなる</span></div>
+        <div class="step"><b>毎月</b><span>どの言葉で検索され、どのページから電話が来たかを確かめ、反応の悪いページの題名や説明文を直す。次のコラムの言葉を、検索数を調べてから決める</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2><span class="no">7</span>言葉の説明</h2>
+      <dl class="glossary">
+        <dt>SEO</dt><dd>Googleなどの検索結果で、上のほうに表示されるための工夫</dd>
+        <dt>AIO</dt><dd>ChatGPTやGoogleの「AIによる概要」などのAIに、答えの中で紹介してもらうための工夫</dd>
+        <dt>下書き</dt><dd>WordPressに保存されているが、まだお客様には見えない状態のページ</dd>
+        <dt>キーワードプランナー</dt><dd>Googleの道具で、言葉ごとに月に何回検索されているかが分かる</dd>
+        <dt>構造化データ</dt><dd>ページの裏側に書く、GoogleやAIが読むための決まった形の説明。お客様の画面には出ない</dd>
+        <dt>llms.txt</dt><dd>AI向けに、サイトの内容を短くまとめたファイル</dd>
+        <dt>予約投稿</dt><dd>日時を決めておくと、その時間にWordPressが自動で記事を公開する機能</dd>
+        <dt>Search Console</dt><dd>Googleの無料の道具。どんな言葉でサイトが表示され、押されたかが分かる</dd>
+        <dt>Bing</dt><dd>Microsoftの検索エンジン。ChatGPTが調べものに使う</dd>
+      </dl>
+    </section>
+
+    <footer>この報告書の内容は、作業の記録（docs フォルダ）と同じです。分からないところは、いつでも聞いてください。</footer>
+  </div>
+</main>
