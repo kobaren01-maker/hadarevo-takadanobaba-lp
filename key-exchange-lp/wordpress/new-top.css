@@ -384,3 +384,4 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
   .km-lp ul.km-tiles a { font-size: 13px; }
   .km-lp .km-message h2 { font-size: clamp(18px, 4.6vw, 20px); }
 }
+.km-lp li, .km-lp ul.km-related-list li a { text-wrap: balance; }
