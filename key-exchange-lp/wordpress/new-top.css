@@ -367,3 +367,20 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 .km-lp .km-message__photos { display: flex; justify-content: center; gap: 10px; margin: 0 auto 22px; }
 .km-lp .km-message__photos img { width: 30%; max-width: 150px; aspect-ratio: 1; height: auto; object-fit: cover; border-radius: 12px; }
 .km-lp .km-message__sign { font-weight: 700; color: var(--km-navy); margin-top: 8px !important; }
+
+/* スマホの不自然な改行を減らす（2026/11/6）
+   見出し・表・ボタン・質問：行の長さをそろえて、1〜2文字だけ次の行に送られないようにする
+   本文：最後の行に1文字だけ残らないようにする（対応しているブラウザのみ。対応していなくても表示は崩れない） */
+.km-lp h1, .km-lp h2, .km-lp h3, .km-lp h4, .km-lp summary, .km-lp th, .km-lp td, .km-lp strong,
+.km-lp .wp-block-button__link, .km-lp ul.km-tiles a, .km-lp ul.km-links li, .km-lp ul.km-chips li,
+.km-lp ul.km-stats li, .km-lp ul.km-voices small, .km-lp figcaption { text-wrap: balance; }
+.km-lp p, .km-lp li, .km-lp dd { text-wrap: pretty; line-break: strict; }
+@media (max-width: 480px) {
+  .km-lp h2 { font-size: 20px; line-height: 1.5; }
+  .km-lp h3 { font-size: 17px; line-height: 1.5; }
+  .km-lp table th { font-size: 13px; }
+  .km-lp table td { font-size: 14.5px; }
+  .km-lp p, .km-lp li { font-size: 15.5px; line-height: 1.85; }
+  .km-lp ul.km-tiles a { font-size: 13px; }
+  .km-lp .km-message h2 { font-size: clamp(18px, 4.6vw, 20px); }
+}
