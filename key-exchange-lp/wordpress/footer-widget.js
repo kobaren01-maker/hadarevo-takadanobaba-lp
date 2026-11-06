@@ -11,6 +11,7 @@ async function kmBuildFooter() {
   const css = `
 .site-footer { background: #0b2a5b; color: #fff; border-top: 0; margin-top: 0; }
 .site-body:has(.km-cta) { padding-bottom: 0 !important; }
+.site-body:has(.km-cta) .main-section { margin-bottom: 0 !important; }
 .entry-body h1, .entry-body h2, .entry-body h3, .entry-body h4, .page-header-title, .entry-title, .site-footer .footer-nav-list a { text-wrap: balance; }
 .entry-body p, .entry-body li { text-wrap: pretty; line-break: strict; }
 .site-footer .footer-nav { background: #08214a; border: 0; padding: 18px 0; }
