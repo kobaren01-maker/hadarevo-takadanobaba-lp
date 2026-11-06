@@ -400,7 +400,7 @@ async function kmBuildSite(cssText) {
       ]),
       G("km-section", [H("どんなお困りですか？"), tiles()]),
       G("km-section km-band", [H("お客様の声"), voiceList(cases.filter(isHome), 3), P("作業事例に掲載しているお客様のご感想から抜粋しています。", "km-note")]),
-      G("km-section", [H("料金の目安"), T([priceBase, priceOpen[0], priceChange[0]]), priceNote(), P(A("/price/", "料金表をすべて見る")), cheapWarning()]),
+      G("km-section", [H("料金の目安"), T([priceBase, priceOpen[0], priceChange[0]]), priceNote(), cheapWarning()]),
       G("km-section", flow(2)),
       G("km-section km-band", rules()),
       G("km-section", [H("鍵マッハ24が選ばれる理由"), stats(), fvPhotos(), founderNote()]),
@@ -438,7 +438,7 @@ async function kmBuildSite(cssText) {
       stats(),
       G("km-section", [H("どんなお困りですか？"), tiles()]),
       G("km-section km-band", [H("鍵をなくしたお客様の声"), voiceList(cases.filter((c) => isHome(c) && (isLost(c) || isStuck(c))), 3)]),
-      G("km-section", [H("鍵開けの料金"), T([priceBase, ...priceOpen]), priceNote(), P(A("/price/", "料金表をすべて見る →")), cheapWarning()]),
+      G("km-section", [H("鍵開けの料金"), T([priceBase, ...priceOpen]), priceNote(), cheapWarning()]),
       G("km-section", [...rules(), ...flow()]),
       G("km-section", [
         H("本人確認について"),
@@ -495,7 +495,7 @@ async function kmBuildSite(cssText) {
       stats(),
       G("km-section", [H("鍵交換は3つの考え方から選べます"), plans(), P("どれにするか迷ったら、お電話でご相談ください。ドアに合う部品と総額をお伝えします。", "km-note")]),
       ...lineBox(),
-      G("km-section", [H("鍵交換の料金"), T([priceBase, ...priceChange]), priceNote(), P(A("/price/", "料金表をすべて見る →")), cheapWarning()]),
+      G("km-section", [H("鍵交換の料金"), T([priceBase, ...priceChange]), priceNote(), cheapWarning()]),
       G("km-section", [
         H("普通の鍵とディンプルキーの違い"),
         T([
