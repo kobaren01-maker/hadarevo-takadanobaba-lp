@@ -334,18 +334,18 @@ async function kmBuildSite(cssText) {
       P("鍵マッハ24 代表", "km-message__sign"),
     ]);
 
-  // 4. 安すぎる表示への注意（他社の名前は出さない）
+  // 4. 安すぎる表示への注意（他社の名前は出さない）。2026/11/7 スマホで読みやすいように作り直し：短い導入 → 2枚のカードで比べる → 3つの約束 → 料金表へ
   const cheapWarning = (priceLink = true) =>
-    G("km-box km-box--warn", [
+    G("km-box km-box--warn km-cheap", [
       H("「◯千円〜」の安すぎる広告にご注意ください", 3),
-      P('現地で高い料金を請求される相談が増えています（<a href="https://www.shouhiseikatu.metro.tokyo.lg.jp/sodan/kinkyu/documents/kagi_kaijou_service.pdf">東京都消費生活総合センター</a>）。広告の「◯千円〜」は作業料金だけの金額で、出張費や基本料金、深夜の割増が別にかかることがあります。'),
-      // 他社の名前は出さず、「よくある広告」と比べる。鍵マッハ24の側は料金表どおりの事実だけ
-      T([
-        ["よくある「◯千円〜」の広告", "作業料金だけを大きく表示。出張費・基本料金・深夜の割増は、現地で足されることがある"],
-        ["鍵マッハ24", "基本料金・作業料金・深夜の割増・キャンセル・警察を待つ間の料金まで、<strong>すべて料金表で公開</strong>しています。日中の鍵開けなら<strong>合計22,000円〜</strong>（基本料金5,500円＋作業料金16,500円〜）"],
-      ], "km-compare km-compare--price"),
-      P('<strong>鍵マッハ24は、作業の前に書面でお見積もりをお出しし、金額にご納得いただいてから作業を始めます。現場でお出ししたお見積もりより高く請求することはありませんので、どうぞご安心ください。</strong>'),
-      ...(priceLink ? [P(A("/price/", "鍵マッハ24の料金表をすべて見る →"))] : []),
+      P("広告の「◯千円〜」は<strong>作業料金だけ</strong>の金額で、出張費・基本料金・深夜の割増が現地で足されることがあります。", "km-cheap__lead"),
+      HTML('<div class="km-cheap__cmp">'
+        + '<div class="km-cheap__card km-cheap__card--other"><p class="km-cheap__label">よくある広告</p><p class="km-cheap__price">◯千円〜</p><p class="km-cheap__note">作業料金だけの表示。出張費・基本料金・深夜の割増は別にかかることも</p></div>'
+        + '<div class="km-cheap__card km-cheap__card--us"><p class="km-cheap__label">鍵マッハ24　日中の鍵開け</p><p class="km-cheap__price">合計 22,000円〜</p><p class="km-cheap__note">基本料金5,500円＋作業料金16,500円〜。深夜の割増やキャンセルまで、すべて料金表で公開しています</p></div>'
+        + "</div>"),
+      L(["作業前に、書面でお見積もり", "お見積もりより高く請求しません", "鍵が開かなかったら0円"], "km-cheap__checks"),
+      ...(priceLink ? [P(A("/price/", "鍵マッハ24の料金表をすべて見る →"), "km-cheap__link")] : []),
+      P('参考：<a href="https://www.shouhiseikatu.metro.tokyo.lg.jp/sodan/kinkyu/documents/kagi_kaijou_service.pdf">東京都消費生活総合センター</a>（現地で高い料金を請求される相談が増えています）', "km-note km-cheap__src"),
     ]);
 
   // 8. 本人確認に使える書類（友人の回答 2026/10/28：顔写真付きの身分証。ない場合は不動産の契約書・公共料金の支払い書など）
