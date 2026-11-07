@@ -430,3 +430,4 @@ body { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 .km-lp ul.km-cheap__checks li::before { content: "✓"; position: absolute; left: 0; top: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--km-navy); color: #fff; font-size: 12px; line-height: 20px; text-align: center; margin-top: 3px; }
 .km-lp .km-cheap__link { font-weight: 700; }
 .km-lp .km-cheap__src { font-size: 12px; margin-top: 8px !important; }
+.km-lp .km-cheap h3::before { display: block !important; position: static !important; border: 0 !important; }
