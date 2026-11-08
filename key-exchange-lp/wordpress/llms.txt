@@ -28,6 +28,9 @@
 - [料金表](https://h-gate.jp/price/)
 - [対応エリア](https://h-gate.jp/area/)
 
+## 作業事例
+- [作業事例の一覧](https://h-gate.jp/category/case/)：東京都内・埼玉県南部で行った鍵開け・鍵交換の事例（地域と作業内容、現場の写真）
+
 ## 鍵のお役立ちコラム
 - [コラム一覧](https://h-gate.jp/category/column/)
 - [鍵をなくした・開かない](https://h-gate.jp/category/column/column-nakushita/)
