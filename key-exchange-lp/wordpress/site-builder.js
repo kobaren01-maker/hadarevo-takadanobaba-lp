@@ -367,13 +367,13 @@ async function kmBuildSite(cssText) {
   // ---- コラムのテーマ別カテゴリー（トピッククラスター） ----
   // 「最新の投稿」ブロックは公開済みの記事だけを出すので、予約投稿で毎日1本ずつ公開されるたびに一覧が自動で増え、リンク切れも起きない
   const CLUSTERS = {
-    nakushita: { slug: "column-nakushita", name: "鍵をなくした・開かない", description: "家の鍵をなくした、締め出された、鍵が回らない・抜けない、閉じ込められたときの対処法をまとめています。",
+    nakushita: { slug: "column-nakushita", name: "鍵をなくした・開かない", thumb: 1361, description: "家の鍵をなくした、締め出された、鍵が回らない・抜けない、閉じ込められたときの対処法をまとめています。",
       posts: ["kagi-nakushita", "chintai-kagi-funshitsu", "mansion-kagi-funshitsu", "kagi-otoshita-keisatsu", "shimedashi", "autolock-kagi-wasureta", "kagi-mawaranai", "kagi-nukenai-oreta", "toilet-heya-kagi-akanai", "kagi-funshitsu-hoken", "dimple-key-nakushita"] },
-    koukan: { slug: "column-koukan", name: "鍵交換・防犯", description: "鍵交換の費用とタイミング、シリンダー交換、ディンプルキー、補助錠、合鍵、鍵の手入れなど、鍵交換と玄関の防犯の情報をまとめています。",
+    koukan: { slug: "column-koukan", name: "鍵交換・防犯", thumb: 1362, description: "鍵交換の費用とタイミング、シリンダー交換、ディンプルキー、補助錠、合鍵、鍵の手入れなど、鍵交換と玄関の防犯の情報をまとめています。",
       posts: ["kagi-koukan-hiyou", "cylinder-koukan-jibun", "dimple-key-koukan", "dimple-key-aikagi", "hikkoshi-kagi-koukan", "chintai-aikagi", "genkan-hojojou", "kagi-shurui", "kagiana-junkatsuzai", "smartlock-chuui"] },
-    ryoukin: { slug: "column-ryoukin", name: "料金・鍵屋の選び方", description: "鍵開けの料金の考え方、安い広告の注意点、安心して頼める鍵屋の選び方をまとめています。",
+    ryoukin: { slug: "column-ryoukin", name: "料金・鍵屋の選び方", thumb: 1363, description: "鍵開けの料金の考え方、安い広告の注意点、安心して頼める鍵屋の選び方をまとめています。",
       posts: ["kagiake-ryoukin", "kagiya-yasui-chuui", "kagiya-erabikata"] },
-    anpi: { slug: "column-anpi", name: "安否確認", description: "家族や入居者と連絡が取れないときの安否確認、警察への相談のしかた、鍵開けの流れをまとめています。",
+    anpi: { slug: "column-anpi", name: "安否確認", thumb: 1364, description: "家族や入居者と連絡が取れないときの安否確認、警察への相談のしかた、鍵開けの流れをまとめています。",
       posts: ["anpi-kakunin-keisatsu"] },
   };
   const CAT = {}; // 保存の直前にカテゴリーを用意して入れる（column と各テーマ）
@@ -773,7 +773,8 @@ async function kmBuildSite(cssText) {
   for (const def of COLUMNS) {
     const key = clusterOf(def.slug);
     if (!key) throw new Error("テーマが決まっていないコラム: " + def.slug);
-    results.push(await upsert("posts", def, { categories: [CAT.column.id, CAT[key].id] }));
+    // アイキャッチはテーマ別のブランド画像（wordpress/thumbs/、2026/11/8）
+    results.push(await upsert("posts", def, { categories: [CAT.column.id, CAT[key].id], featured_media: CLUSTERS[key].thumb }));
   }
   return results;
 }
