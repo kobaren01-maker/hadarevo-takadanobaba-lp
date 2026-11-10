@@ -373,8 +373,8 @@ async function kmBuildSite(cssText) {
       posts: ["kagi-koukan-hiyou", "cylinder-koukan-jibun", "dimple-key-koukan", "dimple-key-aikagi", "hikkoshi-kagi-koukan", "chintai-aikagi", "genkan-hojojou", "kagi-shurui", "kagiana-junkatsuzai", "smartlock-chuui"] },
     ryoukin: { slug: "column-ryoukin", name: "料金・鍵屋の選び方", thumb: 1363, description: "鍵開けの料金の考え方、安い広告の注意点、安心して頼める鍵屋の選び方をまとめています。",
       posts: ["kagiake-ryoukin", "kagiya-yasui-chuui", "kagiya-erabikata"] },
-    anpi: { slug: "column-anpi", name: "安否確認", thumb: 1364, description: "家族や入居者と連絡が取れないときの安否確認、警察への相談のしかた、鍵開けの流れをまとめています。",
-      posts: ["anpi-kakunin-keisatsu"] },
+    anpi: { slug: "column-anpi", name: "安否確認", thumb: 1364, description: "家族や入居者、社員と連絡が取れないときの安否確認、警察への相談のしかた、鍵開けの流れと費用、管理会社・法人の方向けの情報をまとめています。",
+      posts: ["anpi-kakunin-keisatsu", "oya-renraku-torenai", "anpi-kakunin-houritsu", "mudan-kekkin-renraku-torenai", "nyukyosha-renraku-torenai", "anpi-kakunin-hiyou", "oya-mimamori-sonae", "kanri-kaisha-kagiya-erabikata"] },
   };
   const CAT = {}; // 保存の直前にカテゴリーを用意して入れる（column と各テーマ）
   const relatedCols = (key, title, n = 12) => G("km-section km-related", [
@@ -716,7 +716,7 @@ async function kmBuildSite(cssText) {
   if (!window.kmColumns) throw new Error("columns.js が読み込まれていません");
   const parts = { B, P, H, L, T, G, A, D, TODO, answer, telButton, supervisor, LD, faqLd, lp };
   // 第1弾（毎日投稿の1〜7本目）は columns2.js。読み込んでいれば一緒に下書きにする
-  const COLUMNS = [...window.kmColumns(parts), ...(window.kmColumns2 ? window.kmColumns2(parts) : []), ...(window.kmColumns3 ? window.kmColumns3(parts) : []), ...(window.kmColumns4 ? window.kmColumns4(parts) : [])];
+  const COLUMNS = [...window.kmColumns(parts), ...(window.kmColumns2 ? window.kmColumns2(parts) : []), ...(window.kmColumns3 ? window.kmColumns3(parts) : []), ...(window.kmColumns4 ? window.kmColumns4(parts) : []), ...(window.kmColumns5 ? window.kmColumns5(parts) : [])];
 
   // ======================================================================
   // 保存（下書きのみ）
