@@ -368,11 +368,11 @@ async function kmBuildSite(cssText) {
   // 「最新の投稿」ブロックは公開済みの記事だけを出すので、予約投稿で毎日1本ずつ公開されるたびに一覧が自動で増え、リンク切れも起きない
   const CLUSTERS = {
     nakushita: { slug: "column-nakushita", name: "鍵をなくした・開かない", thumb: 1361, description: "家の鍵をなくした、締め出された、鍵が回らない・抜けない、閉じ込められたときの対処法をまとめています。",
-      posts: ["kagi-nakushita", "chintai-kagi-funshitsu", "mansion-kagi-funshitsu", "kagi-otoshita-keisatsu", "shimedashi", "autolock-kagi-wasureta", "kagi-mawaranai", "kagi-nukenai-oreta", "toilet-heya-kagi-akanai", "kagi-funshitsu-hoken", "dimple-key-nakushita"] },
+      posts: ["kagi-nakushita", "chintai-kagi-funshitsu", "mansion-kagi-funshitsu", "kagi-otoshita-keisatsu", "shimedashi", "autolock-kagi-wasureta", "kagi-mawaranai", "kagi-nukenai-oreta", "toilet-heya-kagi-akanai", "kagi-funshitsu-hoken", "dimple-key-nakushita", "kagi-hairanai", "kagi-mawaru-doa-akanai"] },
     koukan: { slug: "column-koukan", name: "鍵交換・防犯", thumb: 1362, description: "鍵交換の費用とタイミング、シリンダー交換、ディンプルキー、補助錠、合鍵、鍵の手入れなど、鍵交換と玄関の防犯の情報をまとめています。",
-      posts: ["kagi-koukan-hiyou", "cylinder-koukan-jibun", "dimple-key-koukan", "dimple-key-aikagi", "hikkoshi-kagi-koukan", "chintai-aikagi", "genkan-hojojou", "kagi-shurui", "kagiana-junkatsuzai", "smartlock-chuui"] },
-    ryoukin: { slug: "column-ryoukin", name: "料金・鍵屋の選び方", thumb: 1363, description: "鍵開けの料金の考え方、安い広告の注意点、安心して頼める鍵屋の選び方をまとめています。",
-      posts: ["kagiake-ryoukin", "kagiya-yasui-chuui", "kagiya-erabikata"] },
+      posts: ["kagi-koukan-hiyou", "cylinder-koukan-jibun", "dimple-key-koukan", "dimple-key-aikagi", "hikkoshi-kagi-koukan", "chintai-aikagi", "genkan-hojojou", "kagi-shurui", "kagiana-junkatsuzai", "smartlock-chuui", "kagi-koukan-jikan"] },
+    ryoukin: { slug: "column-ryoukin", name: "料金・鍵屋の選び方", thumb: 1363, description: "鍵開けの料金の考え方、安い広告の注意点、安心して頼める鍵屋の選び方、鍵屋を呼んでから作業が終わるまでの流れ、深夜の料金をまとめています。",
+      posts: ["kagiake-ryoukin", "kagiya-yasui-chuui", "kagiya-erabikata", "kagiake-mibunshou", "kagiya-yobu-nagare", "shinya-kagiya", "kagi-kowasazu-akeru"] },
     anpi: { slug: "column-anpi", name: "安否確認", thumb: 1364, description: "家族や入居者、社員と連絡が取れないときの安否確認、警察への相談のしかた、鍵開けの流れと費用、管理会社・法人の方向けの情報をまとめています。",
       posts: ["anpi-kakunin-keisatsu", "oya-renraku-torenai", "anpi-kakunin-houritsu", "mudan-kekkin-renraku-torenai", "nyukyosha-renraku-torenai", "anpi-kakunin-hiyou", "oya-mimamori-sonae", "kanri-kaisha-kagiya-erabikata"] },
   };
@@ -716,7 +716,7 @@ async function kmBuildSite(cssText) {
   if (!window.kmColumns) throw new Error("columns.js が読み込まれていません");
   const parts = { B, P, H, L, T, G, A, D, TODO, answer, telButton, supervisor, LD, faqLd, lp };
   // 第1弾（毎日投稿の1〜7本目）は columns2.js。読み込んでいれば一緒に下書きにする
-  const COLUMNS = [...window.kmColumns(parts), ...(window.kmColumns2 ? window.kmColumns2(parts) : []), ...(window.kmColumns3 ? window.kmColumns3(parts) : []), ...(window.kmColumns4 ? window.kmColumns4(parts) : []), ...(window.kmColumns5 ? window.kmColumns5(parts) : [])];
+  const COLUMNS = [...window.kmColumns(parts), ...(window.kmColumns2 ? window.kmColumns2(parts) : []), ...(window.kmColumns3 ? window.kmColumns3(parts) : []), ...(window.kmColumns4 ? window.kmColumns4(parts) : []), ...(window.kmColumns5 ? window.kmColumns5(parts) : []), ...(window.kmColumns6 ? window.kmColumns6(parts) : [])];
 
   // ======================================================================
   // 保存（下書きのみ）
